@@ -4,7 +4,9 @@
   "description": "",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "webpack-dev-server",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -19,6 +21,7 @@
   "devDependencies": {
     "file-saver": "^2.0.2",
     "path": "^0.12.7",
+    "vec2": "^1.6.0",
     "webpack": "^4.34.0",
     "webpack-cli": "^3.3.4",
     "webpack-dev-server": "^3.7.2"
