@@ -11,16 +11,20 @@ TODO: technical description of algorithm and application structure
 See `./core` for common modules:
 * Segment - a single segment of a vein
 * Source - source of auxin growth hormone
-* Network - manages a growth of vein segments based on auxin sources
+* Network - manages the growth of vein segments based on auxin sources
 
 ## TODO
-- [ ] Create most basic implementation
+- [X] Create most basic implementation
 - [ ] Add configurable support for open vs. closed venation patterns
 - [ ] Implement configurable birth rates and kill rates
-- [ ] Implement boundary shape (leaf shape)
-  - [ ] Implement boundary shape growth (uniform and non-uniform via interpolation)
-- [ ] Implement environmental force vector (see [ofxSpaceColonization::grow()](https://github.com/edap/ofxSpaceColonization/blob/master/src/ofxSpaceColonization.cpp#L97-L101))
-- [ ] Implement way for multiple vein networks to interact together
+- [ ] Implement static boundary shape (leaf shape) from SVG design
+- [ ] Implement dynamic boundary shape to simulate leaf growth
+  - [ ] Uniform growth via scaling
+  - [ ] Non-uniform growth via shape interpolation (?)
+- [ ] Add support for optional environmental force vector (see [ofxSpaceColonization::grow()](https://github.com/edap/ofxSpaceColonization/blob/master/src/ofxSpaceColonization.cpp#L97-L101))
+- [ ] Ensure that multiple vein networks can grow independently
+- [ ] Document all modules with JSDoc
+- [ ] Add support for obstacles that growth must avoid
                                                                                                                                        
 ## Features
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
