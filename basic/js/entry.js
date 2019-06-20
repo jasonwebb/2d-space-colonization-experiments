@@ -8,6 +8,7 @@ import { setupKeyListeners } from '../../core/KeyboardInteractions'
 let canvas, ctx;
 let network;
 
+// Create initial conditions for simulation
 let setup = () => {
   // Initialize canvas and context
   canvas = document.getElementById('sketch');
@@ -16,11 +17,21 @@ let setup = () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
+  // Setup Network with initial conditions
+  setupNetwork();
+
+  // Begin animation loop
+  requestAnimationFrame(update);
+}
+
+
+// Create the network with initial conditions
+let setupNetwork = () => {
   // Initialize simulation object
   network = new Network(ctx);
 
   // Initialize auxin sources
-  for(let i=0; i<1500; i++) {
+  for(let i=0; i<2000; i++) {
     network.sources.push(
       new Source(
         new Vec2(
@@ -33,35 +44,41 @@ let setup = () => {
   }
 
   // Add an initial root vein at the bottom center of the screen
-  const rootSegment = new Segment(
-                        null,
-                        new Vec2(window.innerWidth / 2, window.innerHeight),
-                        new Vec2(0, -1),
-                        ctx
-                      );
-  network.segments.push(rootSegment);
-  network.roots.push(rootSegment);
-
-  network.initializeTrunks();
+  network.segments.push(
+    new Segment(
+      null,
+      new Vec2(window.innerWidth / 2, window.innerHeight),
+      new Vec2(0, -1),
+      ctx
+    )
+  )
 
   // Set up common keyboard interaction listeners
-  setupKeyListeners([network]);
-
-  // Begin animation loop
-  requestAnimationFrame(update);
+  setupKeyListeners(network);
 }
 
+
+// Main program loop
 let update = (timestamp) => {
   network.update();
 
-  clear();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   network.draw();
 
   requestAnimationFrame(update);
 }
 
-let clear = () => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
 
+// Key commands specific to this sketch
+document.addEventListener('keypress', (e) => {
+  switch(e.key) {
+    // r = reset simulation by reinitializing the network with initial conditions
+    case "r":
+      setupNetwork();
+      break;
+  }
+});
+
+
+// Kick off the application
 setup();

@@ -1,6 +1,11 @@
 export function setupKeyListeners(networks) {
-  document.addEventListener('keyup', (e) => {
+  if(!(networks instanceof Array)) {
+    networks = [networks];
+  }
+
+  document.addEventListener('keypress', (e) => {
     switch(e.key) {
+      // Space = pause/unpause
       case " ":
         for(let network of networks) {
           network.togglePause();
@@ -8,10 +13,7 @@ export function setupKeyListeners(networks) {
 
         break;
 
-      case "r":
-
-        break;
-
+      // v = toggle vein visibility
       case "v":
         for(let network of networks) {
           network.toggleVeins();
@@ -19,6 +21,7 @@ export function setupKeyListeners(networks) {
 
         break;
 
+      // s = toggle auxin source visibility
       case "s":
         for(let network of networks) {
           network.toggleSources();
