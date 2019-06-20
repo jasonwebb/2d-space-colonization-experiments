@@ -1,6 +1,4 @@
 import Defaults from './Defaults';
-import Segment from './Segment';
-import Source from './Source';
 
 export default class Network {
   constructor(ctx, settings) {
@@ -13,14 +11,17 @@ export default class Network {
   }
 
   update() {
+    // For each auxin source ...
     for(let source of this.sources) {
       let closestSegment = null,
-        record = 100;
+        record = this.settings.AttractionDistance;
 
+      // Check if any vein segment is near enough to trigger removal of auxin source
+      // TODO: implement knn searching by putting segments into spatial index
       for(let segment of this.segments) {
         let distance = source.position.distance(segment.position);
 
-        if(distance < 10) {
+        if(distance < this.settings.KillDistance) {
           source.reached = true;
           closestSegment = null;
           break;
@@ -30,6 +31,7 @@ export default class Network {
         }
       }
 
+      // "Bend" the vein growth towards the nearest branch
       if(closestSegment != null) {
         let nextDirection = source.position.subtract(closestSegment.position, true);
         nextDirection.normalize();
@@ -45,7 +47,6 @@ export default class Network {
       }
     }
 
-    
     for(let segment of this.segments) {
       if(segment.count > 0) {
         segment.direction.divide(segment.count + 1);
@@ -56,14 +57,18 @@ export default class Network {
   }
 
   draw() {
-    // draw vein segments
-    for(let segment of this.segments) {
-      segment.draw();
+    // Draw vein segments
+    if(this.settings.ShowVeins) {
+      for(let segment of this.segments) {
+        segment.draw();
+      }
     }
 
-    // draw auxin sources
-    for(let source of this.sources) {
-      // source.draw();
+    // Draw auxin sources
+    if(this.settings.ShowSources) {
+      for(let source of this.sources) {
+        source.draw();
+      }
     }
   }
 
@@ -79,7 +84,7 @@ export default class Network {
         for(let source of this.sources) {
           const distance = currentSegment.position.distance(source.position);
 
-          if(distance < 100) {
+          if(distance < this.settings.KillDistance) {
             found = true;
           }
         }
