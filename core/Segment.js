@@ -14,13 +14,21 @@ export default class Segment {
   }
 
   draw() {
-    if(this.parent != null) {
+    if(this.settings.VeinRenderMode == 'Lines' && this.parent != null) {
       this.ctx.beginPath();
       this.ctx.moveTo(this.position.x, this.position.y);
       this.ctx.lineTo(this.parent.position.x, this.parent.position.y);
+
+      // TODO: vary vein thickness based on algorithm
       this.ctx.strokeStyle = '#333';
-      this.ctx.lineWidth = 3;
+      this.ctx.lineWidth = this.settings.VeinThickness;
       this.ctx.stroke();
+    } else if(this.settings.VeinRenderMode == 'Dots') {
+      this.ctx.beginPath();
+      this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);  // TODO: vary dot radius based on algorithm
+  
+      this.ctx.fillStyle = '#000';
+      this.ctx.fill();
     }
   }
 
