@@ -21,7 +21,7 @@ export default class Segment {
 
       // TODO: vary vein thickness based on algorithm
       this.ctx.strokeStyle = '#333';
-      this.ctx.lineWidth = this.settings.VeinThickness;
+      this.ctx.lineWidth = this.settings.MinimumVeinThickness;
       this.ctx.stroke();
     } else if(this.settings.VeinRenderMode == 'Dots') {
       this.ctx.beginPath();
