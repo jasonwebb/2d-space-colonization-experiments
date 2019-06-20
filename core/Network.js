@@ -11,47 +11,49 @@ export default class Network {
   }
 
   update() {
-    // For each auxin source ...
-    for(let source of this.sources) {
-      let closestSegment = null,
-        record = this.settings.AttractionDistance;
+    if(!this.settings.IsPaused) {
+      // For each auxin source ...
+      for(let source of this.sources) {
+        let closestSegment = null,
+          record = this.settings.AttractionDistance;
 
-      // Check if any vein segment is near enough to trigger removal of auxin source
-      // TODO: implement knn searching by putting segments into spatial index
-      for(let segment of this.segments) {
-        let distance = source.position.distance(segment.position);
+        // Check if any vein segment is near enough to trigger removal of auxin source
+        // TODO: implement knn searching by putting segments into spatial index
+        for(let segment of this.segments) {
+          let distance = source.position.distance(segment.position);
 
-        if(distance < this.settings.KillDistance) {
-          source.reached = true;
-          closestSegment = null;
-          break;
-        } else if(distance < record) {
-          closestSegment = segment;
-          record = distance;
+          if(distance < this.settings.KillDistance) {
+            source.reached = true;
+            closestSegment = null;
+            break;
+          } else if(distance < record) {
+            closestSegment = segment;
+            record = distance;
+          }
+        }
+
+        // "Bend" the vein growth towards the nearest branch
+        if(closestSegment != null) {
+          let nextDirection = source.position.subtract(closestSegment.position, true);
+          nextDirection.normalize();
+          closestSegment.direction.add(nextDirection);
+          closestSegment.count++;
         }
       }
 
-      // "Bend" the vein growth towards the nearest branch
-      if(closestSegment != null) {
-        let nextDirection = source.position.subtract(closestSegment.position, true);
-        nextDirection.normalize();
-        closestSegment.direction.add(nextDirection);
-        closestSegment.count++;
+      // Remove auxin sources as soon as a vein reaches them
+      for(let [index, source] of this.sources.entries()) {
+        if(source.reached) {
+          this.sources.splice(index, 1);
+        }
       }
-    }
 
-    // Remove auxin sources as soon as a vein reaches them
-    for(let [index, source] of this.sources.entries()) {
-      if(source.reached) {
-        this.sources.splice(index, 1);
-      }
-    }
-
-    for(let segment of this.segments) {
-      if(segment.count > 0) {
-        segment.direction.divide(segment.count + 1);
-        this.segments.push(segment.nextSegment());
-        segment.reset();
+      for(let segment of this.segments) {
+        if(segment.count > 0) {
+          segment.direction.divide(segment.count + 1);
+          this.segments.push(segment.nextSegment());
+          segment.reset();
+        }
       }
     }
   }
@@ -103,5 +105,17 @@ export default class Network {
         }
       }
     }
+  }
+
+  toggleVeins() {
+    this.settings.ShowVeins = !this.settings.ShowVeins;
+  }
+
+  toggleSources() {
+    this.settings.ShowSources = !this.settings.ShowSources;
+  }
+
+  togglePause() {
+    this.settings.IsPaused = !this.settings.IsPaused;
   }
 }
