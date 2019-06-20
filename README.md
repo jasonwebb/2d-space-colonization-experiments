@@ -17,6 +17,19 @@ A couple additional helper modules are also included there:
 * KeyboardInteractions - a structure for handling common keyboard commands that every sketch should have
 * Utilities - small helper functions like `random` and `lerp`
 
+## Features
+* Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
+* Vanilla ES6 JavaScript
+* Webpack build system with live-reloading dev server
+
+## Packages used
+* [vec2](https://www.npmjs.com/package/vec2) for simple, fast 2D vector math
+* [Webpack](https://webpack.js.org/) for modern JS (ES6) syntax, code modularization, bundling, and serving locally.
+
+## Install and run notes
+1. Run `npm install` to get all packages
+2. Run `npm run serve` to start up Webpack and launch the application in a browser window
+
 ## TODO
 - [X] Create most basic implementation
 - [ ] Add configurable support for open vs. closed venation patterns
@@ -41,19 +54,6 @@ A couple additional helper modules are also included there:
 - [ ] Implement varying vein widths
   * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
   * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
-                                                                                                                                       
-## Features
-* Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
-* Vanilla ES6 JavaScript
-* Webpack build system with live-reloading dev server
-
-## Packages used
-* [vec2](https://www.npmjs.com/package/vec2) for simple, fast 2D vector math
-* [Webpack](https://webpack.js.org/) for modern JS (ES6) syntax, code modularization, bundling, and serving locally.
-
-## Install and run notes
-1. Run `npm install` to get all packages
-2. Run `npm run serve` to start up Webpack and launch the application in a browser window
 
 ## References
 _Articles and papers:_
