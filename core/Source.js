@@ -1,6 +1,3 @@
-/**
- * Auxin source
- */
 import Defaults from './Defaults';
 
 export default class Source {
@@ -14,8 +11,11 @@ export default class Source {
 
   draw() {
     this.ctx.beginPath();
-    this.ctx.ellipse(this.position.x, this.position.y, 5, 5, 0, 0, Math.PI * 2);
-    this.ctx.fillStyle = '#ffa';
+    this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);
+
+    this.ctx.globalAlpha = .2;
+    this.ctx.fillStyle = '#000';
     this.ctx.fill();
+    this.ctx.globalAlpha = 1;
   }
 }
