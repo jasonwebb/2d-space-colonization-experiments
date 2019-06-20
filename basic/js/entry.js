@@ -3,6 +3,7 @@ import Network from '../../core/Network';
 import Segment from '../../core/Segment';
 import Source from '../../core/Source';
 import { random } from '../../core/Utilities';
+import { setupKeyListeners } from '../../core/KeyboardInteractions'
 
 let canvas, ctx;
 let network;
@@ -42,6 +43,9 @@ let setup = () => {
   network.roots.push(rootSegment);
 
   network.initializeTrunks();
+
+  // Set up common keyboard interaction listeners
+  setupKeyListeners([network]);
 
   // Begin animation loop
   requestAnimationFrame(update);
