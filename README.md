@@ -13,11 +13,15 @@ See `./core` for common modules:
 * Source - source of auxin growth hormone
 * Network - manages the growth of vein segments based on auxin sources
 
+A couple additional helper modules are also included there:
+* KeyboardInteractions - a structure for handling common keyboard commands that every sketch should have
+* Utilities - small helper functions like `random` and `lerp`
+
 ## TODO
 - [X] Create most basic implementation
 - [ ] Add configurable support for open vs. closed venation patterns
   * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
-  * Must also modify the criteria for auxin removal
+  * Must also modify the criteria for auxin source removal to wait for all veins to reach, or exit the proximity threshold.
 - [ ] Implement configurable birth rates and kill rates
 - [ ] Implement static boundary shape (leaf shape) from SVG design
 - [ ] Implement dynamic boundary shape to simulate leaf growth
@@ -61,7 +65,8 @@ _Articles and papers:_
 
 _Creative projects:_
 * [Hyphae](https://n-e-r-v-o-u-s.com/shop/line.php?code=8) and [Xylem](https://n-e-r-v-o-u-s.com/shop/line.php?code=6) series by Nervous System
-  * Also see their [Xylem Experiments and Improvements](https://n-e-r-v-o-u-s.com/blog/?p=1218) write-up 
+  * Also see their [Xylem Experiments and Improvements](https://n-e-r-v-o-u-s.com/blog/?p=1218) write-up
+* [Bromeliad](https://n-e-r-v-o-u-s.com/shop/product.php?code=286) and [Calyx](https://n-e-r-v-o-u-s.com/shop/product.php?code=285&search=download) lamps by Nervous System
 
 _Code projects:_
 * [ofxSpaceColoinzation](https://github.com/edap/ofxSpaceColonization) add-on for openFrameworks
