@@ -16,6 +16,8 @@ See `./core` for common modules:
 ## TODO
 - [X] Create most basic implementation
 - [ ] Add configurable support for open vs. closed venation patterns
+  * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
+  * Must also modify the criteria for auxin removal
 - [ ] Implement configurable birth rates and kill rates
 - [ ] Implement static boundary shape (leaf shape) from SVG design
 - [ ] Implement dynamic boundary shape to simulate leaf growth
@@ -25,11 +27,21 @@ See `./core` for common modules:
 - [ ] Ensure that multiple vein networks can grow independently
 - [ ] Document all modules with JSDoc
 - [ ] Add support for obstacles that growth must avoid
+- [ ] Implement different auxin placement schemes
+  - [ ] Random at start of simulation
+  - [ ] Place using patterned noise, like Perlin
+  - [ ] Place using perfect grid pattern
+  - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
+  - [ ] Added along margin of shape only
+- [ ] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
+- [ ] Implement varying vein widths
+  * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
+  * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
                                                                                                                                        
 ## Features
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
 * Vanilla ES6 JavaScript
-* Webpack build system
+* Webpack build system with live-reloading dev server
 
 ## Packages used
 * [vec2](https://www.npmjs.com/package/vec2) for simple, fast 2D vector math
