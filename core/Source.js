@@ -5,14 +5,11 @@ export default class Source {
     this.position = position;
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
-
-    this.reached = false;
   }
 
   draw() {
     this.ctx.beginPath();
     this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);
-
     this.ctx.globalAlpha = .2;
     this.ctx.fillStyle = '#000';
     this.ctx.fill();

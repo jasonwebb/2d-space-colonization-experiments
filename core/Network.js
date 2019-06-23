@@ -1,5 +1,7 @@
 import Defaults from './Defaults';
 import KDBush from 'kdbush';
+import * as Vec2 from 'vec2';
+import { random } from './Utilities';
 
 export default class Network {
   constructor(ctx, settings) {
@@ -18,73 +20,58 @@ export default class Network {
       return;
     }
 
-    // For each auxin source ...
+    // 1. Associate auxin source only with closest vein segment
     for(let [sourceID, source] of this.sources.entries()) {
-      let closestSegment = null,
+      let nearbySegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]),
+        closestSegment = null,
         record = this.settings.AttractionDistance;
 
-      // Do knn search to find all segments within AttractionDistance of this auxin source
-      let closestSegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]);
+      // a. Find the closest vein segment
+      for(let segment of nearbySegments) {
+        let distance = segment.position.distance(source.position);
 
-      // Use slightly different algorithms depending on whether we want to make open or closed venation networks
-      switch(this.settings.VenationPattern) {
-        case "Open":
-          // Find the closest vein segment, and also check if any segment has reached its auxin source
-          for(let segment of closestSegments) {
-            let distance = source.position.distance(segment.position);
+        if(distance < this.settings.KillDistance) {
+          source.reached = true;
+          closestSegment = null;
+        } else if(distance < record) {
+          closestSegment = segment;
+          record = distance;
+        }
+      }
 
-            if(distance < this.settings.KillDistance) {
-              source.reached = true;
-              closestSegment = null;
-              break;
-            } else if(distance < record) {
-              closestSegment = segment;
-              record = distance;
-            }
-          }
-
-          // "Bend" the nearest vein segment towards this auxin source
-          if(closestSegment != null) {
-            let nextDirection = source.position.subtract(closestSegment.position, true);
-            nextDirection.normalize();
-            closestSegment.direction.add(nextDirection);
-            closestSegment.count++;
-          }
-
-          break;
-
-        case "Closed": 
-          // TODO: extend for "closed" venation by allowing this source to influence direction of ALL nearby segments, not just the closest one
-
-          for(let segment of closestSegments) {
-            let distance = source.position.distance(segment.position);
-
-            if(distance < this.settings.KillDistance) {
-              // TODO: associate this segment (and all its descendent segments) with this auxin source for tracking later
-            }
-
-            // TODO: find the "tips" of each vein segment moving towards this auxin source and "bend" them each towards it
-          }
-
-          break;
+      // b. Associate it with this auxin source
+      if(closestSegment != null) {
+        closestSegment.influencedBy.push(sourceID);
       }
     }
 
-    // Remove auxin sources as soon as a vein reaches them
-    // TODO: extend this logic for "closed" venation type by waiting until all veins influenced by this source reach the source
+
+    for(let segment of this.segments) {
+      if(segment.influencedBy.length > 0) {
+        // 2. Add up normalized vectors pointing to each auxin source
+        let averageDirection = new Vec2(0,0);
+
+        for(let source of segment.influencedBy.map(id => this.sources[id])) {
+          averageDirection.add(source.position.subtract(segment.position, true).normalize());
+        }
+
+        // Add small amount of random "jitter" to avoid getting stuck between two auxin sources and endlessly generating segments in the same place
+        // (Credit to Davide Prati (edap) for the idea, seen in ofxSpaceColonization)
+        averageDirection.add(new Vec2(random(-.1, .1), random(-.1, .1))).normalize();
+
+        averageDirection.normalize().divide(segment.influencedBy.length).normalize();
+
+        // 3. Generate a new vein segment using this direction
+        let nextSegment = segment.getNextSegment(averageDirection);
+
+        this.segments.push(nextSegment);
+      }
+    }
+
+    // 4. Remove any auxin sources that have been reached by a vein segment
     for(let [index, source] of this.sources.entries()) {
       if(source.reached) {
         this.sources.splice(index, 1);
-      }
-    }
-
-    // Add new vein segments to any segments that were influenced by an auxin source this 
-    // iteration, pointed towards the average location of all the auxin sources influencing it
-    for(let segment of this.segments) {
-      if(segment.count > 0) {
-        segment.direction.divide(segment.count + 1);
-        this.segments.push(segment.nextSegment());
-        segment.reset();
       }
     }
 
