@@ -3,7 +3,7 @@ export default {
    * Simulation configurations
    */
 
-  VenationPattern: "Open",  // venation can be "Open" or "Closed"
+  VenationType: "Open",  // venation can be "Open" or "Closed"
   SegmentLength: 5,        // length of each vein segment. Smaller numbers mean smoother lines, but more computation cost
   AttractionDistance: 100,  // radius of influence (d_i) around each auxin source that attracts vein segments
   KillDistance: 10,         // distance (d_k) between auxin sources and segments when segments are ended
