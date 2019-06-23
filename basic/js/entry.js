@@ -30,7 +30,7 @@ let setupNetwork = () => {
   // Initialize simulation object
   network = new Network(ctx);
 
-  // Initialize auxin sources
+  // Generate randomly-placed auxin sources
   for(let i=0; i<2000; i++) {
     network.sources.push(
       new Source(
@@ -43,15 +43,34 @@ let setupNetwork = () => {
     );
   }
 
+  // Generate grid of auxin sources
+  // const xResolution = 100,
+  //   yResolution = 20;
+
+  // for(let i=0; i<window.innerWidth / xResolution; i++) {
+  //   for(let j=0; j<window.innerHeight / yResolution; j++) {
+  //     network.sources.push(
+  //       new Source(
+  //         new Vec2(
+  //           i * xResolution,
+  //           j * yResolution
+  //         ),
+  //         ctx
+  //       )
+  //     );
+  //   }
+  // }
+
   // Add an initial root vein at the bottom center of the screen
-  network.segments.push(
-    new Segment(
-      null,
-      new Vec2(window.innerWidth / 2, window.innerHeight),
-      new Vec2(0, -1),
-      ctx
-    )
-  )
+  let segment = new Segment(
+    null,
+    new Vec2(window.innerWidth / 2, window.innerHeight / 2),
+    new Vec2(0, -1),
+    true,
+    ctx
+  );
+
+  network.segments.push(segment);
 
   // Set up common keyboard interaction listeners
   setupKeyListeners(network);
@@ -60,9 +79,8 @@ let setupNetwork = () => {
 
 // Main program loop
 let update = (timestamp) => {
-  network.update();
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  network.update();
   network.draw();
 
   requestAnimationFrame(update);
