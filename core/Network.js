@@ -2,6 +2,7 @@ import Defaults from './Defaults';
 import KDBush from 'kdbush';
 import * as Vec2 from 'vec2';
 import { random } from './Utilities';
+import { Delaunay } from 'd3-delaunay';
 
 export default class Network {
   constructor(ctx, settings) {
@@ -10,6 +11,9 @@ export default class Network {
 
     this.sources = [];   // sources are locations of auxin, the growth hormone
     this.segments = [];  // segments are discrete line segments that form veins
+
+    this.delaunay;
+    this.voronoi;
 
     this.buildSpatialIndices();
   }
@@ -20,14 +24,13 @@ export default class Network {
       return;
     }
 
-    // Associate auxin sources nearby vein segments
+    // Associate auxin sources with nearby vein segments
     for(let [sourceID, source] of this.sources.entries()) {
-      let nearbySegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]);
-
       switch(this.settings.VenationType) {
         // For open venation, only associate the closest vein segment
         case "Open":
-          let closestSegment = null,
+          let nearbySegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]),
+            closestSegment = null,
             record = this.settings.AttractionDistance;
 
           // Find the closest vein segment
@@ -52,15 +55,16 @@ export default class Network {
 
         // For closed venation, associate with all nearby vein segments
         case "Closed":
-          for(let [segmentID, segment] of nearbySegments.entries()) {
-            let distance = segment.position.distance(source.position);
+          for(let segment of this.segments) {
+            if(this.voronoi.contains(sourceID, segment.x, segment.y)) {
+              let distance = source.position.distance(segment.position);
 
-            if(distance < this.settings.KillDistance) {
-              segment.hasReached.push(sourceID);
+              if(distance < this.settings.KillDistance) {
+                segment.hasReached.push(sourceID);
+              } else {
+                segment.influencedBy.push(sourceID);
+              }
             }
-
-            source.isInfluencing.push(segmentID);
-            segment.influencedBy.push(sourceID);
           }
 
           break;
@@ -139,9 +143,19 @@ export default class Network {
     }
   }
 
+  setAuxinSources(sources) {
+    this.sources = sources;
+    this.buildDelaunay();
+  }
+
   buildSpatialIndices() {
     this.sourcesIndex = new KDBush(this.sources, p => p.position.x, p => p.position.y);
     this.segmentsIndex = new KDBush(this.segments, p => p.position.x, p => p.position.y);
+  }
+
+  buildDelaunay() {
+    this.delaunay = Delaunay.from(this.sources, p => p.position.x, p => p.position.y);
+    this.voronoi = this.delaunay.voronoi();
   }
 
   toggleVeins() {

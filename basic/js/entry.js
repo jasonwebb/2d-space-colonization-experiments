@@ -13,7 +13,7 @@ let setup = () => {
   // Initialize canvas and context
   canvas = document.getElementById('sketch');
   ctx = canvas.getContext('2d');
-  
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -31,17 +31,20 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Generate randomly-placed auxin sources
+  let sources = [];
   for(let i=0; i<2000; i++) {
-    network.sources.push(
+    sources.push(
       new Source(
         new Vec2(
-          random(window.innerWidth), 
+          random(window.innerWidth),
           random(window.innerHeight)
         ),
         ctx
       )
     );
   }
+
+  network.setAuxinSources(sources);
 
   // Generate grid of auxin sources
   // const xResolution = 100,
