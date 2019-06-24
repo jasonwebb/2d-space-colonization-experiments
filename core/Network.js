@@ -20,35 +20,57 @@ export default class Network {
       return;
     }
 
-    // 1. Associate auxin source only with closest vein segment
+    // Associate auxin sources nearby vein segments
     for(let [sourceID, source] of this.sources.entries()) {
-      let nearbySegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]),
-        closestSegment = null,
-        record = this.settings.AttractionDistance;
+      let nearbySegments = this.segmentsIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.segments[id]);
 
-      // a. Find the closest vein segment
-      for(let segment of nearbySegments) {
-        let distance = segment.position.distance(source.position);
+      switch(this.settings.VenationType) {
+        // For open venation, only associate the closest vein segment
+        case "Open":
+          let closestSegment = null,
+            record = this.settings.AttractionDistance;
 
-        if(distance < this.settings.KillDistance) {
-          source.reached = true;
-          closestSegment = null;
-        } else if(distance < record) {
-          closestSegment = segment;
-          record = distance;
-        }
-      }
+          // Find the closest vein segment
+          for(let segment of nearbySegments) {
+            let distance = segment.position.distance(source.position);
 
-      // b. Associate it with this auxin source
-      if(closestSegment != null) {
-        closestSegment.influencedBy.push(sourceID);
+            if(distance < this.settings.KillDistance) {
+              source.reached = true;
+              closestSegment = null;
+            } else if(distance < record) {
+              closestSegment = segment;
+              record = distance;
+            }
+          }
+
+          // Associate it with this auxin source
+          if(closestSegment != null) {
+            closestSegment.influencedBy.push(sourceID);
+          }
+
+          break;
+
+        // For closed venation, associate with all nearby vein segments
+        case "Closed":
+          for(let [segmentID, segment] of nearbySegments.entries()) {
+            let distance = segment.position.distance(source.position);
+
+            if(distance < this.settings.KillDistance) {
+              segment.hasReached.push(sourceID);
+            }
+
+            source.isInfluencing.push(segmentID);
+            segment.influencedBy.push(sourceID);
+          }
+
+          break;
       }
     }
 
-
+    // Grow the network by adding new vein segments onto any segments that are being influenced by auxin sources
     for(let segment of this.segments) {
       if(segment.influencedBy.length > 0) {
-        // 2. Add up normalized vectors pointing to each auxin source
+        // Add up normalized vectors pointing to each auxin source
         let averageDirection = new Vec2(0,0);
 
         for(let source of segment.influencedBy.map(id => this.sources[id])) {
@@ -59,19 +81,41 @@ export default class Network {
         // (Credit to Davide Prati (edap) for the idea, seen in ofxSpaceColonization)
         averageDirection.add(new Vec2(random(-.1, .1), random(-.1, .1))).normalize();
 
-        averageDirection.normalize().divide(segment.influencedBy.length).normalize();
+        averageDirection.divide(segment.influencedBy.length).normalize();
 
-        // 3. Generate a new vein segment using this direction
+        // Generate a new vein segment using this direction
         let nextSegment = segment.getNextSegment(averageDirection);
 
         this.segments.push(nextSegment);
       }
     }
 
-    // 4. Remove any auxin sources that have been reached by a vein segment
-    for(let [index, source] of this.sources.entries()) {
-      if(source.reached) {
-        this.sources.splice(index, 1);
+    // Remove any auxin sources that have been reached by their associated vein segments
+    for(let [sourceID, source] of this.sources.entries()) {
+      switch(this.settings.VenationType) {
+        // For open venation, remove the source as soon as any vein segment reaches it
+        case "Open":
+          if(source.reached) {
+            this.sources.splice(sourceID, 1);
+          }
+
+          break;
+
+        // For closed venation, remove the source only after all associated vein segments have reached it
+        case "Closed":
+          let allSegmentsReached = true;
+
+          for(let segment of source.isInfluencing.map(id => this.segments[id])) {
+            if(!segment.hasReached.includes(sourceID)) {
+              allSegmentsReached = false;
+            }
+          }
+
+          if(allSegmentsReached) {
+            this.sources.splice(sourceID, 1);
+          }
+
+          break;
       }
     }
 

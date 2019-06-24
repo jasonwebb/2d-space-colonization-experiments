@@ -11,6 +11,7 @@ export default class Segment {
     this.settings = Object.assign({}, Defaults, settings);
 
     this.influencedBy = [];
+    this.hasReached = [];
     this.nextDirection = new Vec2(0,0);
     this.nextPosition;
   }
@@ -24,10 +25,11 @@ export default class Segment {
 
         this.ctx.strokeStyle = '#333';
         this.ctx.lineWidth = this.settings.MinimumVeinThickness;  // TODO: vary vein thickness based on algorithm
-        
+
+        // If showing tips, override with thicker red styles
         if(this.isTip && this.settings.ShowVeinTips) {
           this.ctx.strokeStyle = '#ff0000';
-          this.ctx.lineWidth = 3;
+          this.ctx.lineWidth = 2;
         }
 
         this.ctx.stroke();
@@ -35,11 +37,12 @@ export default class Segment {
       } else if(this.settings.VeinRenderMode == 'Dots') {
         this.ctx.beginPath();
         this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);  // TODO: vary dot radius based on algorithm
-    
-        if(this.isTip) {
+
+        this.ctx.fillStyle = '#000';
+
+        // If showing tips, override fill to be red
+        if(this.isTip && this.settings.ShowVeinTips) {
           this.ctx.fillStyle = '#ff0000';
-        } else {
-          this.ctx.fillStyle = '#000';
         }
 
         this.ctx.fill();
@@ -58,8 +61,8 @@ export default class Segment {
       this,
       this.nextPosition,
       this.nextDirection,
-      true, 
-      this.ctx, 
+      true,
+      this.ctx,
       this.settings
     );
   }

@@ -5,6 +5,8 @@ export default class Source {
     this.position = position;
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
+
+    this.isInfluencing = [];
   }
 
   draw() {
