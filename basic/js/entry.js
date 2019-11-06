@@ -31,9 +31,8 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Generate randomly-placed auxin sources
-  let sources = [];
   for(let i=0; i<2000; i++) {
-    sources.push(
+    network.sources.push(
       new Source(
         new Vec2(
           random(window.innerWidth),
@@ -43,8 +42,6 @@ let setupNetwork = () => {
       )
     );
   }
-
-  network.setAuxinSources(sources);
 
   // Generate grid of auxin sources
   // const xResolution = 100,
