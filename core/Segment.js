@@ -11,7 +11,7 @@ export default class Segment {
     this.settings = Object.assign({}, Defaults, settings);
 
     this.influencedBy = [];
-    this.hasReached = [];
+    this.hasReachedSource = false;
     this.nextDirection = new Vec2(0,0);
     this.nextPosition;
   }
@@ -52,8 +52,14 @@ export default class Segment {
 
   getNextSegment(averageSourceDirection) {
     this.isTip = false;
-    // this.nextDirection = this.direction.add(averageSourceDirection, true).normalize();
-    this.nextDirection = averageSourceDirection;
+
+    if(averageSourceDirection == undefined) {
+      this.nextDirection = this.direction.clone();
+    } else {
+      // this.nextDirection = this.direction.add(averageSourceDirection, true).normalize();  // curly variant
+      this.nextDirection = averageSourceDirection;
+    }
+
     this.nextPosition = this.position.add(this.nextDirection.multiply(this.settings.SegmentLength), true);
     this.influencedBy = [];
 

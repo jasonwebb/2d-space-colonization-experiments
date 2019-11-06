@@ -9,11 +9,8 @@ export default class Network {
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
 
-    this.sources = [];   // sources are locations of auxin, the growth hormone
+    this.sources = [];
     this.segments = [];  // segments are discrete line segments that form veins
-
-    this.delaunay;
-    this.voronoi;
 
     this.buildSpatialIndices();
   }
@@ -24,7 +21,7 @@ export default class Network {
       return;
     }
 
-    // Associate auxin sources with nearby vein segments
+    // Associate auxin sources with nearby vein segments to figure out where growth should occur
     for(let [sourceID, source] of this.sources.entries()) {
       switch(this.settings.VenationType) {
         // For open venation, only associate the closest vein segment
@@ -53,16 +50,41 @@ export default class Network {
 
           break;
 
-        // For closed venation, associate with all nearby vein segments
-        case "Closed":
-          for(let segment of this.segments) {
-            if(this.voronoi.contains(sourceID, segment.x, segment.y)) {
-              let distance = source.position.distance(segment.position);
 
-              if(distance < this.settings.KillDistance) {
-                segment.hasReached.push(sourceID);
-              } else {
-                segment.influencedBy.push(sourceID);
+        // For closed venation, associate with segments within relative neighborhood
+        case "Closed":
+          let segmentsWithSource = this.segments.concat(source);
+
+          // Only move forward if a Delaunay triangulation is possible
+          if(segmentsWithSource.length < 3) {
+            continue;
+          }
+
+          let delaunay = Delaunay.from(segmentsWithSource, p => p.position.x, p => p.position.y),
+            adjacentNeighbors = delaunay.neighbors(segmentsWithSource.length - 1),
+            adjacentNeighborIDs = [];  // get neighbors adjacent to source
+
+          for(let id of adjacentNeighbors) {
+            adjacentNeighborIDs.push(id);
+          }
+
+          for(let [segmentID, testSegment] of adjacentNeighborIDs.map(id => this.segments[id]).entries()) {  // testSegment = v
+            for(let secondSegment of adjacentNeighborIDs.map(id => this.segments[id])) {  // secondSegment = u
+              const vsDistance = testSegment.position.distance(source.position),     // ||v - s||
+                usDistance = secondSegment.position.distance(source.position),       // ||u - s||
+                vuDistance = testSegment.position.distance(secondSegment.position);  // ||v - u||
+
+              // testSegment is a relative neighbor of source if and only if
+              // ||v - s|| < max{||u - s||, ||v - u||}
+              if(vsDistance < Math.max(usDistance, vuDistance)) {
+                if(vsDistance < this.settings.AttractionDistance) {
+                  testSegment.influencedBy.push(source);  // influencedBy helps to point next vein segment in the right direction
+                  source.isInfluencing.push(segmentID);   // isInfluencing helps to track when segments have reached their sources
+
+                  if(vsDistance < this.settings.KillDistance) {
+                    testSegment.hasReachedSource = true;
+                  }
+                }
               }
             }
           }
@@ -71,13 +93,17 @@ export default class Network {
       }
     }
 
-    // Grow the network by adding new vein segments onto any segments that are being influenced by auxin sources
+    // Grow the network by adding new vein segments onto any segments
     for(let segment of this.segments) {
-      if(segment.influencedBy.length > 0) {
+      if(this.segments.length < 2) {
+        this.segments.push(segment.getNextSegment());
+
+      } else if(segment.influencedBy.length > 0) {
         // Add up normalized vectors pointing to each auxin source
         let averageDirection = new Vec2(0,0);
 
         for(let source of segment.influencedBy.map(id => this.sources[id])) {
+        // for(let source of segment.influencedBy) {
           averageDirection.add(source.position.subtract(segment.position, true).normalize());
         }
 
@@ -105,18 +131,22 @@ export default class Network {
 
           break;
 
-        // For closed venation, remove the source only after all associated vein segments have reached it
+        // For closed venation, remove the source only when all associated vein segments have reached it
         case "Closed":
-          let allSegmentsReached = true;
+          if(source.isInfluencing.length > 0) {
+            let allSegmentsReached = true;
 
-          for(let segment of source.isInfluencing.map(id => this.segments[id])) {
-            if(!segment.hasReached.includes(sourceID)) {
-              allSegmentsReached = false;
+            for(let segment of source.isInfluencing.map(id => this.segments[id])) {
+              if(!segment.hasReachedSource) {
+                allSegmentsReached = false;
+              }
             }
-          }
 
-          if(allSegmentsReached) {
-            this.sources.splice(sourceID, 1);
+            if(allSegmentsReached) {
+              this.sources.splice(sourceID, 1);
+            }
+
+            source.isInfluencing = [];
           }
 
           break;
@@ -143,19 +173,8 @@ export default class Network {
     }
   }
 
-  setAuxinSources(sources) {
-    this.sources = sources;
-    this.buildDelaunay();
-  }
-
   buildSpatialIndices() {
-    this.sourcesIndex = new KDBush(this.sources, p => p.position.x, p => p.position.y);
     this.segmentsIndex = new KDBush(this.segments, p => p.position.x, p => p.position.y);
-  }
-
-  buildDelaunay() {
-    this.delaunay = Delaunay.from(this.sources, p => p.position.x, p => p.position.y);
-    this.voronoi = this.delaunay.voronoi();
   }
 
   toggleVeins() {
