@@ -1,7 +1,7 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import Segment from '../../core/Segment';
-import Source from '../../core/Source';
+import VeinNode from '../../core/VeinNode';
+import AuxinSource from '../../core/AuxinSource';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions'
 
@@ -33,7 +33,7 @@ let setupNetwork = () => {
   // Generate randomly-placed auxin sources
   for(let i=0; i<2000; i++) {
     network.sources.push(
-      new Source(
+      new AuxinSource(
         new Vec2(
           random(window.innerWidth),
           random(window.innerHeight)
@@ -50,7 +50,7 @@ let setupNetwork = () => {
   // for(let i=0; i<window.innerWidth / xResolution; i++) {
   //   for(let j=0; j<window.innerHeight / yResolution; j++) {
   //     network.sources.push(
-  //       new Source(
+  //       new AuxinSource(
   //         new Vec2(
   //           i * xResolution,
   //           j * yResolution
@@ -62,7 +62,7 @@ let setupNetwork = () => {
   // }
 
   // Add an initial root vein at the bottom center of the screen
-  let segment = new Segment(
+  let node = new VeinNode(
     null,
     new Vec2(window.innerWidth / 2, window.innerHeight / 2),
     new Vec2(0, -1),
@@ -70,7 +70,7 @@ let setupNetwork = () => {
     ctx
   );
 
-  network.segments.push(segment);
+  network.nodes.push(node);
 
   // Set up common keyboard interaction listeners
   setupKeyListeners(network);

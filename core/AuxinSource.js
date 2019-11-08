@@ -1,6 +1,6 @@
 import Defaults from './Defaults';
 
-export default class Source {
+export default class AuxinSource {
   constructor(position, ctx, settings = {}) {
     this.position = position;
     this.ctx = ctx;

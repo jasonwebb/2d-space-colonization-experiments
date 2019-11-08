@@ -1,7 +1,7 @@
 import Defaults from './Defaults';
 import * as Vec2 from 'vec2';
 
-export default class Segment {
+export default class VeinNode {
   constructor(parent, position, direction, isTip, ctx, settings) {
     this.parent = parent;
     this.position = position;
@@ -50,7 +50,7 @@ export default class Segment {
     }
   }
 
-  getNextSegment(averageSourceDirection) {
+  getNextNode(averageSourceDirection) {
     this.isTip = false;
 
     if(averageSourceDirection == undefined) {
@@ -63,7 +63,7 @@ export default class Segment {
     this.nextPosition = this.position.add(this.nextDirection.multiply(this.settings.SegmentLength), true);
     this.influencedBy = [];
 
-    return new Segment(
+    return new VeinNode(
       this,
       this.nextPosition,
       this.nextDirection,
