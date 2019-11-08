@@ -28,6 +28,14 @@ export function setupKeyListeners(networks) {
         }
 
         break;
+
+      // a = toggle attraction zone visibility
+      case "a":
+        for(let network of networks) {
+          network.toggleAttractionZones();
+        }
+
+        break;
     }
   });
 }

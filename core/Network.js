@@ -185,6 +185,14 @@ export default class Network {
     this.settings.ShowSources = !this.settings.ShowSources;
   }
 
+  toggleAttractionZones() {
+    this.settings.ShowAttractionZones = !this.settings.ShowAttractionZones;
+
+    for(let source of this.sources) {
+      source.settings.ShowAttractionZones = !source.settings.ShowAttractionZones;
+    }
+  }
+
   togglePause() {
     this.settings.IsPaused = !this.settings.IsPaused;
   }

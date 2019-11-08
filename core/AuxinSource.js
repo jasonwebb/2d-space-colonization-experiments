@@ -14,7 +14,7 @@ export default class AuxinSource {
     if(this.settings.ShowAttractionZones) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, this.settings.AttractionDistance, this.settings.AttractionDistance, 0, 0, Math.PI * 2);
-      this.ctx.globalAlpha = .01;
+      this.ctx.globalAlpha = .02;
       this.ctx.fillStyle = '#f00';
       this.ctx.fill();
     }
