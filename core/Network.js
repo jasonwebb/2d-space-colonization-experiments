@@ -26,22 +26,8 @@ export default class Network {
       switch(this.settings.VenationType) {
         // For open venation, only associate the closest vein node
         case "Open":
-          let nearbyNodes = this.nodesIndex.within(source.position.x, source.position.y, this.settings.AttractionDistance).map(id => this.nodes[id]),
-            closestNode = null,
-            record = this.settings.AttractionDistance;
-
-          // Find the closest vein node
-          for(let node of nearbyNodes) {
-            let distance = node.position.distance(source.position);
-
-            if(distance < this.settings.KillDistance) {
-              source.reached = true;
-              closestNode = null;
-            } else if(distance < record) {
-              closestNode = node;
-              record = distance;
-            }
-          }
+          let nearbyNodes = this.getNearbyNodes(source),
+            closestNode = this.getClosestNode(source, nearbyNodes);
 
           // Associate it with this auxin source
           if(closestNode != null) {
@@ -93,29 +79,14 @@ export default class Network {
       }
     }
 
-    // Grow the network by adding new vein nodes onto any nodes
+    // Grow the network by adding new vein nodes onto any nodes being influenced by sources
     for(let node of this.nodes) {
       if(this.nodes.length < 2) {
         this.nodes.push(node.getNextNode());
 
       } else if(node.influencedBy.length > 0) {
-        // Add up normalized vectors pointing to each auxin source
-        let averageDirection = new Vec2(0,0);
-
-        for(let source of node.influencedBy.map(id => this.sources[id])) {
-        // for(let source of node.influencedBy) {
-          averageDirection.add(source.position.subtract(node.position, true).normalize());
-        }
-
-        // Add small amount of random "jitter" to avoid getting stuck between two auxin sources and endlessly generating nodes in the same place
-        // (Credit to Davide Prati (edap) for the idea, seen in ofxSpaceColonization)
-        averageDirection.add(new Vec2(random(-.1, .1), random(-.1, .1))).normalize();
-
-        averageDirection.divide(node.influencedBy.length).normalize();
-
-        // Generate a new vein node using this direction
+        let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
-
         this.nodes.push(nextNode);
       }
     }
@@ -171,6 +142,54 @@ export default class Network {
         source.draw();
       }
     }
+  }
+
+  getNearbyNodes(source) {
+    return this.nodesIndex.within(
+      source.position.x,
+      source.position.y,
+      this.settings.AttractionDistance
+    ).map(
+      id => this.nodes[id]
+    );
+  }
+
+  getClosestNode(source, nearbyNodes) {
+    let closestNode = null,
+      record = this.settings.AttractionDistance;
+
+    for(let node of nearbyNodes) {
+      let distance = node.position.distance(source.position);
+
+      if(distance < this.settings.KillDistance) {
+        source.reached = true;
+        closestNode = null;
+      } else if(distance < record) {
+        closestNode = node;
+        record = distance;
+      }
+    }
+
+    return closestNode;
+  }
+
+  getAverageDirection(node, nearbySources) {
+    // Add up normalized vectors pointing to each auxin source
+    let averageDirection = new Vec2(0,0);
+
+    // for(let source of node.influencedBy.map(id => this.sources[id])) {
+    // for(let source of node.influencedBy) {
+    for(let source of nearbySources) {
+      averageDirection.add(source.position.subtract(node.position, true).normalize());
+    }
+
+    // Add small amount of random "jitter" to avoid getting stuck between two auxin sources and endlessly generating nodes in the same place
+    // (Credit to Davide Prati (edap) for the idea, seen in ofxSpaceColonization)
+    averageDirection.add(new Vec2(random(-.1, .1), random(-.1, .1))).normalize();
+
+    averageDirection.divide(node.influencedBy.length).normalize();
+
+    return averageDirection;
   }
 
   buildSpatialIndices() {
