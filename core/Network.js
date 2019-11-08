@@ -81,10 +81,7 @@ export default class Network {
 
     // Grow the network by adding new vein nodes onto any nodes being influenced by sources
     for(let node of this.nodes) {
-      if(this.nodes.length < 2) {
-        this.nodes.push(node.getNextNode());
-
-      } else if(node.influencedBy.length > 0) {
+      if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
         this.nodes.push(nextNode);
@@ -142,6 +139,8 @@ export default class Network {
         source.draw();
       }
     }
+
+    // TODO: draw lines between vein nodes and inluencing sources
   }
 
   getNearbyNodes(source) {

@@ -2,18 +2,15 @@ import Defaults from './Defaults';
 import * as Vec2 from 'vec2';
 
 export default class VeinNode {
-  constructor(parent, position, direction, isTip, ctx, settings) {
+  constructor(parent, position, isTip, ctx, settings) {
     this.parent = parent;
     this.position = position;
-    this.direction = direction;
     this.isTip = isTip;
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
 
     this.influencedBy = [];
     this.hasReachedSource = false;
-    this.nextDirection = new Vec2(0,0);
-    this.nextPosition;
   }
 
   draw() {
@@ -53,20 +50,12 @@ export default class VeinNode {
   getNextNode(averageSourceDirection) {
     this.isTip = false;
 
-    if(averageSourceDirection == undefined) {
-      this.nextDirection = this.direction.clone();
-    } else {
-      // this.nextDirection = this.direction.add(averageSourceDirection, true).normalize();  // curly variant
-      this.nextDirection = averageSourceDirection;
-    }
-
-    this.nextPosition = this.position.add(this.nextDirection.multiply(this.settings.SegmentLength), true);
+    this.nextPosition = this.position.add(averageSourceDirection.multiply(this.settings.SegmentLength), true);
     this.influencedBy = [];
 
     return new VeinNode(
       this,
       this.nextPosition,
-      this.nextDirection,
       true,
       this.ctx,
       this.settings
