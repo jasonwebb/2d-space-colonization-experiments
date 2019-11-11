@@ -10,7 +10,6 @@ export default class VeinNode {
     this.settings = Object.assign({}, Defaults, settings);
 
     this.influencedBy = [];
-    this.hasReachedSource = false;
   }
 
   draw() {

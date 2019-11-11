@@ -6,7 +6,7 @@ export function setupKeyListeners(networks) {
   document.addEventListener('keypress', (e) => {
     switch(e.key) {
       // Space = pause/unpause
-      case " ":
+      case ' ':
         for(let network of networks) {
           network.togglePause();
         }
@@ -14,7 +14,7 @@ export function setupKeyListeners(networks) {
         break;
 
       // v = toggle vein visibility
-      case "v":
+      case 'v':
         for(let network of networks) {
           network.toggleVeins();
         }
@@ -22,7 +22,7 @@ export function setupKeyListeners(networks) {
         break;
 
       // s = toggle auxin source visibility
-      case "s":
+      case 's':
         for(let network of networks) {
           network.toggleSources();
         }
@@ -30,9 +30,25 @@ export function setupKeyListeners(networks) {
         break;
 
       // a = toggle attraction zone visibility
-      case "a":
+      case 'a':
         for(let network of networks) {
           network.toggleAttractionZones();
+        }
+
+        break;
+
+      // t = toggle vein tip visibility
+      case 't':
+        for(let network of networks) {
+          network.toggleVeinTips();
+        }
+
+        break;
+
+      // k = toggle kill zone visibility
+      case 'k':
+        for(let network of networks) {
+          network.toggleKillZones();
         }
 
         break;

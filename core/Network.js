@@ -23,56 +23,25 @@ export default class Network {
 
     // Associate auxin sources with nearby vein nodes to figure out where growth should occur
     for(let [sourceID, source] of this.sources.entries()) {
-      switch(this.settings.VenationType) {
-        // For open venation, only associate the closest vein node
-        case "Open":
-          let nearbyNodes = this.getNearbyNodes(source),
-            closestNode = this.getClosestNode(source, nearbyNodes);
+      let nearbyNodes = this.getNodesInAttractionZone(source);
 
-          // Associate it with this auxin source
+      switch(this.settings.VenationType) {
+        // For open venation, only associate this source with its closest vein node
+        case 'Open':
+          let closestNode = this.getClosestNode(source, nearbyNodes);
+
           if(closestNode != null) {
             closestNode.influencedBy.push(sourceID);
           }
 
           break;
 
+        // For closed venation, associate this source with all nodes in its relative neighborhood
+        case 'Closed':
+          let neighborhoodNodes = this.getRelativeNeighborNodes(source);
 
-        // For closed venation, associate with nodes within relative neighborhood
-        case "Closed":
-          let nodesWithSource = this.nodes.concat(source);
-
-          // Only move forward if a Delaunay triangulation is possible
-          if(nodesWithSource.length < 3) {
-            continue;
-          }
-
-          let delaunay = Delaunay.from(nodesWithSource, p => p.position.x, p => p.position.y),
-            adjacentNeighbors = delaunay.neighbors(nodesWithSource.length - 1),
-            adjacentNeighborIDs = [];  // get neighbors adjacent to source
-
-          for(let id of adjacentNeighbors) {
-            adjacentNeighborIDs.push(id);
-          }
-
-          for(let [nodeID, testNode] of adjacentNeighborIDs.map(id => this.nodes[id]).entries()) {  // testNode = v
-            for(let secondNode of adjacentNeighborIDs.map(id => this.nodes[id])) {  // secondNode = u
-              const vsDistance = testNode.position.distance(source.position),     // ||v - s||
-                usDistance = secondNode.position.distance(source.position),       // ||u - s||
-                vuDistance = testNode.position.distance(secondNode.position);  // ||v - u||
-
-              // testNode is a relative neighbor of source if and only if
-              // ||v - s|| < max{||u - s||, ||v - u||}
-              if(vsDistance < Math.max(usDistance, vuDistance)) {
-                if(vsDistance < this.settings.AttractionDistance) {
-                  testNode.influencedBy.push(source);  // influencedBy helps to point next vein node in the right direction
-                  source.isInfluencing.push(nodeID);   // isInfluencing helps to track when nodes have reached their sources
-
-                  if(vsDistance < this.settings.KillDistance) {
-                    testNode.hasReachedSource = true;
-                  }
-                }
-              }
-            }
+          for(let node of neighborhoodNodes) {
+            node.influencedBy.push(sourceID);
           }
 
           break;
@@ -83,7 +52,7 @@ export default class Network {
     for(let node of this.nodes) {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
-        let nextNode = node.getNextNode(averageDirection);
+        let nextNode = node.getNextNode(averageDirection);  // THIS IS THE PROBLEM!!
         this.nodes.push(nextNode);
       }
     }
@@ -92,7 +61,13 @@ export default class Network {
     for(let [sourceID, source] of this.sources.entries()) {
       switch(this.settings.VenationType) {
         // For open venation, remove the source as soon as any vein node reaches it
-        case "Open":
+        case 'Open':
+          let closestNode = this.getClosestNode(source, this.getNodesInAttractionZone(source));
+
+          if(closestNode != null) {
+            source.influencingNodes.push(closestNode);
+          }
+
           if(source.reached) {
             this.sources.splice(sourceID, 1);
           }
@@ -100,21 +75,15 @@ export default class Network {
           break;
 
         // For closed venation, remove the source only when all associated vein nodes have reached it
-        case "Closed":
-          if(source.isInfluencing.length > 0) {
-            let allNodesReached = true;
+        case 'Closed':
+          let neighborhoodNodes = this.getRelativeNeighborNodes(source);
 
-            for(let node of source.isInfluencing.map(id => this.nodes[id])) {
-              if(!node.hasReachedSource) {
-                allNodesReached = false;
-              }
-            }
+          if(neighborhoodNodes.length > 0) {
+            source.influencingNodes = neighborhoodNodes;
+          }
 
-            if(allNodesReached) {
-              this.sources.splice(sourceID, 1);
-            }
-
-            source.isInfluencing = [];
+          if(source.influencingNodes.length <= 0) {
+            this.sources.splice(sourceID, 1);
           }
 
           break;
@@ -133,21 +102,82 @@ export default class Network {
       }
     }
 
-    // Draw auxin sources
-    if(this.settings.ShowSources) {
-      for(let source of this.sources) {
+    for(let source of this.sources) {
+      // Draw auxin sources
+      if(this.settings.ShowSources) {
         source.draw();
+      }
+
+      // Draw lines between each source and the nodes they are influencing
+      if(this.settings.ShowInfluences && source.influencingNodes.length > 0) {
+        for(let node of source.influencingNodes) {
+          this.ctx.beginPath();
+          this.ctx.moveTo(source.position.x, source.position.y);
+          this.ctx.lineTo(node.position.x, node.position.y);
+          this.ctx.strokeStyle = '#00fff0';
+          this.ctx.stroke();
+        }
       }
     }
 
-    // TODO: draw lines between vein nodes and inluencing sources
   }
 
-  getNearbyNodes(source) {
+  getRelativeNeighborNodes(source) {
+    let fail;
+
+    let nearbyNodes = this.getNodesInAttractionZone(source);
+    let relativeNeighbors = [];
+    let sourceToP0, sourceToP1, p0ToP1;
+
+    // p0 is a relative neighbor of auxinPos iff
+    // for any point p1 that is closer to auxinPos than is p0,
+    // p0 is closer to auxinPos than to p1
+    for(let p0 of nearbyNodes) {
+      fail = false;
+      sourceToP0 = p0.position.subtract(source.position, true);
+
+      for(let p1 of nearbyNodes) {
+        if(p0 === p1) {
+          continue;
+        }
+
+        sourceToP1 = p1.position.subtract(source.position, true);
+
+        if(sourceToP1.length() > sourceToP0.length()) {
+          continue;
+        }
+
+        p0ToP1 = p1.position.subtract(p0.position, true);
+
+        if(sourceToP0.length() > p0ToP1.length()) {
+          fail = true;
+          break;
+        }
+      }
+
+      if(!fail) {
+        relativeNeighbors.push(p0);
+      }
+    }
+
+    return relativeNeighbors;
+  }
+
+  getNodesInAttractionZone(source) {
     return this.nodesIndex.within(
       source.position.x,
       source.position.y,
       this.settings.AttractionDistance
+    ).map(
+      id => this.nodes[id]
+    );
+  }
+
+  getNodesInKillZone(source) {
+    return this.nodesIndex.within(
+      source.position.x,
+      source.position.y,
+      this.settings.KillDistance
     ).map(
       id => this.nodes[id]
     );
@@ -176,10 +206,10 @@ export default class Network {
     // Add up normalized vectors pointing to each auxin source
     let averageDirection = new Vec2(0,0);
 
-    // for(let source of node.influencedBy.map(id => this.sources[id])) {
-    // for(let source of node.influencedBy) {
     for(let source of nearbySources) {
-      averageDirection.add(source.position.subtract(node.position, true).normalize());
+      averageDirection.add(
+        source.position.subtract(node.position, true).normalize()
+      );
     }
 
     // Add small amount of random "jitter" to avoid getting stuck between two auxin sources and endlessly generating nodes in the same place
@@ -191,12 +221,25 @@ export default class Network {
     return averageDirection;
   }
 
+  addVeinNode(node) {
+    this.nodes.push(node);
+    this.buildSpatialIndices();
+  }
+
   buildSpatialIndices() {
     this.nodesIndex = new KDBush(this.nodes, p => p.position.x, p => p.position.y);
   }
 
   toggleVeins() {
     this.settings.ShowVeins = !this.settings.ShowVeins;
+  }
+
+  toggleVeinTips() {
+    this.settings.ShowVeinTips = !this.settings.ShowVeinTips;
+
+    for(let node of this.nodes) {
+      node.settings.ShowVeinTips = !node.settings.ShowVeinTips;
+    }
   }
 
   toggleSources() {
@@ -208,6 +251,14 @@ export default class Network {
 
     for(let source of this.sources) {
       source.settings.ShowAttractionZones = !source.settings.ShowAttractionZones;
+    }
+  }
+
+  toggleKillZones() {
+    this.settings.ShowKillZones = !this.settings.ShowKillZones;
+
+    for(let source of this.sources) {
+      source.settings.ShowKillZones = !source.settings.ShowKillZones;
     }
   }
 
