@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/jasonwebb/2d-space-colonization-experiments#readme",
   "devDependencies": {
-    "d3-delaunay": "^4.1.5",
     "file-saver": "^2.0.2",
     "kdbush": "^3.0.0",
     "path": "^0.12.7",
