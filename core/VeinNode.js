@@ -32,7 +32,15 @@ export default class VeinNode {
 
       } else if(this.settings.VeinRenderMode == 'Dots') {
         this.ctx.beginPath();
-        this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);  // TODO: vary dot radius based on algorithm
+        this.ctx.ellipse(
+          this.position.x,
+          this.position.y,
+          this.settings.AuxinRadius,
+          this.settings.AuxinRadius,
+          0,
+          0,
+          Math.PI * 2
+        );  // TODO: vary dot radius based on algorithm
 
         this.ctx.fillStyle = '#000';
 
@@ -48,9 +56,7 @@ export default class VeinNode {
 
   getNextNode(averageSourceDirection) {
     this.isTip = false;
-
     this.nextPosition = this.position.add(averageSourceDirection.multiply(this.settings.SegmentLength), true);
-    this.influencedBy = [];
 
     return new VeinNode(
       this,
