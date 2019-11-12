@@ -1,3 +1,5 @@
+import Network from "./Network";
+
 export function setupKeyListeners(networks) {
   if(!(networks instanceof Array)) {
     networks = [networks];
@@ -49,6 +51,14 @@ export function setupKeyListeners(networks) {
       case 'k':
         for(let network of networks) {
           network.toggleKillZones();
+        }
+
+        break;
+
+      // i = toggle influence lines
+      case 'i':
+        for(let network of networks) {
+          network.toggleInfluenceLines();
         }
 
         break;
