@@ -31,45 +31,56 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Generate randomly-placed auxin sources
-  for(let i=0; i<100; i++) {
-    network.sources.push(
-      new AuxinSource(
-        new Vec2(
-          random(window.innerWidth),
-          random(window.innerHeight)
-        ),
-        ctx
-      )
-    );
-  }
-
-  // Generate grid of auxin sources
-  // const xResolution = 100,
-  //   yResolution = 20;
-
-  // for(let i=0; i<window.innerWidth / xResolution; i++) {
-  //   for(let j=0; j<window.innerHeight / yResolution; j++) {
-  //     network.sources.push(
-  //       new AuxinSource(
-  //         new Vec2(
-  //           i * xResolution,
-  //           j * yResolution
-  //         ),
-  //         ctx
-  //       )
-  //     );
-  //   }
+  // for(let i=0; i<500; i++) {
+  //   network.sources.push(
+  //     new AuxinSource(
+  //       new Vec2(
+  //         random(window.innerWidth),
+  //         random(window.innerHeight)
+  //       ),
+  //       ctx
+  //     )
+  //   );
   // }
 
+  // Generate grid of auxin sources
+  const xResolution = 50,
+    yResolution = 50;
+
+  for(let i=0; i<window.innerWidth / xResolution; i++) {
+    for(let j=0; j<window.innerHeight / yResolution; j++) {
+      network.sources.push(
+        new AuxinSource(
+          new Vec2(
+            i * xResolution,
+            j * yResolution
+          ),
+          ctx
+        )
+      );
+    }
+  }
+
   // Add an initial root vein at the bottom center of the screen
-  network.addVeinNode(
-    new VeinNode(
-      null,
-      new Vec2(window.innerWidth / 2, window.innerHeight / 2),
-      true,
-      ctx
+  // network.addVeinNode(
+  //   new VeinNode(
+  //     null,
+  //     new Vec2(window.innerWidth / 2, window.innerHeight / 2),
+  //     true,
+  //     ctx
+  //   )
+  // );
+
+  for(let i=0; i<10; i++) {
+    network.addVeinNode(
+      new VeinNode(
+        null,
+        new Vec2(random(window.innerWidth), random(window.innerHeight)),
+        true,
+        ctx
+      )
     )
-  );
+  }
 
   // Set up common keyboard interaction listeners
   setupKeyListeners(network);
