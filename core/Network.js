@@ -2,7 +2,6 @@ import Defaults from './Defaults';
 import KDBush from 'kdbush';
 import * as Vec2 from 'vec2';
 import { random } from './Utilities';
-import { Delaunay } from 'd3-delaunay';
 
 export default class Network {
   constructor(ctx, settings) {
@@ -23,12 +22,10 @@ export default class Network {
 
     // Associate auxin sources with nearby vein nodes to figure out where growth should occur
     for(let [sourceID, source] of this.sources.entries()) {
-      let nearbyNodes = this.getNodesInAttractionZone(source);
-
       switch(this.settings.VenationType) {
         // For open venation, only associate this source with its closest vein node
         case 'Open':
-          let closestNode = this.getClosestNode(source, nearbyNodes);
+          let closestNode = this.getClosestNode(source, this.getNodesInAttractionZone(source));
 
           if(closestNode != null) {
             closestNode.influencedBy.push(sourceID);
@@ -39,8 +36,13 @@ export default class Network {
         // For closed venation, associate this source with all nodes in its relative neighborhood
         case 'Closed':
           let neighborhoodNodes = this.getRelativeNeighborNodes(source);
+          let nodesInKillZone = this.getNodesInKillZone(source);
 
-          for(let node of neighborhoodNodes) {
+          let nodesToGrow = neighborhoodNodes.filter((neighborNode, index) => {
+            return !nodesInKillZone.includes(neighborNode);
+          });
+
+          for(let node of nodesToGrow) {
             node.influencedBy.push(sourceID);
           }
 
@@ -52,7 +54,7 @@ export default class Network {
     for(let node of this.nodes) {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
-        let nextNode = node.getNextNode(averageDirection);  // THIS IS THE PROBLEM!!
+        let nextNode = node.getNextNode(averageDirection);
         this.nodes.push(nextNode);
       }
     }
@@ -65,7 +67,7 @@ export default class Network {
           let closestNode = this.getClosestNode(source, this.getNodesInAttractionZone(source));
 
           if(closestNode != null) {
-            source.influencingNodes.push(closestNode);
+            source.influencingNodes = [closestNode];
           }
 
           if(source.reached) {
@@ -77,17 +79,26 @@ export default class Network {
         // For closed venation, remove the source only when all associated vein nodes have reached it
         case 'Closed':
           let neighborhoodNodes = this.getRelativeNeighborNodes(source);
+          let nodesInKillZone = this.getNodesInKillZone(source);
+
+          if(neighborhoodNodes.length === nodesInKillZone.length) {
+            this.sources.splice(sourceID, 1);
+          }
 
           if(neighborhoodNodes.length > 0) {
             source.influencingNodes = neighborhoodNodes;
           }
 
-          if(source.influencingNodes.length <= 0) {
-            this.sources.splice(sourceID, 1);
-          }
+          // if(source.influencingNodes.length <= 0) {
+          //   this.sources.splice(sourceID, 1);
+          // }
 
           break;
       }
+    }
+
+    for(let node of this.nodes) {
+      node.influencedBy = [];
     }
 
     // Rebuild spatial indices
@@ -109,12 +120,12 @@ export default class Network {
       }
 
       // Draw lines between each source and the nodes they are influencing
-      if(this.settings.ShowInfluences && source.influencingNodes.length > 0) {
+      if(this.settings.ShowInfluenceLines && source.influencingNodes.length > 0) {
         for(let node of source.influencingNodes) {
           this.ctx.beginPath();
           this.ctx.moveTo(source.position.x, source.position.y);
           this.ctx.lineTo(node.position.x, node.position.y);
-          this.ctx.strokeStyle = '#00fff0';
+          this.ctx.strokeStyle = '#0fff0f';
           this.ctx.stroke();
         }
       }
@@ -260,6 +271,10 @@ export default class Network {
     for(let source of this.sources) {
       source.settings.ShowKillZones = !source.settings.ShowKillZones;
     }
+  }
+
+  toggleInfluenceLines() {
+    this.settings.ShowInfluenceLines = !this.settings.ShowInfluenceLines;
   }
 
   togglePause() {
