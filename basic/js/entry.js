@@ -18,10 +18,7 @@ let setup = () => {
   canvas.height = window.innerHeight;
 
   // Setup Network with initial conditions
-  setupNetwork();
-
-  // Set up common keyboard interaction listeners
-  setupKeyListeners(network);
+  setupNetwork()
 
   // Begin animation loop
   requestAnimationFrame(update);
@@ -63,6 +60,9 @@ let setupNetwork = () => {
       )
     )
   }
+
+  // Set up common keyboard interaction listeners
+  setupKeyListeners(network);
 }
 
 // Main program loop
