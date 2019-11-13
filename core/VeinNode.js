@@ -1,5 +1,4 @@
 import Defaults from './Defaults';
-import * as Vec2 from 'vec2';
 
 export default class VeinNode {
   constructor(parent, position, isTip, ctx, settings) {

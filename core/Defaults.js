@@ -1,7 +1,7 @@
 export default {
   /**
-   * Simulation configurations
-   */
+    Simulation configurations
+  */
 
   VenationType: 'Closed',   // venation can be "Open" or "Closed"
   SegmentLength: 5,         // length of each vein segment. Smaller numbers mean smoother lines, but more computation cost
@@ -11,16 +11,16 @@ export default {
 
 
   /**
-   * Rendering configurations
-   */
+    Rendering configurations
+  */
 
   // Visibility toggles
-  ShowSources: false,
+  ShowSources: true,
   ShowVeins: true,
   ShowVeinTips: false,
   ShowAttractionZones: false,
   ShowKillZones: false,
-  ShowInfluenceLines: false,
+  ShowInfluenceLines: true,
 
   // Modes
   VeinRenderMode: 'Dots',  // draw vein segments as "Lines" or "Dots"

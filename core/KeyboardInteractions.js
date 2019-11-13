@@ -1,5 +1,3 @@
-import Network from "./Network";
-
 export function setupKeyListeners(networks) {
   if(!(networks instanceof Array)) {
     networks = [networks];
