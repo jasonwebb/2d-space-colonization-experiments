@@ -1,9 +1,9 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
+import SourcePatterns from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
-import AuxinSource from '../../core/AuxinSource';
 import { random } from '../../core/Utilities';
-import { setupKeyListeners } from '../../core/KeyboardInteractions'
+import { setupKeyListeners } from '../../core/KeyboardInteractions';
 
 let canvas, ctx;
 let network;
@@ -20,6 +20,9 @@ let setup = () => {
   // Setup Network with initial conditions
   setupNetwork();
 
+  // Set up common keyboard interaction listeners
+  setupKeyListeners(network);
+
   // Begin animation loop
   requestAnimationFrame(update);
 }
@@ -30,36 +33,11 @@ let setupNetwork = () => {
   // Initialize simulation object
   network = new Network(ctx);
 
-  // Generate randomly-placed auxin sources
-  // for(let i=0; i<500; i++) {
-  //   network.sources.push(
-  //     new AuxinSource(
-  //       new Vec2(
-  //         random(window.innerWidth),
-  //         random(window.innerHeight)
-  //       ),
-  //       ctx
-  //     )
-  //   );
-  // }
+  // Set up the auxin sources using pre-made patterns
+  let randomSources = SourcePatterns.getRandomSources(500, ctx);
+  let gridSources = SourcePatterns.getGridOfSources(10, 10, ctx);
 
-  // Generate grid of auxin sources
-  const xResolution = 50,
-    yResolution = 50;
-
-  for(let i=0; i<window.innerWidth / xResolution; i++) {
-    for(let j=0; j<window.innerHeight / yResolution; j++) {
-      network.sources.push(
-        new AuxinSource(
-          new Vec2(
-            i * xResolution,
-            j * yResolution
-          ),
-          ctx
-        )
-      );
-    }
-  }
+  network.sources = gridSources;
 
   // Add an initial root vein at the bottom center of the screen
   // network.addVeinNode(
@@ -71,21 +49,21 @@ let setupNetwork = () => {
   //   )
   // );
 
+  // Add a set of random root veins throughout scene
   for(let i=0; i<10; i++) {
     network.addVeinNode(
       new VeinNode(
         null,
-        new Vec2(random(window.innerWidth), random(window.innerHeight)),
+        new Vec2(
+          random(window.innerWidth),
+          random(window.innerHeight)
+        ),
         true,
         ctx
       )
     )
   }
-
-  // Set up common keyboard interaction listeners
-  setupKeyListeners(network);
 }
-
 
 // Main program loop
 let update = (timestamp) => {
@@ -95,7 +73,6 @@ let update = (timestamp) => {
 
   requestAnimationFrame(update);
 }
-
 
 // Key commands specific to this sketch
 document.addEventListener('keypress', (e) => {
