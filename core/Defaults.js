@@ -3,11 +3,11 @@ export default {
     Simulation configurations
   */
 
-  VenationType: 'Closed',   // venation can be "Open" or "Closed"
+  VenationType: 'Open',     // venation can be "Open" or "Closed"
   SegmentLength: 5,         // length of each vein segment. Smaller numbers mean smoother lines, but more computation cost
   AttractionDistance: 200,  // radius of influence (d_i) around each auxin source that attracts vein segments
   KillDistance: 5,          // distance (d_k) between auxin sources and segments when segments are ended
-  IsPaused: false,          // initial pause/unpause state
+  IsPaused: true,          // initial pause/unpause state
 
 
   /**
@@ -15,15 +15,15 @@ export default {
   */
 
   // Visibility toggles
-  ShowSources: true,
+  ShowSources: false,
   ShowVeins: true,
   ShowVeinTips: false,
   ShowAttractionZones: false,
   ShowKillZones: false,
-  ShowInfluenceLines: true,
+  ShowInfluenceLines: false,
 
   // Modes
-  VeinRenderMode: 'Dots',  // draw vein segments as "Lines" or "Dots"
+  VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Veins
   MinimumVeinThickness: 1,
