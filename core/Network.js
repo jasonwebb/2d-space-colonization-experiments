@@ -11,6 +11,8 @@ export default class Network {
     this.sources = [];  // sources (AuxinSources) attract vein nodes
     this.nodes = [];    // nodes (VeinNodes) are connected to form veins
 
+    this.nodesIndex;    // kd-bush spatial index for all nodes
+
     this.buildSpatialIndices();
   }
 
