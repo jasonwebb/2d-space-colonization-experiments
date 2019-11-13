@@ -31,6 +31,7 @@ export default class Network {
 
           if(closestNode != null) {
             closestNode.influencedBy.push(sourceID);
+            source.influencingNodes = [closestNode];
           }
 
           break;
@@ -40,9 +41,12 @@ export default class Network {
           let neighborhoodNodes = this.getRelativeNeighborNodes(source);
           let nodesInKillZone = this.getNodesInKillZone(source);
 
-          let nodesToGrow = neighborhoodNodes.filter((neighborNode, index) => {
+          // Exclude nodes that are in the source's kill zone (these should stop growing)
+          let nodesToGrow = neighborhoodNodes.filter((neighborNode) => {
             return !nodesInKillZone.includes(neighborNode);
           });
+
+          source.influencingNodes = nodesToGrow;
 
           for(let node of nodesToGrow) {
             node.influencedBy.push(sourceID);
@@ -59,6 +63,8 @@ export default class Network {
         let nextNode = node.getNextNode(averageDirection);
         this.nodes.push(nextNode);
       }
+
+      node.influencedBy = [];
     }
 
     // Remove any auxin sources that have been reached by their associated vein nodes
@@ -66,12 +72,6 @@ export default class Network {
       switch(this.settings.VenationType) {
         // For open venation, remove the source as soon as any vein node reaches it
         case 'Open':
-          let closestNode = this.getClosestNode(source, this.getNodesInAttractionZone(source));
-
-          if(closestNode != null) {
-            source.influencingNodes = [closestNode];
-          }
-
           if(source.reached) {
             this.sources.splice(sourceID, 1);
           }
@@ -80,27 +80,12 @@ export default class Network {
 
         // For closed venation, remove the source only when all associated vein nodes have reached it
         case 'Closed':
-          let neighborhoodNodes = this.getRelativeNeighborNodes(source);
-          let nodesInKillZone = this.getNodesInKillZone(source);
-
-          if(neighborhoodNodes.length === nodesInKillZone.length) {
+          if(source.influencingNodes.length === 0) {
             this.sources.splice(sourceID, 1);
           }
 
-          if(neighborhoodNodes.length > 0) {
-            source.influencingNodes = neighborhoodNodes;
-          }
-
-          // if(source.influencingNodes.length <= 0) {
-          //   this.sources.splice(sourceID, 1);
-          // }
-
           break;
       }
-    }
-
-    for(let node of this.nodes) {
-      node.influencedBy = [];
     }
 
     // Rebuild spatial indices
