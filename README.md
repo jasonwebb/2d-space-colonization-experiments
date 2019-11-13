@@ -9,13 +9,13 @@ TODO: technical description of algorithm and application structure
 ```
 
 See `./core` for common modules:
-* Segment - a single segment of a vein
-* Source - source of auxin growth hormone
-* Network - manages the growth of vein segments based on auxin sources
+* `VeinNode.js` - a single segment of a vein
+* `AuxinSource.js` - source of auxin growth hormone
+* `Network.js` - manages the growth of vein segments based on auxin sources
 
 A couple additional helper modules are also included there:
-* KeyboardInteractions - a structure for handling common keyboard commands that every sketch should have
-* Utilities - small helper functions like `random` and `lerp`
+* `KeyboardInteractions.js` - a structure for handling common keyboard commands that every sketch should have
+* `Utilities.js` - small helper functions like `random` and `lerp`
 
 ## Features
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
@@ -51,7 +51,7 @@ A couple additional helper modules are also included there:
   - [ ] Place using perfect grid pattern
   - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
   - [ ] Added along margin of shape only
-- [ ] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
+- [X] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
 - [ ] Implement varying vein widths
   * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
   * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
