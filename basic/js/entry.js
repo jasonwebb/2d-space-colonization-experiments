@@ -18,7 +18,7 @@ let setup = () => {
   canvas.height = window.innerHeight;
 
   // Setup Network with initial conditions
-  setupNetwork()
+  setupNetwork();
 
   // Begin animation loop
   requestAnimationFrame(update);
@@ -32,19 +32,9 @@ let setupNetwork = () => {
 
   // Set up the auxin sources using pre-made patterns
   let randomSources = SourcePatterns.getRandomSources(500, ctx);
-  let gridSources = SourcePatterns.getGridOfSources(10, 10, ctx);
+  let gridSources = SourcePatterns.getGridOfSources(20, 20, ctx);
 
   network.sources = gridSources;
-
-  // Add an initial root vein at the bottom center of the screen
-  // network.addVeinNode(
-  //   new VeinNode(
-  //     null,
-  //     new Vec2(window.innerWidth / 2, window.innerHeight / 2),
-  //     true,
-  //     ctx
-  //   )
-  // );
 
   // Add a set of random root veins throughout scene
   for(let i=0; i<10; i++) {
