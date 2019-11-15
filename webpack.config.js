@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    basic: path.resolve('basic/js/entry.js')
+    basic: path.resolve('basic/js/entry.js'),
+    bounds: path.resolve('bounds/js/entry.js')
   },
   devtool: 'inline-source-map',
   devServer: {
