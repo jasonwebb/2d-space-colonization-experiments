@@ -2,7 +2,6 @@ import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
 import SourcePatterns from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
-import Bounds from '../../core/Bounds';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 
@@ -19,30 +18,11 @@ let setup = () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  // Set up bounding square
-  setupBounds();
-
   // Setup Network with initial conditions
   setupNetwork();
 
   // Begin animation loop
   requestAnimationFrame(update);
-}
-
-let setupBounds = () => {
-  let cx = window.innerWidth / 2;
-  let cy = window.innerHeight / 2;
-  let sideLength = 800;
-
-  bounds = new Bounds(
-    [
-      [cx - sideLength/2, cy - sideLength/2],  // top left corner
-      [cx + sideLength/2, cy - sideLength/2],  // top right corner
-      [cx + sideLength/2, cy + sideLength/2],  // bottom right corner
-      [cx - sideLength/2, cy + sideLength/2]   // bottom left corner
-    ],
-    ctx
-  );
 }
 
 // Create the network with initial conditions
@@ -51,26 +31,24 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Set up the auxin sources using pre-made patterns
-  let randomSources = SourcePatterns.getRandomSources(500, ctx, bounds);
-  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx, bounds);
+  let randomSources = SourcePatterns.getRandomSources(500, ctx);
+  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx);
 
   network.sources = gridSources;
 
   // Add a set of random root veins throughout scene
   for(let i=0; i<10; i++) {
-    let x = random(window.innerWidth);
-    let y = random(window.innerHeight);
-
-    if((bounds != undefined && bounds.contains(x,y)) || bounds == undefined) {
-      network.addVeinNode(
-        new VeinNode(
-          null,
-          new Vec2(x, y),
-          true,
-          ctx
-        )
+    network.addVeinNode(
+      new VeinNode(
+        null,
+        new Vec2(
+          random(window.innerWidth),
+          random(window.innerHeight)
+        ),
+        true,
+        ctx
       )
-    }
+    )
   }
 
   // Set up common keyboard interaction listeners
@@ -82,7 +60,6 @@ let update = (timestamp) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   network.update();
   network.draw();
-  bounds.draw();
 
   requestAnimationFrame(update);
 }
