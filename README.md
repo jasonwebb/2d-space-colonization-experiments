@@ -12,12 +12,16 @@ See `./core` for common modules:
 * `VeinNode.js` - a single segment of a vein
 * `AuxinSource.js` - source of auxin growth hormone
 * `Network.js` - manages the growth of vein segments based on auxin sources
+* `Bounds.js` - arbitrary path consisting of points, used for constraining growth
+* `SourcePattern.js` - functions for generating auxin sources arranged in various patterns (grids, noise, etc)
+* `Defaults.js` - collection of global variables used for configuring the behavior and display of the algorithm
+  * Any variable can be overridden on a per-sketch basis using a local `Setting.js` file
 
 A couple additional helper modules are also included there:
 * `KeyboardInteractions.js` - a structure for handling common keyboard commands that every sketch should have
 * `Utilities.js` - small helper functions like `random` and `lerp`
 
-## Features
+## Technologies used
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
 * Vanilla ES6 JavaScript
 * Webpack build system with live-reloading dev server
@@ -33,7 +37,7 @@ A couple additional helper modules are also included there:
 
 ## TODO
 - [X] Create most basic implementation
-- [ ] Add configurable support for open vs. closed venation patterns
+- [X] Add configurable support for open vs. closed venation patterns
   * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
   * Must also modify the criteria for auxin source removal to wait for all veins to reach, or exit the proximity threshold.
 - [ ] Implement configurable birth rates and kill rates
@@ -46,9 +50,9 @@ A couple additional helper modules are also included there:
 - [ ] Document all modules with JSDoc
 - [ ] Add support for obstacles that growth must avoid
 - [ ] Implement different auxin placement schemes
-  - [ ] Random at start of simulation
+  - [X] Random at start of simulation
   - [ ] Place using patterned noise, like Perlin
-  - [ ] Place using perfect grid pattern
+  - [X] Place using perfect grid pattern
   - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
   - [ ] Added along margin of shape only
 - [X] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
