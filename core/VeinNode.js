@@ -19,10 +19,10 @@ export default class VeinNode {
         this.ctx.lineTo(this.parent.position.x, this.parent.position.y);
 
         if(this.isTip && this.settings.ShowVeinTips) {
-          this.ctx.strokeStyle = this.settings.VeinTipColor;
+          this.ctx.strokeStyle = this.settings.Colors.VeinTipColor;
           this.ctx.lineWidth = 2;
         } else {
-          this.ctx.strokeStyle = this.settings.VeinColor;
+          this.ctx.strokeStyle = this.settings.Colors.VeinColor;
           this.ctx.lineWidth = 1;
         }
 
@@ -41,9 +41,9 @@ export default class VeinNode {
         );  // TODO: vary dot radius based on algorithm
 
         if(this.isTip && this.settings.ShowVeinTips) {
-          this.ctx.fillStyle = this.settings.VeinTipColor;
+          this.ctx.fillStyle = this.settings.Colors.VeinTipColor;
         } else {
-          this.ctx.fillStyle = this.settings.VeinColor;
+          this.ctx.fillStyle = this.settings.Colors.VeinColor;
         }
 
         this.ctx.fill();

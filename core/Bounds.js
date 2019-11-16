@@ -25,7 +25,7 @@ export default class Bounds {
 
       this.ctx.lineTo(this.polygon[0][0], this.polygon[0][1]);
 
-      this.ctx.strokeStyle = this.settings.BoundsColor;
+      this.ctx.strokeStyle = this.settings.Colors.BoundsColor;
       this.ctx.stroke();
     }
   }

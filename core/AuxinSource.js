@@ -14,7 +14,7 @@ export default class AuxinSource {
     if(this.settings.ShowAttractionZones) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, this.settings.AttractionDistance, this.settings.AttractionDistance, 0, 0, Math.PI * 2);
-      this.ctx.fillStyle = this.settings.AttractionZoneColor;
+      this.ctx.fillStyle = this.settings.Colors.AttractionZoneColor;
       this.ctx.fill();
     }
 
@@ -22,7 +22,7 @@ export default class AuxinSource {
     if(this.settings.ShowKillZones) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, this.settings.KillDistance, this.settings.KillDistance, 0, 0, Math.PI * 2);
-      this.ctx.fillStyle = this.settings.KillZoneColor;
+      this.ctx.fillStyle = this.settings.Colors.KillZoneColor;
       this.ctx.fill();
     }
 
@@ -30,7 +30,7 @@ export default class AuxinSource {
     if(this.settings.ShowSources) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, 1, 1, 0, 0, Math.PI * 2);
-      this.ctx.fillStyle = this.settings.SourceColor;
+      this.ctx.fillStyle = this.settings.Colors.SourceColor;
       this.ctx.fill();
     }
   }

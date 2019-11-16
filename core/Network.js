@@ -97,7 +97,7 @@ export default class Network {
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     this.ctx.beginPath();
-    this.ctx.fillStyle = this.settings.BackgroundColor;
+    this.ctx.fillStyle = this.settings.Colors.BackgroundColor;
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
     // Draw vein nodes
@@ -117,7 +117,7 @@ export default class Network {
           this.ctx.beginPath();
           this.ctx.moveTo(source.position.x, source.position.y);
           this.ctx.lineTo(node.position.x, node.position.y);
-          this.ctx.strokeStyle = this.settings.InfluenceLinesColor;
+          this.ctx.strokeStyle = this.settings.Colors.InfluenceLinesColor;
           this.ctx.stroke();
         }
       }

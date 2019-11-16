@@ -20,6 +20,7 @@ See `./core` for common modules:
 A couple additional helper modules are also included there:
 * `KeyboardInteractions.js` - a structure for handling common keyboard commands that every sketch should have
 * `Utilities.js` - small helper functions like `random` and `lerp`
+* `ColorPresets.js` - collection of pre-made color palettes for use in `Defaults.js`
 
 ## Technologies used
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
