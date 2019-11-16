@@ -96,11 +96,9 @@ export default class Network {
     // Erase the canvas
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
-    if(this.settings.InvertColors) {
-      this.ctx.globalAlpha = 1;
-      this.ctx.fillStyle = 'rgba(0,0,0,.95)';
-      this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-    }
+    this.ctx.beginPath();
+    this.ctx.fillStyle = this.settings.BackgroundColor;
+    this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
 
     // Draw vein nodes
     if(this.settings.ShowVeins) {
@@ -111,9 +109,7 @@ export default class Network {
 
     for(let source of this.sources) {
       // Draw auxin sources
-      if(this.settings.ShowSources) {
-        source.draw();
-      }
+      source.draw();
 
       // Draw lines between each source and the nodes they are influencing
       if(this.settings.ShowInfluenceLines && source.influencingNodes.length > 0) {
@@ -121,7 +117,7 @@ export default class Network {
           this.ctx.beginPath();
           this.ctx.moveTo(source.position.x, source.position.y);
           this.ctx.lineTo(node.position.x, node.position.y);
-          this.ctx.strokeStyle = '#0fff0f';
+          this.ctx.strokeStyle = this.settings.InfluenceLinesColor;
           this.ctx.stroke();
         }
       }

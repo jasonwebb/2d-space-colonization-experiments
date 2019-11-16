@@ -24,12 +24,7 @@ export default class Bounds {
 
     this.ctx.lineTo(this.polygon[0][0], this.polygon[0][1]);
 
-    if(this.settings.InvertColors) {
-      this.ctx.strokeStyle = 'rgba(255,255,255,.4)';
-    } else {
-      this.ctx.strokeStyle = '#000';
-    }
-
+    this.ctx.strokeStyle = this.settings.BoundsColor;
     this.ctx.stroke();
   }
 }
