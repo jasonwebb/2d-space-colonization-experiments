@@ -33,8 +33,8 @@ export default class VeinNode {
         this.ctx.ellipse(
           this.position.x,
           this.position.y,
-          this.settings.AuxinRadius,
-          this.settings.AuxinRadius,
+          1,
+          1,
           0,
           0,
           Math.PI * 2

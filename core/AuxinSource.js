@@ -29,7 +29,7 @@ export default class AuxinSource {
     // Draw the auxin source
     if(this.settings.ShowSources) {
       this.ctx.beginPath();
-      this.ctx.ellipse(this.position.x, this.position.y, this.settings.AuxinRadius, this.settings.AuxinRadius, 0, 0, Math.PI * 2);
+      this.ctx.ellipse(this.position.x, this.position.y, 1, 1, 0, 0, Math.PI * 2);
       this.ctx.fillStyle = this.settings.SourceColor;
       this.ctx.fill();
     }

@@ -124,8 +124,13 @@ let update = (timestamp) => {
 document.addEventListener('keypress', (e) => {
   switch(e.key) {
     // r = reset simulation by reinitializing the network with initial conditions
-    case "r":
+    case 'r':
       setupNetwork();
+      break;
+
+    // b = toggle visibility of bounds
+    case 'b':
+      bounds.settings.ShowBounds = !bounds.settings.ShowBounds;
       break;
 
     case '1':
