@@ -25,6 +25,9 @@ export default {
   // Modes
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
+  // Colors
+  InvertColors: false,
+
   // Veins
   MinimumVeinThickness: 1,
 

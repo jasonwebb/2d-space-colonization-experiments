@@ -7,7 +7,6 @@ import { setupKeyListeners } from '../../core/KeyboardInteractions';
 
 let canvas, ctx;
 let network;
-let bounds;
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -57,7 +56,6 @@ let setupNetwork = () => {
 
 // Main program loop
 let update = (timestamp) => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   network.update();
   network.draw();
 

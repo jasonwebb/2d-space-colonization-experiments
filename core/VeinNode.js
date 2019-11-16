@@ -18,8 +18,13 @@ export default class VeinNode {
         this.ctx.moveTo(this.position.x, this.position.y);
         this.ctx.lineTo(this.parent.position.x, this.parent.position.y);
 
-        this.ctx.strokeStyle = '#333';
         this.ctx.lineWidth = this.settings.MinimumVeinThickness;  // TODO: vary vein thickness based on algorithm
+
+        if(this.settings.InvertColors) {
+          this.ctx.strokeStyle = 'rgb(255,255,255,.9)';
+        } else {
+          this.ctx.strokeStyle = '#333';
+        }
 
         // If showing tips, override with thicker red styles
         if(this.isTip && this.settings.ShowVeinTips) {
@@ -41,7 +46,11 @@ export default class VeinNode {
           Math.PI * 2
         );  // TODO: vary dot radius based on algorithm
 
-        this.ctx.fillStyle = '#000';
+        if(this.settings.InvertColors) {
+          this.ctx.fillStyle = 'rgba(255,255,255,.9)';
+        } else {
+          this.ctx.fillStyle = '#000';
+        }
 
         // If showing tips, override fill to be red
         if(this.isTip && this.settings.ShowVeinTips) {

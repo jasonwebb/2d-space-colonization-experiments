@@ -93,6 +93,15 @@ export default class Network {
   }
 
   draw() {
+    // Erase the canvas
+    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+
+    if(this.settings.InvertColors) {
+      this.ctx.globalAlpha = 1;
+      this.ctx.fillStyle = 'rgba(0,0,0,.95)';
+      this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+    }
+
     // Draw vein nodes
     if(this.settings.ShowVeins) {
       for(let node of this.nodes) {
@@ -117,7 +126,6 @@ export default class Network {
         }
       }
     }
-
   }
 
   getRelativeNeighborNodes(source) {

@@ -113,7 +113,6 @@ let setupNetwork = () => {
 
 // Main program loop
 let update = (timestamp) => {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   network.update();
   network.draw();
   bounds.draw();
