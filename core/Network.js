@@ -94,6 +94,7 @@ export default class Network {
 
   draw() {
     this.drawBackground();
+    this.drawSources();
     this.drawVeins();
   }
 
@@ -107,15 +108,15 @@ export default class Network {
   }
 
   drawVeins() {
-    // Draw vein nodes
     if(this.settings.ShowVeins) {
       for(let node of this.nodes) {
         node.draw();
       }
     }
+  }
 
+  drawSources() {
     for(let source of this.sources) {
-      // Draw auxin sources
       source.draw();
 
       // Draw lines between each source and the nodes they are influencing
