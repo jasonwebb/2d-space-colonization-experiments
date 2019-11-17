@@ -93,13 +93,20 @@ export default class Network {
   }
 
   draw() {
+    this.drawBackground();
+    this.drawVeins();
+  }
+
+  drawBackground() {
     // Erase the canvas
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     this.ctx.beginPath();
     this.ctx.fillStyle = this.settings.Colors.BackgroundColor;
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  }
 
+  drawVeins() {
     // Draw vein nodes
     if(this.settings.ShowVeins) {
       for(let node of this.nodes) {
