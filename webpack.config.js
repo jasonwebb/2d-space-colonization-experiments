@@ -6,6 +6,14 @@ module.exports = {
     basic: path.resolve('basic/js/entry.js'),
     bounds: path.resolve('bounds/js/entry.js')
   },
+  module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        loader: 'svg-inline-loader'
+      }
+    ]
+  },
   devtool: 'inline-source-map',
   devServer: {
     host: '127.0.0.1',

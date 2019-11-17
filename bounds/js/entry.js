@@ -3,8 +3,11 @@ import Network from '../../core/Network';
 import SourcePatterns from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
 import Bounds from '../../core/Bounds';
+import SVGLoader from '../../core/SVGLoader';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
+
+const leaf = require('../svg/leaf.svg');
 
 let canvas, ctx;
 let network;
@@ -12,7 +15,8 @@ let bounds;
 
 const SQUARE = 0;
 const CIRCLE = 1;
-let currentBoundsShape = CIRCLE;
+const LEAF = 2;
+let currentBoundsShape = LEAF;
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -41,6 +45,10 @@ let setupBounds = () => {
 
     case CIRCLE:
       bounds = getCircleBounds();
+      break;
+
+    case LEAF:
+      bounds = getLeafBounds();
       break;
   }
 }
@@ -79,6 +87,23 @@ let getCircleBounds = () => {
   return new Bounds(points, ctx);
 }
 
+let getLeafBounds = () => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+  const shapeWidth = 900;
+  const shapeHeight = 900;
+
+  let polygon = SVGLoader.load(leaf)[0];
+
+  // Translate the design to the screen center
+  for(let point of polygon) {
+    point[0] = cx - shapeWidth/2 + point[0];
+    point[1] = cy - shapeHeight/2 + point[1];
+  }
+
+  return new Bounds(polygon, ctx);
+}
+
 // Create the network with initial conditions
 let setupNetwork = () => {
   // Initialize simulation object
@@ -86,25 +111,47 @@ let setupNetwork = () => {
 
   // Set up the auxin sources using pre-made patterns
   let randomSources = SourcePatterns.getRandomSources(500, ctx, bounds);
-  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx, bounds);
+  let gridSources = SourcePatterns.getGridOfSources(80, 80, ctx, bounds);
 
   network.sources = gridSources;
 
-  // Add a set of random root veins throughout scene
-  for(let i=0; i<10; i++) {
-    let x = random(window.innerWidth);
-    let y = random(window.innerHeight);
+  switch(currentBoundsShape) {
+    case SQUARE:
+    case CIRCLE:
+      // Add a set of random root veins throughout scene
+      for(let i=0; i<10; i++) {
+        let x = random(window.innerWidth);
+        let y = random(window.innerHeight);
 
-    if((bounds != undefined && bounds.contains(x,y)) || bounds == undefined) {
+        if((bounds != undefined && bounds.contains(x,y)) || bounds == undefined) {
+          network.addVeinNode(
+            new VeinNode(
+              null,
+              new Vec2(x, y),
+              true,
+              ctx
+            )
+          );
+        }
+      }
+
+      break;
+
+    case LEAF:
+      // Put a single root note at the base of the leaf
       network.addVeinNode(
         new VeinNode(
           null,
-          new Vec2(x, y),
+          new Vec2(
+            window.innerWidth / 2 - 5,
+            window.innerHeight / 2 + 220
+          ),
           true,
           ctx
         )
-      )
-    }
+      );
+
+      break;
   }
 
   // Set up common keyboard interaction listeners
@@ -114,8 +161,9 @@ let setupNetwork = () => {
 // Main program loop
 let update = (timestamp) => {
   network.update();
-  network.draw();
+  network.drawBackground();
   bounds.draw();
+  network.drawVeins();
 
   requestAnimationFrame(update);
 }
@@ -141,6 +189,12 @@ document.addEventListener('keypress', (e) => {
 
     case '2':
       currentBoundsShape = CIRCLE;
+      setupBounds();
+      setupNetwork();
+      break;
+
+    case '3':
+      currentBoundsShape = LEAF;
       setupBounds();
       setupNetwork();
       break;
