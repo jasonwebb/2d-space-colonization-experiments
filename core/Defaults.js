@@ -1,4 +1,4 @@
-import { Light, Dark } from './ColorPresets';
+import { Light, Dark, Custom } from './ColorPresets';
 
 export default {
   /**
@@ -23,7 +23,7 @@ export default {
   ShowAttractionZones: false,   // toggled with 'a'
   ShowKillZones: false,         // toggled with 'k'
   ShowInfluenceLines: false,    // toggled with 'i'
-  ShowBounds: true,
+  ShowBounds: true,             // toggled with 'b'
 
   // Modes
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
