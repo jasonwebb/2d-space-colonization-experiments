@@ -25,8 +25,13 @@ export default class Bounds {
 
       this.ctx.lineTo(this.polygon[0][0], this.polygon[0][1]);
 
-      this.ctx.strokeStyle = this.settings.Colors.BoundsColor;
+      this.ctx.strokeStyle = this.settings.Colors.BoundsBorderColor;
+      this.ctx.lineWidth = 10;
       this.ctx.stroke();
+      this.ctx.lineWidth = 1;
+
+      this.ctx.fillStyle = this.settings.Colors.BoundsFillColor;
+      this.ctx.fill();
     }
   }
 }
