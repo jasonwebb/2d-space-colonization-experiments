@@ -2,7 +2,7 @@ import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
 import SourcePatterns from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
-import Bounds from '../../core/Bounds';
+import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
@@ -58,13 +58,14 @@ let getSquareBounds = () => {
   const cy = window.innerHeight / 2;
   const sideLength = 800;
 
-  return new Bounds(
+  return new Path(
     [
       [cx - sideLength/2, cy - sideLength/2],  // top left corner
       [cx + sideLength/2, cy - sideLength/2],  // top right corner
       [cx + sideLength/2, cy + sideLength/2],  // bottom right corner
       [cx - sideLength/2, cy + sideLength/2]   // bottom left corner
     ],
+    'Bounds',
     ctx
   );
 }
@@ -72,7 +73,7 @@ let getSquareBounds = () => {
 let getCircleBounds = () => {
   const cx = window.innerWidth / 2;
   const cy = window.innerHeight / 2;
-  const radius = 300;
+  const radius = 350;
   const resolution = 100;
   let points = [];
 
@@ -84,7 +85,7 @@ let getCircleBounds = () => {
     points.push([x, y]);
   }
 
-  return new Bounds(points, ctx);
+  return new Path(points, 'Bounds', ctx);
 }
 
 let getLeafBounds = () => {
@@ -101,7 +102,7 @@ let getLeafBounds = () => {
     point[1] = cy - shapeHeight/2 + point[1];
   }
 
-  return new Bounds(polygon, ctx);
+  return new Path(polygon, 'Bounds', ctx);
 }
 
 // Create the network with initial conditions
@@ -164,6 +165,7 @@ let update = (timestamp) => {
   network.drawBackground();
   bounds.draw();
   network.drawVeins();
+  network.drawSources();
 
   requestAnimationFrame(update);
 }
