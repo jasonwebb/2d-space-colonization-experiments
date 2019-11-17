@@ -20,13 +20,14 @@ export default class VeinNode {
 
         if(this.isTip && this.settings.ShowVeinTips) {
           this.ctx.strokeStyle = this.settings.Colors.VeinTipColor;
-          this.ctx.lineWidth = 2;
+          this.ctx.lineWidth = this.settings.VeinTipThickness;
         } else {
           this.ctx.strokeStyle = this.settings.Colors.VeinColor;
-          this.ctx.lineWidth = 1;
+          this.ctx.lineWidth = this.settings.VeinThickness;
         }
 
         this.ctx.stroke();
+        this.ctx.lineWidth = 1;
 
       } else if(this.settings.VeinRenderMode == 'Dots') {
         this.ctx.beginPath();

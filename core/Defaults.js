@@ -29,5 +29,10 @@ export default {
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Light
+  Colors: Light,
+
+  // Line thicknesses
+  VeinThickness: 1,
+  VeinTipThickness: 2,
+  BoundsBorderThickness: 0
 }
