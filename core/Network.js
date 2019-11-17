@@ -16,7 +16,7 @@ export default class Network {
     this.buildSpatialIndices();
   }
 
-  update() {
+  update(bounds = undefined) {
     // Skip iteration if paused
     if(this.settings.IsPaused) {
       return;
@@ -61,7 +61,12 @@ export default class Network {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
-        this.nodes.push(nextNode);
+
+        if(bounds != undefined && bounds.contains(nextNode.position)) {
+          this.nodes.push(nextNode);
+        } else {
+          this.nodes.push(nextNode);
+        }
       }
 
       node.influencedBy = [];
