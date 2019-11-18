@@ -178,11 +178,6 @@ document.addEventListener('keypress', (e) => {
       resetNetwork();
       break;
 
-    // b = toggle visibility of bounds
-    case 'b':
-      network.settings.ShowBounds = !network.settings.ShowBounds;
-      break;
-
     case '1':
       currentBoundsShape = SQUARE;
       resetNetwork();

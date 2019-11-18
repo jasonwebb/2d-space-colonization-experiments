@@ -338,6 +338,14 @@ export default class Network {
     this.settings.ShowInfluenceLines = !this.settings.ShowInfluenceLines;
   }
 
+  toggleBounds() {
+    this.settings.ShowBounds = !this.settings.ShowBounds;
+  }
+
+  toggleObstacles() {
+    this.settings.ShowObstacles = !this.settings.ShowObstacles;
+  }
+
   togglePause() {
     this.settings.IsPaused = !this.settings.IsPaused;
   }

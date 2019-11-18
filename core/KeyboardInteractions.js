@@ -53,10 +53,26 @@ export function setupKeyListeners(networks) {
 
         break;
 
-      // i = toggle influence lines
+      // i = toggle influence lines visibility
       case 'i':
         for(let network of networks) {
           network.toggleInfluenceLines();
+        }
+
+        break;
+
+      // b = toggle bounds visibility
+      case 'b':
+        for(let network of networks) {
+          network.toggleBounds();
+        }
+
+        break;
+
+      // o = toggle obstacles visibility
+      case 'o':
+        for(let network of networks) {
+          network.toggleObstacles();
         }
 
         break;

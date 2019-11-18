@@ -131,6 +131,8 @@ let resetNetwork = () => {
     }
 
   let addObstacles = () => {
+    network.obstacles = [];
+
     // Ten random circles
     // for(let i=0; i<10; i++) {
     //   obstacles.push(
@@ -268,16 +270,6 @@ document.addEventListener('keypress', (e) => {
     // r = reset simulation by reinitializing the network with initial conditions
     case 'r':
       resetNetwork();
-      break;
-
-    // b = toggle visibility of bounds
-    case 'b':
-      network.settings.ShowBounds = !network.settings.ShowBounds;
-      break;
-
-    // o = toggle visibility of obstacles
-    case 'o':
-      network.settings.ShowObstacles = !network.settings.ShowObstacles;
       break;
 
     case '1':
