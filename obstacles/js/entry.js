@@ -4,7 +4,7 @@ import SourcePatterns from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
 import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
-import { random } from '../../core/Utilities';
+import { random, getCircleOfPoints } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 
 const leaf = require('../svg/leaf.svg');
@@ -13,10 +13,11 @@ let canvas, ctx;
 let network;
 let bounds;
 
-const SQUARE = 0;
-const CIRCLE = 1;
-const LEAF = 2;
-let currentBoundsShape = LEAF;
+const TRIANGLE = 0;
+const SQUARE = 1;
+const CIRCLE = 2;
+const LEAF = 3;
+let currentBoundsShape = TRIANGLE;
 
 let obstacles = [];
 
@@ -32,6 +33,7 @@ let setup = () => {
   // Set up bounding square
   setupBounds();
 
+  // Create obstacles to avoid
   setupObstacles();
 
   // Setup Network with initial conditions
@@ -43,6 +45,10 @@ let setup = () => {
 
 let setupBounds = () => {
   switch(currentBoundsShape) {
+    case TRIANGLE:
+      bounds = getTriangleBounds();
+      break;
+
     case SQUARE:
       bounds = getSquareBounds();
       break;
@@ -55,6 +61,21 @@ let setupBounds = () => {
       bounds = getLeafBounds();
       break;
   }
+}
+
+let getTriangleBounds = () => {
+  const cx = window.innerWidth / 2;
+  const cy = window.innerHeight / 2;
+
+  return new Path(
+    [
+      [cx - 400, cy + 300],
+      [cx, cy - 350],
+      [cx + 400, cy + 300]
+    ],
+    'Bounds',
+    ctx
+  )
 }
 
 let getSquareBounds = () => {
@@ -75,21 +96,16 @@ let getSquareBounds = () => {
 }
 
 let getCircleBounds = () => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const radius = 350;
-  const resolution = 100;
-  let points = [];
-
-  for(let i = 0; i < resolution; i++) {
-    let angle = 2 * Math.PI * i / resolution;
-    let x = cx + Math.floor(radius * Math.cos(angle));
-    let y = cy + Math.floor(radius * Math.sin(angle));
-
-    points.push([x, y]);
-  }
-
-  return new Path(points, 'Bounds', ctx);
+  return new Path(
+    getCircleOfPoints(
+      window.innerWidth / 2,    // cx
+      window.innerHeight / 2,   // cy
+      350,                      // radius
+      100                       // resolution
+    ),
+    'Bounds',
+    ctx
+  );
 }
 
 let getLeafBounds = () => {
@@ -110,7 +126,35 @@ let getLeafBounds = () => {
 }
 
 let setupObstacles = () => {
+  // Ten random circles
+  // for(let i=0; i<10; i++) {
+  //   obstacles.push(
+  //     new Path(
+  //       getCircleOfPoints(
+  //         window.innerWidth / 2 + random(-300,300),
+  //         window.innerHeight / 2 + random(-300,300),
+  //         random(20,70),
+  //         100
+  //       ),
+  //       'Obstacle',
+  //       ctx
+  //     )
+  //   );
+  // }
 
+  // Single circle in center
+  obstacles.push(
+    new Path(
+      getCircleOfPoints(
+        window.innerWidth / 2,
+        window.innerHeight / 2 + 70,
+        200,
+        100
+      ),
+      'Obstacle',
+      ctx
+    )
+  );
 }
 
 // Create the network with initial conditions
@@ -119,20 +163,79 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Set up the auxin sources using pre-made patterns
-  let randomSources = SourcePatterns.getRandomSources(500, ctx, bounds);
-  let gridSources = SourcePatterns.getGridOfSources(80, 80, ctx, bounds);
+  let randomSources = SourcePatterns.getRandomSources(500, ctx, bounds, obstacles);
+  let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, bounds, obstacles);
+
+  const cx = window.innerWidth/2;
+  const cy = window.innerHeight/2;
 
   network.sources = gridSources;
 
   switch(currentBoundsShape) {
-    case SQUARE:
+    case TRIANGLE:
+      network.addVeinNode(
+        new VeinNode(
+          null,
+          new Vec2(cx - 340, cy + 290),
+          true,
+          ctx
+        )
+      );
+
+      // network.addVeinNode(
+      //   new VeinNode(
+      //     null,
+      //     new Vec2(cx, cy - 300),
+      //     true,
+      //     ctx
+      //   )
+      // );
+
+      // network.addVeinNode(
+      //   new VeinNode(
+      //     null,
+      //     new Vec2(cx + 340, cy + 290),
+      //     true,
+      //     ctx
+      //   )
+      // );
+
+      break;
+
     case CIRCLE:
+      network.addVeinNode(
+        new VeinNode(
+          null,
+          new Vec2(cx, cy + 300),
+          true,
+          ctx
+        )
+      );
+
+      break;
+
+    case SQUARE:
       // Add a set of random root veins throughout scene
       for(let i=0; i<10; i++) {
         let x = random(window.innerWidth);
         let y = random(window.innerHeight);
+        let ok = true;
 
-        if((bounds != undefined && bounds.contains(x,y)) || bounds == undefined) {
+        // Only put root veins inside the bounds
+        if(bounds != undefined && !bounds.contains(x, y)) {
+          ok = false;
+        }
+
+        // Don't put root veins inside of obstacles
+        if(obstacles != undefined && obstacles.length > 0) {
+          for(let obstacle of obstacles) {
+            if(obstacle.contains(x, y)) {
+              ok = false;
+            }
+          }
+        }
+
+        if(ok) {
           network.addVeinNode(
             new VeinNode(
               null,
@@ -169,9 +272,14 @@ let setupNetwork = () => {
 
 // Main program loop
 let update = (timestamp) => {
-  network.update();
+  network.update(undefined, obstacles);
   network.drawBackground();
   bounds.draw();
+
+  for(let obstacle of obstacles) {
+    obstacle.draw();
+  }
+
   network.drawVeins();
   network.drawSources();
 
@@ -191,19 +299,33 @@ document.addEventListener('keypress', (e) => {
       bounds.settings.ShowBounds = !bounds.settings.ShowBounds;
       break;
 
+    // o = toggle visibility of obstacles
+    case 'o':
+      for(let obstacle of obstacles) {
+        obstacle.settings.ShowObstacles = !obstacle.settings.ShowObstacles;
+      }
+
+      break;
+
     case '1':
-      currentBoundsShape = SQUARE;
+      currentBoundsShape = TRIANGLE;
       setupBounds();
       setupNetwork();
       break;
 
     case '2':
-      currentBoundsShape = CIRCLE;
+      currentBoundsShape = SQUARE;
       setupBounds();
       setupNetwork();
       break;
 
     case '3':
+      currentBoundsShape = CIRCLE;
+      setupBounds();
+      setupNetwork();
+      break;
+
+    case '4':
       currentBoundsShape = LEAF;
       setupBounds();
       setupNetwork();
