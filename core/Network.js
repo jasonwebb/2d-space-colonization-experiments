@@ -13,10 +13,13 @@ export default class Network {
 
     this.nodesIndex;    // kd-bush spatial index for all nodes
 
+    this.bounds;
+    this.obstacles = [];
+
     this.buildSpatialIndices();
   }
 
-  update(bounds = undefined, obstacles = undefined) {
+  update() {
     // Skip iteration if paused
     if(this.settings.IsPaused) {
       return;
@@ -64,13 +67,13 @@ export default class Network {
         let ok = true;
 
         // Don't grow if the next node goes out of the passed bounds
-        if(bounds != undefined && !bounds.contains(nextNode.position.x, nextNode.position.y)) {
+        if(this.bounds != undefined && !this.bounds.contains(nextNode.position.x, nextNode.position.y)) {
           ok = false;
         }
 
         // Don't grow if the next node goes inside any passed obstacle
-        if(obstacles != undefined && obstacles.length > 0) {
-          for(let obstacle of obstacles) {
+        if(this.obstacles != undefined && this.obstacles.length > 0) {
+          for(let obstacle of this.obstacles) {
             if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
               ok = false;
             }
@@ -112,6 +115,8 @@ export default class Network {
 
   draw() {
     this.drawBackground();
+    this.drawBounds();
+    this.drawObstacles();
     this.drawSources();
     this.drawVeins();
   }
@@ -123,6 +128,20 @@ export default class Network {
     this.ctx.beginPath();
     this.ctx.fillStyle = this.settings.Colors.BackgroundColor;
     this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  }
+
+  drawBounds() {
+    if(this.settings.ShowBounds && this.bounds != undefined) {
+      this.bounds.draw();
+    }
+  }
+
+  drawObstacles() {
+    if(this.settings.ShowObstacles && this.obstacles != undefined && this.obstacles.length > 0) {
+      for(let obstacle of this.obstacles) {
+        obstacle.draw();
+      }
+    }
   }
 
   drawVeins() {
@@ -250,7 +269,32 @@ export default class Network {
   }
 
   addVeinNode(node) {
-    this.nodes.push(node);
+    let ok = true;
+
+    // Only put root veins inside the bounds
+    if(this.bounds != undefined && !this.bounds.contains(node.position.x, node.position.y)) {
+      ok = false;
+    }
+
+    // Don't put root veins inside of obstacles
+    if(this.obstacles != undefined && this.obstacles.length > 0) {
+      for(let obstacle of this.obstacles) {
+        if(obstacle.contains(node.position.x, node.position.y)) {
+          ok = false;
+        }
+      }
+    }
+
+    if(ok) {
+      this.nodes.push(node);
+      this.buildSpatialIndices();
+    }
+  }
+
+  reset() {
+    this.nodes = [];
+    this.sources = [];
+
     this.buildSpatialIndices();
   }
 

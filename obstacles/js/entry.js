@@ -11,15 +11,12 @@ const leaf = require('../svg/leaf.svg');
 
 let canvas, ctx;
 let network;
-let bounds;
 
 const TRIANGLE = 0;
 const SQUARE = 1;
 const CIRCLE = 2;
 const LEAF = 3;
 let currentBoundsShape = TRIANGLE;
-
-let obstacles = [];
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -30,102 +27,111 @@ let setup = () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  // Set up bounding square
-  setupBounds();
+  // Initialize simulation object
+  network = new Network(ctx);
 
-  // Create obstacles to avoid
-  setupObstacles();
+  // Add bounding shape
+  addBounds();
 
-  // Setup Network with initial conditions
-  setupNetwork();
+  // Add obstacles to avoid
+  addObstacles();
+
+  // Add auxin sources for veins to move towards
+  addSources();
+
+  // Add root veins
+  addRootVeins();
+
+  // Set up common keyboard interaction listeners
+  setupKeyListeners(network);
 
   // Begin animation loop
   requestAnimationFrame(update);
 }
 
-let setupBounds = () => {
+let addBounds = () => {
   switch(currentBoundsShape) {
     case TRIANGLE:
-      bounds = getTriangleBounds();
+      network.bounds = getTriangleBounds();
       break;
 
     case SQUARE:
-      bounds = getSquareBounds();
+      network.bounds = getSquareBounds();
       break;
 
     case CIRCLE:
-      bounds = getCircleBounds();
+      network.bounds = getCircleBounds();
       break;
 
     case LEAF:
-      bounds = getLeafBounds();
+      network.bounds = getLeafBounds();
       break;
   }
 }
 
-let getTriangleBounds = () => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
+  let getTriangleBounds = () => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
 
-  return new Path(
-    [
-      [cx - 400, cy + 300],
-      [cx, cy - 350],
-      [cx + 400, cy + 300]
-    ],
-    'Bounds',
-    ctx
-  )
-}
-
-let getSquareBounds = () => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const sideLength = 800;
-
-  return new Path(
-    [
-      [cx - sideLength/2, cy - sideLength/2],  // top left corner
-      [cx + sideLength/2, cy - sideLength/2],  // top right corner
-      [cx + sideLength/2, cy + sideLength/2],  // bottom right corner
-      [cx - sideLength/2, cy + sideLength/2]   // bottom left corner
-    ],
-    'Bounds',
-    ctx
-  );
-}
-
-let getCircleBounds = () => {
-  return new Path(
-    getCircleOfPoints(
-      window.innerWidth / 2,    // cx
-      window.innerHeight / 2,   // cy
-      350,                      // radius
-      100                       // resolution
-    ),
-    'Bounds',
-    ctx
-  );
-}
-
-let getLeafBounds = () => {
-  const cx = window.innerWidth / 2;
-  const cy = window.innerHeight / 2;
-  const shapeWidth = 900;
-  const shapeHeight = 900;
-
-  let polygon = SVGLoader.load(leaf)[0];
-
-  // Translate the design to the screen center
-  for(let point of polygon) {
-    point[0] = cx - shapeWidth/2 + point[0];
-    point[1] = cy - shapeHeight/2 + point[1];
+    return new Path(
+      [
+        [cx - 400, cy + 300],
+        [cx, cy - 350],
+        [cx + 400, cy + 300]
+      ],
+      'Bounds',
+      ctx
+    )
   }
 
-  return new Path(polygon, 'Bounds', ctx);
-}
+  let getSquareBounds = () => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const sideLength = 800;
 
-let setupObstacles = () => {
+    return new Path(
+      [
+        [cx - sideLength/2, cy - sideLength/2],  // top left corner
+        [cx + sideLength/2, cy - sideLength/2],  // top right corner
+        [cx + sideLength/2, cy + sideLength/2],  // bottom right corner
+        [cx - sideLength/2, cy + sideLength/2]   // bottom left corner
+      ],
+      'Bounds',
+      ctx
+    );
+  }
+
+  let getCircleBounds = () => {
+    return new Path(
+      getCircleOfPoints(
+        window.innerWidth / 2,    // cx
+        window.innerHeight / 2,   // cy
+        350,                      // radius
+        100                       // resolution
+      ),
+      'Bounds',
+      ctx
+    );
+  }
+
+  let getLeafBounds = () => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const shapeWidth = 900;
+    const shapeHeight = 900;
+
+    let polygon = SVGLoader.load(leaf)[0];
+
+    // Translate the design to the screen center
+    for(let point of polygon) {
+      point[0] = cx - shapeWidth/2 + point[0];
+      point[1] = cy - shapeHeight/2 + point[1];
+    }
+
+    return new Path(polygon, 'Bounds', ctx);
+  }
+
+let addObstacles = () => {
   // Ten random circles
   // for(let i=0; i<10; i++) {
   //   obstacles.push(
@@ -143,11 +149,11 @@ let setupObstacles = () => {
   // }
 
   // Single circle in center
-  obstacles.push(
+  network.obstacles.push(
     new Path(
       getCircleOfPoints(
         window.innerWidth / 2,
-        window.innerHeight / 2 + 70,
+        window.innerHeight / 2 + 90,
         200,
         100
       ),
@@ -157,19 +163,18 @@ let setupObstacles = () => {
   );
 }
 
-// Create the network with initial conditions
-let setupNetwork = () => {
-  // Initialize simulation object
-  network = new Network(ctx);
-
+let addSources = () => {
   // Set up the auxin sources using pre-made patterns
-  let randomSources = SourcePatterns.getRandomSources(500, ctx, bounds, obstacles);
-  let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, bounds, obstacles);
-
-  const cx = window.innerWidth/2;
-  const cy = window.innerHeight/2;
+  let randomSources = SourcePatterns.getRandomSources(500, ctx, network.bounds, network.obstacles);
+  let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, network.bounds, network.obstacles);
 
   network.sources = gridSources;
+}
+
+// Create the network with initial conditions
+let addRootVeins = () => {
+  const cx = window.innerWidth/2;
+  const cy = window.innerHeight/2;
 
   switch(currentBoundsShape) {
     case TRIANGLE:
@@ -217,34 +222,17 @@ let setupNetwork = () => {
     case SQUARE:
       // Add a set of random root veins throughout scene
       for(let i=0; i<10; i++) {
-        let x = random(window.innerWidth);
-        let y = random(window.innerHeight);
-        let ok = true;
-
-        // Only put root veins inside the bounds
-        if(bounds != undefined && !bounds.contains(x, y)) {
-          ok = false;
-        }
-
-        // Don't put root veins inside of obstacles
-        if(obstacles != undefined && obstacles.length > 0) {
-          for(let obstacle of obstacles) {
-            if(obstacle.contains(x, y)) {
-              ok = false;
-            }
-          }
-        }
-
-        if(ok) {
-          network.addVeinNode(
-            new VeinNode(
-              null,
-              new Vec2(x, y),
-              true,
-              ctx
-            )
-          );
-        }
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              random(window.innerWidth),
+              random(window.innerHeight)
+            ),
+            true,
+            ctx
+          )
+        );
       }
 
       break;
@@ -265,23 +253,12 @@ let setupNetwork = () => {
 
       break;
   }
-
-  // Set up common keyboard interaction listeners
-  setupKeyListeners(network);
 }
 
 // Main program loop
 let update = (timestamp) => {
-  network.update(undefined, obstacles);
-  network.drawBackground();
-  bounds.draw();
-
-  for(let obstacle of obstacles) {
-    obstacle.draw();
-  }
-
-  network.drawVeins();
-  network.drawSources();
+  network.update();
+  network.draw();
 
   requestAnimationFrame(update);
 }
@@ -291,48 +268,60 @@ document.addEventListener('keypress', (e) => {
   switch(e.key) {
     // r = reset simulation by reinitializing the network with initial conditions
     case 'r':
-      setupNetwork();
+      network.reset();
+      addBounds();
+      addObstacles();
+      addSources();
+      addRootVeins();
       break;
 
     // b = toggle visibility of bounds
     case 'b':
-      bounds.settings.ShowBounds = !bounds.settings.ShowBounds;
+      network.settings.ShowBounds = !network.settings.ShowBounds;
       break;
 
     // o = toggle visibility of obstacles
     case 'o':
-      for(let obstacle of obstacles) {
-        obstacle.settings.ShowObstacles = !obstacle.settings.ShowObstacles;
-      }
-
+      network.settings.ShowObstacles = !network.settings.ShowObstacles;
       break;
 
     case '1':
       currentBoundsShape = TRIANGLE;
-      setupBounds();
-      setupNetwork();
+      network.reset();
+      addBounds();
+      addObstacles();
+      addSources();
+      addRootVeins();
       break;
 
     case '2':
       currentBoundsShape = SQUARE;
-      setupBounds();
-      setupNetwork();
+      network.reset();
+      addBounds();
+      addObstacles();
+      addSources();
+      addRootVeins();
       break;
 
     case '3':
       currentBoundsShape = CIRCLE;
-      setupBounds();
-      setupNetwork();
+      network.reset();
+      addBounds();
+      addObstacles();
+      addSources();
+      addRootVeins();
       break;
 
     case '4':
       currentBoundsShape = LEAF;
-      setupBounds();
-      setupNetwork();
+      network.reset();
+      addBounds();
+      addObstacles();
+      addSources();
+      addRootVeins();
       break;
   }
 });
-
 
 // Kick off the application
 setup();
