@@ -42,14 +42,13 @@ A couple additional helper modules are also included there:
   * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
   * Must also modify the criteria for auxin source removal to wait for all veins to reach, or exit the proximity threshold.
 - [ ] Implement configurable birth rates and kill rates
-- [ ] Implement static boundary shape (leaf shape) from SVG design
+- [X] Implement static boundary shape (leaf shape) from SVG design
 - [ ] Implement dynamic boundary shape to simulate leaf growth
   - [ ] Uniform growth via scaling
   - [ ] Non-uniform growth via shape interpolation (?)
 - [ ] Add support for optional environmental force vector (see [ofxSpaceColonization::grow()](https://github.com/edap/ofxSpaceColonization/blob/master/src/ofxSpaceColonization.cpp#L97-L101))
 - [ ] Ensure that multiple vein networks can grow independently
-- [ ] Document all modules with JSDoc
-- [ ] Add support for obstacles that growth must avoid
+- [X] Add support for obstacles that growth must avoid
 - [ ] Implement different auxin placement schemes
   - [X] Random at start of simulation
   - [ ] Place using patterned noise, like Perlin
