@@ -40,7 +40,7 @@ export default class Path {
 
           break;
 
-        case 'Obstacles':
+        case 'Obstacle':
           this.ctx.fillStyle = this.settings.Colors.ObstacleFillColor;
           break;
       }

@@ -24,6 +24,7 @@ export default {
   ShowKillZones: false,         // toggled with 'k'
   ShowInfluenceLines: false,    // toggled with 'i'
   ShowBounds: true,             // toggled with 'b'
+  ShowObstacles: true,          // toggled with 'o'
 
   // Modes
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"

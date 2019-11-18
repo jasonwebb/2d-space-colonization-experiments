@@ -16,7 +16,7 @@ export default class Network {
     this.buildSpatialIndices();
   }
 
-  update(bounds = undefined) {
+  update(bounds = undefined, obstacles = undefined) {
     // Skip iteration if paused
     if(this.settings.IsPaused) {
       return;
@@ -61,10 +61,23 @@ export default class Network {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
+        let ok = true;
 
-        if(bounds != undefined && bounds.contains(nextNode.position)) {
-          this.nodes.push(nextNode);
-        } else {
+        // Don't grow if the next node goes out of the passed bounds
+        if(bounds != undefined && !bounds.contains(nextNode.position.x, nextNode.position.y)) {
+          ok = false;
+        }
+
+        // Don't grow if the next node goes inside any passed obstacle
+        if(obstacles != undefined && obstacles.length > 0) {
+          for(let obstacle of obstacles) {
+            if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
+              ok = false;
+            }
+          }
+        }
+
+        if(ok) {
           this.nodes.push(nextNode);
         }
       }
