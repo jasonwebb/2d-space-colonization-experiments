@@ -17,18 +17,15 @@ export default class SourcePatterns {
       ok = true;
 
       // Only put root veins inside the bounds
-      if(bounds != undefined) {
-        if(bounds instanceof Path && bounds.contains(x,y)) {
-          ok = true;
-        } else if(Array.isArray(bounds)) {
-          for(let bound of bounds) {
-            if(bound.contains(x,y)) {
-              ok = true;
-            }
+      if(bounds != undefined && bounds.length > 0) {
+        for(let bound of bounds) {
+          if(bound.contains(x,y)) {
+            ok = true;
           }
         }
       }
 
+      // Don't put root veins inside of obstacles
       if(obstacles != undefined && obstacles.length > 0) {
         for(let obstacle of obstacles) {
           if(!obstacle.contains(x,y)) {
@@ -62,22 +59,19 @@ export default class SourcePatterns {
         ok = false;
 
         // Only put root veins inside the bounds
-        if(bounds != undefined) {
-          if(bounds instanceof Path && bounds.contains(x,y)) {
-            ok = true;
-          } else if(Array.isArray(bounds)) {
-            for(let bound of bounds) {
-              if(bound.contains(x,y)) {
-                ok = true;
-              }
+        if(bounds != undefined && bounds.length > 0) {
+          for(let bound of bounds) {
+            if(bound.contains(x,y)) {
+              ok = true;
             }
           }
         }
 
+        // Don't put root veins inside of obstacles
         if(obstacles != undefined && obstacles.length > 0) {
           for(let obstacle of obstacles) {
-            if(!obstacle.contains(x,y)) {
-              ok = true;
+            if(obstacle.contains(x,y)) {
+              ok = false;
             }
           }
         }

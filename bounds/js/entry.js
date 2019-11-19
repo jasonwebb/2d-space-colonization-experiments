@@ -73,7 +73,7 @@ let resetNetwork = () => {
       const cy = window.innerHeight / 2;
       const sideLength = 800;
 
-      return new Path(
+      return [new Path(
         [
           [cx - sideLength/2, cy - sideLength/2],  // top left corner
           [cx + sideLength/2, cy - sideLength/2],  // top right corner
@@ -82,7 +82,7 @@ let resetNetwork = () => {
         ],
         'Bounds',
         ctx
-      );
+      )];
     }
 
     let getCircleBounds = () => {
@@ -100,7 +100,7 @@ let resetNetwork = () => {
         points.push([x, y]);
       }
 
-      return new Path(points, 'Bounds', ctx);
+      return [new Path(points, 'Bounds', ctx)];
     }
 
     let getLeafBounds = () => {
@@ -117,7 +117,7 @@ let resetNetwork = () => {
         point[1] = cy - shapeHeight/2 + point[1];
       }
 
-      return new Path(polygon, 'Bounds', ctx);
+      return [new Path(polygon, 'Bounds', ctx)];
     }
 
     let getVeinsTextBounds = () => {

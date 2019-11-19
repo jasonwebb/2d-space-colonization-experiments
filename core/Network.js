@@ -14,7 +14,7 @@ export default class Network {
 
     this.nodesIndex;    // kd-bush spatial index for all nodes
 
-    this.bounds;
+    this.bounds = [];
     this.obstacles = [];
 
     this.buildSpatialIndices();
@@ -68,14 +68,10 @@ export default class Network {
         let ok = false;
 
         // Only put root veins inside the bounds
-        if(this.bounds != undefined) {
-          if(this.bounds instanceof Path && this.bounds.contains(nextNode.position.x, nextNode.position.y)) {
-            ok = true;
-          } else if(Array.isArray(this.bounds)) {
-            for(let bound of this.bounds) {
-              if(bound.contains(nextNode.position.x, nextNode.position.y)) {
-                ok = true;
-              }
+        if(this.bounds != undefined && this.bounds.length > 0) {
+          for(let bound of this.bounds) {
+            if(bound.contains(nextNode.position.x, nextNode.position.y)) {
+              ok = true;
             }
           }
         }
@@ -84,7 +80,7 @@ export default class Network {
         if(this.obstacles != undefined && this.obstacles.length > 0) {
           for(let obstacle of this.obstacles) {
             if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
-              ok = true;
+              ok = false;
             }
           }
         }
@@ -141,12 +137,8 @@ export default class Network {
 
   drawBounds() {
     if(this.settings.ShowBounds && this.bounds != undefined) {
-      if(this.bounds instanceof Path) {
-        this.bounds.draw();
-      } else if(Array.isArray(this.bounds)) {
-        for(let bound of this.bounds) {
-          bound.draw();
-        }
+      for(let bound of this.bounds) {
+        bound.draw();
       }
     }
   }
@@ -302,8 +294,8 @@ export default class Network {
     // Don't put root veins inside of obstacles
     if(this.obstacles != undefined && this.obstacles.length > 0) {
       for(let obstacle of this.obstacles) {
-        if(!obstacle.contains(node.position.x, node.position.y)) {
-          ok = true;
+        if(obstacle.contains(node.position.x, node.position.y)) {
+          ok = false;
         }
       }
     }
