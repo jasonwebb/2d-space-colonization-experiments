@@ -144,7 +144,7 @@ export default class Network {
   }
 
   drawObstacles() {
-    if(this.settings.ShowObstacles && this.obstacles != undefined && this.obstacles.length > 0) {
+    if(this.settings.ShowObstacles && this.obstacles != undefined) {
       for(let obstacle of this.obstacles) {
         obstacle.draw();
       }
@@ -331,6 +331,10 @@ export default class Network {
 
   toggleSources() {
     this.settings.ShowSources = !this.settings.ShowSources;
+
+    for(let source of this.sources) {
+      source.settings.ShowSources = !source.settings.ShowSources;
+    }
   }
 
   toggleAttractionZones() {
