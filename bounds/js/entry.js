@@ -8,6 +8,7 @@ import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 
 const leaf = require('../svg/leaf.svg');
+const veinsText = require('../svg/veins-text.svg');
 
 let canvas, ctx;
 let network;
@@ -15,7 +16,8 @@ let network;
 const SQUARE = 0;
 const CIRCLE = 1;
 const LEAF = 2;
-let currentBoundsShape = LEAF;
+const VEINSTEXT = 3;
+let currentBoundsShape = VEINSTEXT;
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -58,6 +60,10 @@ let resetNetwork = () => {
 
       case LEAF:
         network.bounds = getLeafBounds();
+        break;
+
+      case VEINSTEXT:
+        network.bounds = getVeinsTextBounds();
         break;
     }
   }
@@ -114,10 +120,32 @@ let resetNetwork = () => {
       return new Path(polygon, 'Bounds', ctx);
     }
 
+    let getVeinsTextBounds = () => {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+      const shapeWidth = 900;
+      const shapeHeight = 900;
+
+      let polygons = SVGLoader.load(veinsText);
+      let bounds = [];
+
+      for(let polygon of polygons) {
+        // Translate the design to the screen center
+        for(let point of polygon) {
+          point[0] = cx - shapeWidth/2 + point[0];
+          point[1] = cy - shapeHeight/2 + point[1];
+        }
+
+        bounds.push(new Path(polygon, 'Bounds', ctx));
+      }
+
+      return bounds;
+    }
+
   let addSources = () => {
     // Set up the auxin sources using pre-made patterns
     let randomSources = SourcePatterns.getRandomSources(500, ctx, network.bounds);
-    let gridSources = SourcePatterns.getGridOfSources(80, 80, ctx, network.bounds);
+    let gridSources = SourcePatterns.getGridOfSources(300, 300, ctx, network.bounds);
 
     network.sources = gridSources;
   }
@@ -159,6 +187,74 @@ let resetNetwork = () => {
         );
 
         break;
+
+      case VEINSTEXT:
+        // V
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              window.innerWidth / 2 - 330,
+              window.innerHeight / 2 + 70
+            ),
+            true,
+            ctx
+          )
+        );
+
+        // E
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              window.innerWidth / 2 - 200,
+              window.innerHeight / 2
+            ),
+            true,
+            ctx
+          )
+        );
+
+        // I
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              window.innerWidth / 2,
+              window.innerHeight / 2
+            ),
+            true,
+            ctx
+          )
+        );
+
+        // N
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              window.innerWidth / 2 + 100,
+              window.innerHeight / 2
+            ),
+            true,
+            ctx
+          )
+        );
+
+        // S
+        network.addVeinNode(
+          new VeinNode(
+            null,
+            new Vec2(
+              window.innerWidth / 2 + 410,
+              window.innerHeight / 2
+            ),
+            true,
+            ctx
+          )
+        );
+
+        break;
     }
   }
 
@@ -190,6 +286,11 @@ document.addEventListener('keypress', (e) => {
 
     case '3':
       currentBoundsShape = LEAF;
+      resetNetwork();
+      break;
+
+    case '4':
+      currentBoundsShape = VEINSTEXT;
       resetNetwork();
       break;
   }

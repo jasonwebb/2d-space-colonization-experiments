@@ -1,6 +1,7 @@
 import AuxinSource from './AuxinSource';
 import Vec2 from 'vec2';
 import { random } from './Utilities';
+import Path from './Path';
 
 export default class SourcePatterns {
   constructor() {}
@@ -15,14 +16,23 @@ export default class SourcePatterns {
       y = random(window.innerHeight);
       ok = true;
 
-      if((bounds != undefined && !bounds.contains(x,y))) {
-        ok = false;
+      // Only put root veins inside the bounds
+      if(bounds != undefined) {
+        if(bounds instanceof Path && bounds.contains(x,y)) {
+          ok = true;
+        } else if(Array.isArray(bounds)) {
+          for(let bound of bounds) {
+            if(bound.contains(x,y)) {
+              ok = true;
+            }
+          }
+        }
       }
 
       if(obstacles != undefined && obstacles.length > 0) {
         for(let obstacle of obstacles) {
-          if(obstacle.contains(x,y)) {
-            ok = false;
+          if(!obstacle.contains(x,y)) {
+            ok = true;
           }
         }
       }
@@ -49,16 +59,25 @@ export default class SourcePatterns {
       for(let j=0; j<=numColumns; j++) {
         x = (window.innerWidth / numColumns) * j + random(-10,10);
         y = (window.innerHeight / numRows) * i + random(-10,10);
-        ok = true;
+        ok = false;
 
-        if((bounds != undefined && !bounds.contains(x,y))) {
-          ok = false;
+        // Only put root veins inside the bounds
+        if(bounds != undefined) {
+          if(bounds instanceof Path && bounds.contains(x,y)) {
+            ok = true;
+          } else if(Array.isArray(bounds)) {
+            for(let bound of bounds) {
+              if(bound.contains(x,y)) {
+                ok = true;
+              }
+            }
+          }
         }
 
         if(obstacles != undefined && obstacles.length > 0) {
           for(let obstacle of obstacles) {
-            if(obstacle.contains(x,y)) {
-              ok = false;
+            if(!obstacle.contains(x,y)) {
+              ok = true;
             }
           }
         }

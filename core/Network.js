@@ -2,6 +2,7 @@ import Defaults from './Defaults';
 import KDBush from 'kdbush';
 import * as Vec2 from 'vec2';
 import { random } from './Utilities';
+import Path from './Path';
 
 export default class Network {
   constructor(ctx, settings) {
@@ -64,18 +65,26 @@ export default class Network {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
-        let ok = true;
+        let ok = false;
 
-        // Don't grow if the next node goes out of the passed bounds
-        if(this.bounds != undefined && !this.bounds.contains(nextNode.position.x, nextNode.position.y)) {
-          ok = false;
+        // Only put root veins inside the bounds
+        if(this.bounds != undefined) {
+          if(this.bounds instanceof Path && this.bounds.contains(nextNode.position.x, nextNode.position.y)) {
+            ok = true;
+          } else if(Array.isArray(this.bounds)) {
+            for(let bound of this.bounds) {
+              if(bound.contains(nextNode.position.x, nextNode.position.y)) {
+                ok = true;
+              }
+            }
+          }
         }
 
         // Don't grow if the next node goes inside any passed obstacle
         if(this.obstacles != undefined && this.obstacles.length > 0) {
           for(let obstacle of this.obstacles) {
             if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
-              ok = false;
+              ok = true;
             }
           }
         }
@@ -132,7 +141,13 @@ export default class Network {
 
   drawBounds() {
     if(this.settings.ShowBounds && this.bounds != undefined) {
-      this.bounds.draw();
+      if(this.bounds instanceof Path) {
+        this.bounds.draw();
+      } else if(Array.isArray(this.bounds)) {
+        for(let bound of this.bounds) {
+          bound.draw();
+        }
+      }
     }
   }
 
@@ -269,18 +284,26 @@ export default class Network {
   }
 
   addVeinNode(node) {
-    let ok = true;
+    let ok = false;
 
     // Only put root veins inside the bounds
-    if(this.bounds != undefined && !this.bounds.contains(node.position.x, node.position.y)) {
-      ok = false;
+    if(this.bounds != undefined) {
+      if(this.bounds instanceof Path && this.bounds.contains(node.position.x, node.position.y)) {
+        ok = true;
+      } else if(Array.isArray(this.bounds)) {
+        for(let bound of this.bounds) {
+          if(bound.contains(node.position.x, node.position.y)) {
+            ok = true;
+          }
+        }
+      }
     }
 
     // Don't put root veins inside of obstacles
     if(this.obstacles != undefined && this.obstacles.length > 0) {
       for(let obstacle of this.obstacles) {
-        if(obstacle.contains(node.position.x, node.position.y)) {
-          ok = false;
+        if(!obstacle.contains(node.position.x, node.position.y)) {
+          ok = true;
         }
       }
     }
