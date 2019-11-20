@@ -7,6 +7,7 @@ export default class AuxinSource {
     this.settings = Object.assign({}, Defaults, settings);
 
     this.influencingNodes = [];
+    this.fresh = true;
   }
 
   draw() {

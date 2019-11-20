@@ -50,11 +50,16 @@ export default class Network {
             return !nodesInKillZone.includes(neighborNode);
           });
 
-          source.influencingNodes = nodesToGrow;
+          source.influencingNodes = neighborhoodNodes;
 
-          for(let node of nodesToGrow) {
-            node.influencedBy.push(sourceID);
+          if(nodesToGrow.length > 0) {
+            source.fresh = false;
+
+            for(let node of nodesToGrow) {
+              node.influencedBy.push(sourceID);
+            }
           }
+
 
           break;
       }
@@ -106,8 +111,18 @@ export default class Network {
 
         // For closed venation, remove the source only when all associated vein nodes have reached it
         case 'Closed':
-          if(source.influencingNodes.length === 0) {
-            this.sources.splice(sourceID, 1);
+          if(source.influencingNodes.length > 0 && !source.fresh) {
+            let allNodesReached = true;
+
+            for(let node of source.influencingNodes) {
+              if(node.position.distance(source.position) > this.settings.KillDistance) {
+                allNodesReached = false;
+              }
+            }
+
+            if(allNodesReached) {
+              this.sources.splice(sourceID, 1);
+            }
           }
 
           break;
