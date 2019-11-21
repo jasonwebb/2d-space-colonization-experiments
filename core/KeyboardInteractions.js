@@ -1,3 +1,5 @@
+import { exportSVG } from "./Utilities";
+
 export function setupKeyListeners(networks) {
   if(!(networks instanceof Array)) {
     networks = [networks];
@@ -75,6 +77,11 @@ export function setupKeyListeners(networks) {
           network.toggleObstacles();
         }
 
+        break;
+
+      // e = export an SVG file of all visible geometry
+      case 'e':
+        exportSVG(networks[0]);
         break;
     }
   });
