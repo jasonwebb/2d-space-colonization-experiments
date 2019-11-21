@@ -59,6 +59,7 @@ A couple additional helper modules are also included there:
 - [ ] Implement varying vein widths
   * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
   * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
+- [X] Implement SVG export
 
 ## References
 _Articles and papers:_
