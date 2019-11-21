@@ -1,12 +1,13 @@
 import Defaults from './Defaults';
 
 export default class VeinNode {
-  constructor(parent, position, isTip, ctx, settings) {
+  constructor(parent, position, isTip, ctx, settings, color = undefined) {
     this.parent = parent;
     this.position = position;
     this.isTip = isTip;
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
+    this.color = color;
 
     this.influencedBy = [];
   }
@@ -22,7 +23,12 @@ export default class VeinNode {
           this.ctx.strokeStyle = this.settings.Colors.VeinTipColor;
           this.ctx.lineWidth = this.settings.VeinTipThickness;
         } else {
-          this.ctx.strokeStyle = this.settings.Colors.VeinColor;
+          if(this.color != undefined) {
+            this.ctx.strokeStyle = this.color;
+          } else {
+            this.ctx.strokeStyle = this.settings.Colors.VeinColor;
+          }
+
           this.ctx.lineWidth = this.settings.VeinThickness;
         }
 
@@ -61,7 +67,8 @@ export default class VeinNode {
       this.nextPosition,
       true,
       this.ctx,
-      this.settings
+      this.settings,
+      this.color
     );
   }
 }

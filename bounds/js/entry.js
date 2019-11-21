@@ -165,7 +165,9 @@ let resetNetwork = () => {
                 random(window.innerHeight)
               ),
               true,
-              ctx
+              ctx,
+              undefined,
+              'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
             )
           );
         }
