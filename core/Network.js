@@ -70,27 +70,32 @@ export default class Network {
       if(node.influencedBy.length > 0) {
         let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
         let nextNode = node.getNextNode(averageDirection);
-        let ok = false;
+        let isInsideAnyBounds = false;
+        let isInsideAnyObstacle = false;
 
-        // Only put root veins inside the bounds
+        // Only allow root veins inside of defined bounds
         if(this.bounds != undefined && this.bounds.length > 0) {
           for(let bound of this.bounds) {
             if(bound.contains(nextNode.position.x, nextNode.position.y)) {
-              ok = true;
+              isInsideAnyBounds = true;
             }
           }
         }
 
-        // Don't grow if the next node goes inside any passed obstacle
+        // Don't allow any root veins that are inside of an obstacle
         if(this.obstacles != undefined && this.obstacles.length > 0) {
           for(let obstacle of this.obstacles) {
             if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
-              ok = false;
+              isInsideAnyObstacle = true;
             }
           }
         }
 
-        if(ok) {
+        // NOTE: disabling this check lets veins grow across gaps in bounds - cool effect!
+        if(
+          (isInsideAnyBounds || this.bounds.length === 0) &&
+          (!isInsideAnyObstacle || this.obstacles.length === 0)
+        ) {
           this.nodes.push(nextNode);
         }
       }
@@ -291,31 +296,31 @@ export default class Network {
   }
 
   addVeinNode(node) {
-    let ok = false;
+    let isInsideAnyBounds = false;
+    let isInsideAnyObstacle = false;
 
-    // Only put root veins inside the bounds
-    if(this.bounds != undefined) {
-      if(this.bounds instanceof Path && this.bounds.contains(node.position.x, node.position.y)) {
-        ok = true;
-      } else if(Array.isArray(this.bounds)) {
-        for(let bound of this.bounds) {
-          if(bound.contains(node.position.x, node.position.y)) {
-            ok = true;
-          }
+    // Only allow root veins inside of defined bounds
+    if(this.bounds != undefined && this.bounds.length > 0) {
+      for(let bound of this.bounds) {
+        if(bound.contains(node.position.x, node.position.y)) {
+          isInsideAnyBounds = true;
         }
       }
     }
 
-    // Don't put root veins inside of obstacles
+    // Don't allow any root veins that are inside of an obstacle
     if(this.obstacles != undefined && this.obstacles.length > 0) {
       for(let obstacle of this.obstacles) {
         if(obstacle.contains(node.position.x, node.position.y)) {
-          ok = false;
+          isInsideAnyObstacle = true;
         }
       }
     }
 
-    if(ok) {
+    if(
+      (isInsideAnyBounds || this.bounds.length === 0) &&
+      (!isInsideAnyObstacle || this.obstacles.length === 0)
+    ) {
       this.nodes.push(node);
       this.buildSpatialIndices();
     }
