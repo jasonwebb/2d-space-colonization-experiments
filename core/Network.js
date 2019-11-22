@@ -395,6 +395,16 @@ export default class Network {
     this.settings.ShowObstacles = !this.settings.ShowObstacles;
   }
 
+  toggleCanalization() {
+    this.settings.EnableCanalization = !this.settings.EnableCanalization;
+
+    if(!this.settings.EnableCanalization) {
+      for(let node of this.nodes) {
+        node.thickness = 0;
+      }
+    }
+  }
+
   togglePause() {
     this.settings.IsPaused = !this.settings.IsPaused;
   }

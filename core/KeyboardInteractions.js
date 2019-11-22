@@ -83,6 +83,14 @@ export function setupKeyListeners(networks) {
       case 'e':
         exportSVG(networks[0]);
         break;
+
+      // c = toggle auxin flux canalization
+      case 'c':
+        for(let network of networks) {
+          network.toggleCanalization();
+        }
+
+        break;
     }
   });
 }
