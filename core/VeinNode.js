@@ -10,6 +10,7 @@ export default class VeinNode {
     this.color = color;
 
     this.influencedBy = [];
+    this.thickness = 0;
   }
 
   draw() {
@@ -29,7 +30,7 @@ export default class VeinNode {
             this.ctx.strokeStyle = this.settings.Colors.VeinColor;
           }
 
-          this.ctx.lineWidth = this.settings.VeinThickness;
+          this.ctx.lineWidth = this.settings.VeinThickness + this.thickness;
         }
 
         this.ctx.stroke();

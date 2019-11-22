@@ -101,6 +101,16 @@ export default class Network {
       }
 
       node.influencedBy = [];
+
+      // Perform auxin flux canalization (line segment thickening)
+      if(node.isTip && this.settings.EnableCanalization) {
+        let currentNode = node;
+
+        while(currentNode.parent != null) {
+          currentNode.parent.thickness = currentNode.thickness + .1;
+          currentNode = currentNode.parent;
+        }
+      }
     }
 
     // Remove any auxin sources that have been reached by their associated vein nodes

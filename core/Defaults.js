@@ -10,6 +10,7 @@ export default {
   AttractionDistance: 50,  // radius of influence (d_i) around each auxin source that attracts vein segments
   KillDistance: 5,          // distance (d_k) between auxin sources and segments when segments are ended
   IsPaused: false,          // initial pause/unpause state
+  EnableCanalization: true,   // turns on/off auxin flux canalization (line segment thickening)
 
 
   /**
@@ -30,10 +31,10 @@ export default {
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Light,
+  Colors: Dark,
 
   // Line thicknesses
-  VeinThickness: 1,
+  VeinThickness: 1.5,
   VeinTipThickness: 2,
   BoundsBorderThickness: 0
 }
