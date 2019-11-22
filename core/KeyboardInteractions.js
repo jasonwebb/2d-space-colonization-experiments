@@ -1,95 +1,61 @@
 import { exportSVG } from "./Utilities";
 
-export function setupKeyListeners(networks) {
-  if(!(networks instanceof Array)) {
-    networks = [networks];
-  }
-
+export function setupKeyListeners(network) {
   document.addEventListener('keypress', (e) => {
     switch(e.key) {
       // Space = pause/unpause
       case ' ':
-        for(let network of networks) {
-          network.togglePause();
-        }
-
+        network.togglePause();
         break;
 
       // v = toggle vein visibility
       case 'v':
-        for(let network of networks) {
-          network.toggleVeins();
-        }
-
+        network.toggleVeins();
         break;
 
       // s = toggle auxin source visibility
       case 's':
-        for(let network of networks) {
-          network.toggleSources();
-        }
-
+        network.toggleSources();
         break;
 
       // a = toggle attraction zone visibility
       case 'a':
-        for(let network of networks) {
-          network.toggleAttractionZones();
-        }
-
+        network.toggleAttractionZones();
         break;
 
       // t = toggle vein tip visibility
       case 't':
-        for(let network of networks) {
-          network.toggleVeinTips();
-        }
-
+        network.toggleVeinTips();
         break;
 
       // k = toggle kill zone visibility
       case 'k':
-        for(let network of networks) {
-          network.toggleKillZones();
-        }
-
+        network.toggleKillZones();
         break;
 
       // i = toggle influence lines visibility
       case 'i':
-        for(let network of networks) {
-          network.toggleInfluenceLines();
-        }
-
+        network.toggleInfluenceLines();
         break;
 
       // b = toggle bounds visibility
       case 'b':
-        for(let network of networks) {
-          network.toggleBounds();
-        }
-
+        network.toggleBounds();
         break;
 
       // o = toggle obstacles visibility
       case 'o':
-        for(let network of networks) {
-          network.toggleObstacles();
-        }
-
+        network.toggleObstacles();
         break;
 
       // e = export an SVG file of all visible geometry
       case 'e':
-        exportSVG(networks[0]);
+        exportSVG(network);
         break;
 
       // c = toggle auxin flux canalization
       case 'c':
-        for(let network of networks) {
-          network.toggleCanalization();
-        }
-
+        network.toggleCanalization();
         break;
     }
   });
