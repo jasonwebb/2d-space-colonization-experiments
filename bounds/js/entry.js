@@ -17,7 +17,7 @@ const SQUARE = 0;
 const CIRCLE = 1;
 const LEAF = 2;
 const VEINSTEXT = 3;
-let currentBoundsShape = VEINSTEXT;
+let currentBoundsShape = CIRCLE;
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -145,7 +145,7 @@ let resetNetwork = () => {
   let addSources = () => {
     // Set up the auxin sources using pre-made patterns
     let randomSources = SourcePatterns.getRandomSources(500, ctx, network.bounds);
-    let gridSources = SourcePatterns.getGridOfSources(300, 300, ctx, network.bounds);
+    let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, network.bounds);
 
     network.sources = gridSources;
   }
@@ -156,7 +156,7 @@ let resetNetwork = () => {
       case SQUARE:
       case CIRCLE:
         // Add a set of random root veins throughout scene
-        for(let i=0; i<10; i++) {
+        for(let i=0; i<13; i++) {
           network.addVeinNode(
             new VeinNode(
               null,
@@ -184,7 +184,9 @@ let resetNetwork = () => {
               window.innerHeight / 2 + 220
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
@@ -200,7 +202,9 @@ let resetNetwork = () => {
               window.innerHeight / 2 + 70
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
@@ -213,7 +217,9 @@ let resetNetwork = () => {
               window.innerHeight / 2
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
@@ -226,7 +232,9 @@ let resetNetwork = () => {
               window.innerHeight / 2
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
@@ -239,7 +247,9 @@ let resetNetwork = () => {
               window.innerHeight / 2
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
@@ -252,7 +262,9 @@ let resetNetwork = () => {
               window.innerHeight / 2
             ),
             true,
-            ctx
+            ctx,
+            undefined,
+            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
           )
         );
 
