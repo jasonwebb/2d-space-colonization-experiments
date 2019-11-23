@@ -33,8 +33,18 @@ export default class VeinNode {
           this.ctx.lineWidth = this.settings.VeinThickness + this.thickness;
         }
 
+        // Smoothly ramp up opacity based on vein thickness
+        if(this.settings.EnableOpacityGradient) {
+          this.ctx.globalAlpha = this.thickness / 3 + .2;
+        }
+
         this.ctx.stroke();
         this.ctx.lineWidth = 1;
+
+        // Reset global opacity if it was changed due to opacity gradient flag
+        if(this.settings.EnableOpacityGradient) {
+          this.ctx.globalAlpha = 1;
+        }
 
       } else if(this.settings.VeinRenderMode == 'Dots') {
         this.ctx.beginPath();
