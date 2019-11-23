@@ -51,16 +51,15 @@ export default class SourcePatterns {
     return sources;
   }
 
-  // TODO: add "jitter" parameter for randomness
-  static getGridOfSources(numRows, numColumns, ctx, bounds = undefined, obstacles = undefined) {
+  static getGridOfSources(numRows, numColumns, ctx, jitterRange = 0, bounds = undefined, obstacles = undefined) {
     let sources = [];
     let x, y;
     let isInsideAnyBounds, isInsideAnyObstacle;
 
     for(let i=0; i<=numRows; i++) {
       for(let j=0; j<=numColumns; j++) {
-        x = (window.innerWidth / numColumns) * j + random(-10,10);
-        y = (window.innerHeight / numRows) * i + random(-10,10);
+        x = (window.innerWidth / numColumns) * j + random(-jitterRange, jitterRange);
+        y = (window.innerHeight / numRows) * i + random(-jitterRange, jitterRange);
         isInsideAnyBounds = false;
         isInsideAnyObstacle = false;
 

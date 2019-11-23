@@ -166,8 +166,8 @@ let resetNetwork = () => {
 
   let addSources = () => {
     // Set up the auxin sources using pre-made patterns
-    let randomSources = SourcePatterns.getRandomSources(500, ctx, network.bounds, network.obstacles);
-    let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, network.bounds, network.obstacles);
+    let randomSources = SourcePatterns.getRandomSources(500, ctx, 10, network.bounds, network.obstacles);
+    let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, 10, network.bounds, network.obstacles);
 
     network.sources = gridSources;
   }

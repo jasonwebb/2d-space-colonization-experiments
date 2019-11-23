@@ -30,8 +30,8 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Set up the auxin sources using pre-made patterns
-  let randomSources = SourcePatterns.getRandomSources(500, ctx);
-  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx);
+  let randomSources = SourcePatterns.getRandomSources(500, ctx, 10);
+  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx, 10);
 
   network.sources = gridSources;
 
