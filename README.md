@@ -46,8 +46,7 @@ A couple additional helper modules are also included there:
 - [ ] Implement dynamic boundary shape to simulate leaf growth
   - [ ] Uniform growth via scaling
   - [ ] Non-uniform growth via shape interpolation (?)
-- [ ] Add support for optional environmental force vector (see [ofxSpaceColonization::grow()](https://github.com/edap/ofxSpaceColonization/blob/master/src/ofxSpaceColonization.cpp#L97-L101))
-- [ ] Ensure that multiple vein networks can grow independently
+- [X] Ensure that multiple vein networks can grow independently
 - [X] Add support for obstacles that growth must avoid
 - [ ] Implement different auxin placement schemes
   - [X] Random at start of simulation
@@ -56,7 +55,7 @@ A couple additional helper modules are also included there:
   - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
   - [ ] Added along margin of shape only
 - [X] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
-- [ ] Implement varying vein widths
+- [X] Implement varying vein widths (auxin flux canalization)
   * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
   * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
 - [X] Implement SVG export
