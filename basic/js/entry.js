@@ -1,6 +1,6 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import SourcePatterns from '../../core/SourcePatterns';
+import { getRandomSources, getGridOfSources, applyNoise, getPhyllotaxisSources } from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
@@ -30,8 +30,9 @@ let setupNetwork = () => {
   network = new Network(ctx);
 
   // Set up the auxin sources using pre-made patterns
-  let randomSources = SourcePatterns.getRandomSources(500, ctx, 10);
-  let gridSources = SourcePatterns.getGridOfSources(60, 60, ctx, 10);
+  let randomSources = getRandomSources(500, ctx, 10);
+  let gridSources = getGridOfSources(150, 100, ctx, 10);
+  let phyllotaxisSources = getPhyllotaxisSources(ctx);
 
   network.sources = gridSources;
 

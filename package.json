@@ -23,6 +23,7 @@
     "kdbush": "^3.0.0",
     "path": "^0.12.7",
     "point-in-polygon": "^1.0.1",
+    "simplex-noise": "^2.4.0",
     "svg-inline-loader": "^0.8.0",
     "svg-pathdata": "^5.0.2",
     "svg-points": "^6.0.1",

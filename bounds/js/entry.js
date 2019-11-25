@@ -1,6 +1,6 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import SourcePatterns from '../../core/SourcePatterns';
+import { getRandomSources, getGridOfSources } from '../../core/SourcePatterns';
 import VeinNode from '../../core/VeinNode';
 import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
@@ -144,8 +144,8 @@ let resetNetwork = () => {
 
   let addSources = () => {
     // Set up the auxin sources using pre-made patterns
-    let randomSources = SourcePatterns.getRandomSources(500, ctx, network.bounds);
-    let gridSources = SourcePatterns.getGridOfSources(200, 200, ctx, network.bounds);
+    let randomSources = getRandomSources(500, ctx, 10, network.bounds);
+    let gridSources = getGridOfSources(150, 150, ctx, 10, network.bounds);
 
     network.sources = gridSources;
   }
