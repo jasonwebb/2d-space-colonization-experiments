@@ -1,6 +1,6 @@
 import AuxinSource from './AuxinSource';
 import Vec2 from 'vec2';
-import { random } from './Utilities';
+import { random, map } from './Utilities';
 var SimplexNoise = require('simplex-noise');
 
 export function getRandomSources(numSources, ctx, bounds = undefined, obstacles = undefined) {
@@ -140,6 +140,30 @@ export function getPhyllotaxisSources(ctx) {
         ctx
       )
     );
+  }
+
+  return sources;
+}
+
+export function getWaveOfSources(ctx) {
+  let sources = [];
+  let numRows = 70;
+  let numColumns = 100;
+  let rowSpacing = window.innerHeight / numRows;
+  let colSpacing = window.innerWidth / numColumns;
+
+  for(let row = 0; row < numRows; row++) {
+    for(let col = 0; col < numColumns; col++) {
+      sources.push(
+        new AuxinSource(
+          new Vec2(
+            (col * colSpacing) + (Math.sin(map(col, 0, numColumns, 0, Math.PI * 2)) * 200),
+            (row * rowSpacing) + (Math.sin(map(row, 0, numRows, 0, Math.PI * 2)) * 50)
+          ),
+          ctx
+        )
+      )
+    }
   }
 
   return sources;

@@ -14,6 +14,10 @@ export function random(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+export function map(value, originalLower, originalUpper, newLower, newUpper) {
+  return newLower + (newUpper - newLower) * ((value - originalLower) / (originalUpper - originalLower));
+}
+
 export function getCircleOfPoints(cx, cy, radius, resolution) {
   let angle, x, y;
   let points = [];
