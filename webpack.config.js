@@ -5,7 +5,8 @@ module.exports = {
   entry: {
     basic: path.resolve('basic/js/entry.js'),
     bounds: path.resolve('bounds/js/entry.js'),
-    obstacles: path.resolve('obstacles/js/entry.js')
+    obstacles: path.resolve('obstacles/js/entry.js'),
+    sourcesOnPaths: path.resolve('sources-on-paths/js/entry.js')
   },
   module: {
     rules: [
