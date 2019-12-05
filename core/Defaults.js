@@ -7,7 +7,7 @@ export default {
 
   VenationType: 'Open',         // venation can be "Open" or "Closed"
   SegmentLength: 5,             // length of each vein segment. Smaller numbers mean smoother lines, but more computation cost
-  AttractionDistance: 50,       // radius of influence (d_i) around each auxin source that attracts vein segments
+  AttractionDistance: 30,       // radius of influence (d_i) around each auxin source that attracts vein segments
   KillDistance: 5,              // distance (d_k) between auxin sources and segments when segments are ended
   IsPaused: false,              // initial pause/unpause state
   EnableCanalization: true,     // turns on/off auxin flux canalization (line segment thickening)
