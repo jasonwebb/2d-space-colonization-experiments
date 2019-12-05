@@ -2,19 +2,25 @@ import Defaults from './Defaults';
 
 export default class VeinNode {
   constructor(parent, position, isTip, ctx, settings, color = undefined) {
-    this.parent = parent;
-    this.position = position;
-    this.isTip = isTip;
-    this.ctx = ctx;
+    this.parent = parent;       // reference to parent node, necessary for vein thickening later
+    this.position = position;   // {vec2} of this node's position
+    this.isTip = isTip;         // {boolean}
+    this.ctx = ctx;             // global canvas context for drawing
     this.settings = Object.assign({}, Defaults, settings);
-    this.color = color;
+    this.color = color;         // color, usually passed down from parent
 
-    this.influencedBy = [];
-    this.thickness = 0;
+    this.influencedBy = [];     // references to all AuxinSources influencing this node each frame
+    this.thickness = 0;         // thickness - this is increased during vein thickening process
   }
 
   draw() {
     if(this.parent != null) {
+      // Smoothly ramp up opacity based on vein thickness
+      if(this.settings.EnableOpacityGradient) {
+        this.ctx.globalAlpha = this.thickness / 3 + .2;
+      }
+
+      // "Lines" render mode
       if(this.settings.VeinRenderMode == 'Lines') {
         this.ctx.beginPath();
         this.ctx.moveTo(this.position.x, this.position.y);
@@ -33,26 +39,17 @@ export default class VeinNode {
           this.ctx.lineWidth = this.settings.VeinThickness + this.thickness;
         }
 
-        // Smoothly ramp up opacity based on vein thickness
-        if(this.settings.EnableOpacityGradient) {
-          this.ctx.globalAlpha = this.thickness / 3 + .2;
-        }
-
         this.ctx.stroke();
         this.ctx.lineWidth = 1;
 
-        // Reset global opacity if it was changed due to opacity gradient flag
-        if(this.settings.EnableOpacityGradient) {
-          this.ctx.globalAlpha = 1;
-        }
-
+      // "Dots" render mode
       } else if(this.settings.VeinRenderMode == 'Dots') {
         this.ctx.beginPath();
         this.ctx.ellipse(
           this.position.x,
           this.position.y,
-          1,
-          1,
+          1 + this.thickness / 2,
+          1 + this.thickness / 2,
           0,
           0,
           Math.PI * 2
@@ -65,6 +62,11 @@ export default class VeinNode {
         }
 
         this.ctx.fill();
+      }
+
+      // Reset global opacity if it was changed due to opacity gradient flag
+      if(this.settings.EnableOpacityGradient) {
+        this.ctx.globalAlpha = 1;
       }
     }
   }
