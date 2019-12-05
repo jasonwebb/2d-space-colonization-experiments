@@ -2,12 +2,12 @@ import Defaults from './Defaults';
 
 export default class AuxinSource {
   constructor(position, ctx, settings = {}) {
-    this.position = position;
-    this.ctx = ctx;
+    this.position = position;     // vec2 of this source's position
+    this.ctx = ctx;               // global canvas context
     this.settings = Object.assign({}, Defaults, settings);
 
-    this.influencingNodes = [];
-    this.fresh = true;
+    this.influencingNodes = [];   // references to nodes this source is influencing each frame
+    this.fresh = true;            // flag used to prevent sources from being removed during first frame of Closed venation mode
   }
 
   draw() {

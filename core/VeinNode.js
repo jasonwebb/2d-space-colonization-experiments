@@ -53,8 +53,9 @@ export default class VeinNode {
           0,
           0,
           Math.PI * 2
-        );  // TODO: vary dot radius based on algorithm
+        );
 
+        // Change color or "tip" nodes
         if(this.isTip && this.settings.ShowVeinTips) {
           this.ctx.fillStyle = this.settings.Colors.VeinTipColor;
         } else {
@@ -71,6 +72,7 @@ export default class VeinNode {
     }
   }
 
+  // Create a new node in the provided direction and a pre-defined distance (SegmentLength)
   getNextNode(averageSourceDirection) {
     this.isTip = false;
     this.nextPosition = this.position.add(averageSourceDirection.multiply(this.settings.SegmentLength), true);

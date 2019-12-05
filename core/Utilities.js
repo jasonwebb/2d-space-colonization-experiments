@@ -1,6 +1,9 @@
 import { saveAs } from 'file-saver';
 import { toPath } from 'svg-points';
 
+// random(), similar to Processing's
+// If two parameters are passed, they are interpreted as the minimum and maximum of the desired range
+// If only one parameter is passed, it is interpreted as the maximum, while zero is used as the minimum
 export function random(min, max) {
   if (max === undefined) {
     max = min;
@@ -14,10 +17,12 @@ export function random(min, max) {
   return Math.random() * (max - min) + min;
 }
 
+// Converts a number from one range to another
 export function map(value, originalLower, originalUpper, newLower, newUpper) {
   return newLower + (newUpper - newLower) * ((value - originalLower) / (originalUpper - originalLower));
 }
 
+// Returns an array of point coordinates (also arrays, with two entries) for points arranged in a circle
 export function getCircleOfPoints(cx, cy, radius, resolution) {
   let angle, x, y;
   let points = [];

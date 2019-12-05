@@ -10,7 +10,7 @@ export default class SVGLoader {
     let inputPaths = svgNode.querySelectorAll('path'),
       paths = [];
 
-    // Scrape all points from all points, and record breakpoints
+    // Scrape all points from all paths, and record breakpoints
     for(let inputPath of inputPaths) {
       let pathData = new SVGPathData(inputPath.getAttribute('d')),
         points = [];
