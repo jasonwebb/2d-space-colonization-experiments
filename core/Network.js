@@ -107,7 +107,11 @@ export default class Network {
         let currentNode = node;
 
         while(currentNode.parent != null) {
-          currentNode.parent.thickness = currentNode.thickness + .1;
+          // When there are multiple child veins, use the thickest of them all
+          if(currentNode.parent.thickness < currentNode.thickness + .07) {
+            currentNode.parent.thickness = currentNode.thickness + .07;
+          }
+
           currentNode = currentNode.parent;
         }
       }
