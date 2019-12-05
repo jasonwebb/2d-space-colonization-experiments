@@ -18,10 +18,10 @@ export const Dark = {
   VeinTipColor: 'rgba(0,255,255,1)',
   AttractionZoneColor: 'rgba(255,255,255,.002)',
   KillZoneColor: 'rgba(255,0,0,.4)',
-  InfluenceLinesColor: 'rgba(0,0,255,1)',
-  BoundsFillColor: 'rgba(255,255,255,.05)',
+  InfluenceLinesColor: 'rgba(255,255,255,.2)',
+  BoundsFillColor: 'rgba(255,255,255,0)',
   BoundsBorderColor: 'rgba(255,255,255,.05)',
-  ObstacleFillColor: 'rgba(255,255,255,1)'
+  ObstacleFillColor: 'rgba(255,255,255,.2)'
 }
 
 export const Custom = {
