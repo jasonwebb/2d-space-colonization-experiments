@@ -4,6 +4,7 @@ import { getRandomSources, getGridOfSources, applyNoise, getPhyllotaxisSources, 
 import VeinNode from '../../core/VeinNode';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
+import Settings from './Settings';
 
 let canvas, ctx;
 let network;
@@ -27,15 +28,15 @@ let setup = () => {
 // Create the network with initial conditions
 let setupNetwork = () => {
   // Initialize simulation object
-  network = new Network(ctx);
+  network = new Network(ctx, Settings);
 
   // Set up the auxin sources using pre-made patterns
   let randomSources = getRandomSources(500, ctx, 10);
-  let gridSources = getGridOfSources(150, 100, ctx, 0);
+  let gridSources = getGridOfSources(150, 100, ctx, 10);
   let phyllotaxisSources = getPhyllotaxisSources(ctx);
   let waveSources = getWaveOfSources(ctx);
 
-  network.sources = waveSources;
+  network.sources = gridSources;
 
   // Add a set of random root veins throughout scene
   for(let i=0; i<10; i++) {
@@ -48,8 +49,7 @@ let setupNetwork = () => {
         ),
         true,
         ctx,
-        undefined,
-        'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+        Settings
       )
     )
   }
