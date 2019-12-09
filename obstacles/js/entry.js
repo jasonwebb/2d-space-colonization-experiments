@@ -16,7 +16,7 @@ const TRIANGLE = 0;
 const SQUARE = 1;
 const CIRCLE = 2;
 const LEAF = 3;
-let currentBoundsShape = TRIANGLE;
+let currentBoundsShape = LEAF;
 
 // Create initial conditions for simulation
 let setup = () => {
@@ -133,35 +133,43 @@ let resetNetwork = () => {
   let addObstacles = () => {
     network.obstacles = [];
 
-    // Ten random circles
-    // for(let i=0; i<10; i++) {
-    //   obstacles.push(
-    //     new Path(
-    //       getCircleOfPoints(
-    //         window.innerWidth / 2 + random(-300,300),
-    //         window.innerHeight / 2 + random(-300,300),
-    //         random(20,70),
-    //         100
-    //       ),
-    //       'Obstacle',
-    //       ctx
-    //     )
-    //   );
-    // }
+    switch(currentBoundsShape) {
+      case LEAF:
+        // Ten random circles
+        for(let i=0; i<25; i++) {
+          network.obstacles.push(
+            new Path(
+              getCircleOfPoints(
+                window.innerWidth / 2 + random(-300,300),
+                window.innerHeight / 2 + random(-300,300),
+                random(20,60),
+                100
+              ),
+              'Obstacle',
+              ctx
+            )
+          );
+        }
 
-    // Single circle in center
-    network.obstacles.push(
-      new Path(
-        getCircleOfPoints(
-          window.innerWidth / 2,
-          window.innerHeight / 2 + 90,
-          200,
-          100
-        ),
-        'Obstacle',
-        ctx
-      )
-    );
+        break;
+
+      default:
+        // Single circle in center
+        network.obstacles.push(
+          new Path(
+            getCircleOfPoints(
+              window.innerWidth / 2,
+              window.innerHeight / 2 + 90,
+              200,
+              100
+            ),
+            'Obstacle',
+            ctx
+          )
+        );
+
+        break;
+    }
   }
 
   let addSources = () => {
