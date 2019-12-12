@@ -16,7 +16,7 @@ export default class VeinNode {
   draw() {
     if(this.parent != null) {
       // Smoothly ramp up opacity based on vein thickness
-      if(this.settings.EnableOpacityGradient) {
+      if(this.settings.EnableOpacityBlending) {
         this.ctx.globalAlpha = this.thickness / 3 + .2;
       }
 
@@ -66,7 +66,7 @@ export default class VeinNode {
       }
 
       // Reset global opacity if it was changed due to opacity gradient flag
-      if(this.settings.EnableOpacityGradient) {
+      if(this.settings.EnableOpacityBlending) {
         this.ctx.globalAlpha = 1;
       }
     }
