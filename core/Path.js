@@ -1,4 +1,5 @@
 import Defaults from './Defaults';
+import * as Vec2 from 'vec2';
 
 let inside = require('point-in-polygon');
 
@@ -29,6 +30,25 @@ export default class Path {
   moveTo(x, y) {
     this.origin.x = x;
     this.origin.y = y;
+  }
+
+  // Calculate total path length by adding up all line segment lengths (distances between polygon points)
+  getTotalLength() {
+    let totalLength = 0;
+
+    for(let i=1; i<this.polygon.length; i++) {
+      totalLength += Vec2(
+        this.polygon[i][0],
+        this.polygon[i][1]
+      ).distance(
+        Vec2(
+          this.polygon[i-1][0],
+          this.polygon[i-1][1]
+        )
+      );
+    }
+
+    return totalLength;
   }
 
   draw() {
