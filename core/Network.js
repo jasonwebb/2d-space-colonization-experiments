@@ -109,7 +109,7 @@ export default class Network {
         while(currentNode.parent != null) {
           // When there are multiple child veins, use the thickest of them all
           if(currentNode.parent.thickness < currentNode.thickness + .07) {
-            currentNode.parent.thickness = currentNode.thickness + .07;
+            currentNode.parent.thickness = currentNode.thickness + .03;
           }
 
           currentNode = currentNode.parent;
@@ -161,7 +161,6 @@ export default class Network {
   }
 
   drawBackground() {
-    // Erase the canvas
     this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
 
     this.ctx.beginPath();
@@ -406,6 +405,14 @@ export default class Network {
       for(let node of this.nodes) {
         node.thickness = 0;
       }
+    }
+  }
+
+  toggleOpacityBlending() {
+    this.settings.EnableOpacityBlending = !this.settings.EnableOpacityBlending;
+
+    for(let node of this.nodes) {
+      node.settings.EnableOpacityBlending = this.settings.EnableOpacityBlending;
     }
   }
 

@@ -57,6 +57,11 @@ export function setupKeyListeners(network) {
       case 'c':
         network.toggleCanalization();
         break;
+
+      // p = toggle opacity blending
+      case 'p':
+        network.toggleOpacityBlending();
+        break;
     }
   });
 }
