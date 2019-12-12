@@ -11,7 +11,7 @@ export default {
   KillDistance: 5,              // distance (d_k) between auxin sources and segments when segments are ended
   IsPaused: false,              // initial pause/unpause state
   EnableCanalization: false,     // turns on/off auxin flux canalization (line segment thickening)
-  EnableOpacityGradient: false,  // turns on/off opacity
+  EnableOpacityBlending: false,  // turns on/off opacity
 
 
   /**
