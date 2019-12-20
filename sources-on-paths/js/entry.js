@@ -49,8 +49,8 @@ let resetNetwork = () => {
     yPosition = cy;
 
     // currentPath = getHorizontalLine();
-    currentPath = getSquareBounds();
-    // currentPath = getCircleBounds();
+    // currentPath = getSquareBounds();
+    currentPath = getCircleBounds();
     // currentPath = getLeafBounds();
 
     currentPath.isCentered = true;
@@ -93,7 +93,7 @@ let resetNetwork = () => {
       const cx = 100;
       const cy = 100;
       const radius = 100;
-      const resolution = 8;
+      const resolution = 20;
       let points = [];
 
       for(let i = 0; i < resolution; i++) {
@@ -140,13 +140,19 @@ let resetNetwork = () => {
 
   let scalePath = () => {
     if(!network.settings.IsPaused) {
-      currentPath.setScale(1.002);
+      currentPath.setScale(1.005);
+    }
+  }
+
+  let rotatePath = () => {
+    if(!network.settings.IsPaused) {
+      // TODO: rotate path
     }
   }
 
   let generateSourcesOnPath = () => {
     let sources = [];
-    const sourceSpacing = 20;
+    const sourceSpacing = 50;
     let previousSegmentRemainder = 0;
 
     // For each path segment ...
@@ -154,7 +160,8 @@ let resetNetwork = () => {
       const point0 = Vec2(currentPath.transformedPolygon[i-1][0], currentPath.transformedPolygon[i-1][1]);
       const point1 = Vec2(currentPath.transformedPolygon[i][0], currentPath.transformedPolygon[i][1]);
       const currentSegmentLength = point1.distance(point0);
-      const availableLength = currentSegmentLength - previousSegmentRemainder;
+      const startingOffset = sourceSpacing - previousSegmentRemainder;
+      const availableLength = currentSegmentLength - startingOffset;
 
       // We can fit at least one source onto this segment
       if(availableLength >= sourceSpacing) {
@@ -167,7 +174,7 @@ let resetNetwork = () => {
         for(let sourceIndex=0; sourceIndex<=numSources; sourceIndex++) {
           sources.push(
             new AuxinSource(
-              point0.add(segmentDirection.multiply(previousSegmentRemainder + sourceSpacing * sourceIndex, true), true),
+              point0.add(segmentDirection.multiply(sourceSpacing * sourceIndex + startingOffset, true), true),
               ctx
             )
           );
