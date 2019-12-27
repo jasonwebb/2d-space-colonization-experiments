@@ -85,8 +85,10 @@ let resetNetwork = () => {
         break;
     }
 
-    currentPath.isCentered = true;
-    currentPath.setScale(.01);
+    if(currentPathShape != LINE) {
+      currentPath.isCentered = true;
+      currentPath.setScale(.01);
+    }
   }
 
     let getHorizontalLine = () => {
@@ -179,7 +181,11 @@ let resetNetwork = () => {
   // Create the network with initial conditions
   let addRootVeins = () => {
     const cx = window.innerWidth/2;
-    const cy = window.innerHeight/2;
+    let cy = window.innerHeight/2;
+
+    if(currentPathShape == LINE) {
+      cy = window.innerHeight - 100;
+    }
 
     network.addVeinNode(
       new VeinNode(
@@ -329,15 +335,21 @@ let resetNetwork = () => {
 // Main program loop
 let update = (timestamp) => {
   if(!network.settings.IsPaused) {
-    // movePath();
-    scalePath();
+    if(currentPathShape == LINE) {
+      movePath();
+    }
+
+    if(currentPathShape != LINE) {
+      scalePath();
+    }
+
     generateSourcesOnPath();
 
     network.update();
   }
 
-  currentPath.draw();
   network.draw();
+  currentPath.draw();
   requestAnimationFrame(update);
 }
 
