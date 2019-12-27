@@ -41,10 +41,9 @@ A couple additional helper modules are also included there:
 - [X] Add configurable support for open vs. closed venation patterns
   * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
   * Must also modify the criteria for auxin source removal to wait for all veins to reach, or exit the proximity threshold.
-- [ ] Implement configurable birth rates and kill rates
 - [X] Implement static boundary shape (leaf shape) from SVG design
 - [ ] Implement dynamic boundary shape to simulate leaf growth
-  - [ ] Uniform growth via scaling
+  - [X] Uniform growth via scaling
   - [ ] Non-uniform growth via shape interpolation (?)
 - [X] Ensure that multiple vein networks can grow independently
 - [X] Add support for obstacles that growth must avoid
@@ -53,7 +52,9 @@ A couple additional helper modules are also included there:
   - [ ] Place using patterned noise, like Perlin
   - [X] Place using perfect grid pattern
   - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
-  - [ ] Added along margin of shape only
+  - [X] Added along margin of shape only
+    - [X] Using adaptive subdivision
+    - [X] Using constant spacing
 - [X] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
 - [X] Implement varying vein widths (auxin flux canalization)
   * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
