@@ -9,18 +9,19 @@ TODO: technical description of algorithm and application structure
 ```
 
 See `./core` for common modules:
-* `VeinNode.js` - a single segment of a vein
-* `AuxinSource.js` - source of auxin growth hormone
-* `Network.js` - manages the growth of vein segments based on auxin sources
-* `Bounds.js` - arbitrary path consisting of points, used for constraining growth
-* `SourcePattern.js` - functions for generating auxin sources arranged in various patterns (grids, noise, etc)
-* `Defaults.js` - collection of global variables used for configuring the behavior and display of the algorithm
-  * Any variable can be overridden on a per-sketch basis using a local `Setting.js` file
+* `AuxinSource.js` - location of a single source of auxin growth hormone
+* `Network.js` - manages the growth of vein segments based on auxin sources and provided bounds and obstacles
+* `Path.js` - arbitrary path consisting of points, used for either constraining growth ("bounds") or defining areas for growth to avoid ("obstacle").
+* `SourcePatterns.js` - functions for generating auxin sources arranged in various patterns (grids, noise, etc)
+* `VeinNode.js` - a single point in a vein
 
 A couple additional helper modules are also included there:
 * `KeyboardInteractions.js` - a structure for handling common keyboard commands that every sketch should have
 * `Utilities.js` - small helper functions like `random` and `lerp`
 * `ColorPresets.js` - collection of pre-made color palettes for use in `Defaults.js`
+* `Defaults.js` - collection of global variables used for configuring the behavior and display of the algorithm
+  * Any variable can be overridden on a per-sketch basis using a local `Setting.js` file
+* `SVGLoader.js` - utility for loading and parsing simple SVG documents to create Paths
 
 ## Technologies used
 * Native [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API), specifically the [CanvasRenderingContext2D](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D) interface, for all drawing
