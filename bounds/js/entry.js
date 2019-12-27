@@ -6,6 +6,7 @@ import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
+import Settings from './Settings';
 
 const leaf = require('../svg/leaf.svg');
 const veinsText = require('../svg/veins-text.svg');
@@ -29,7 +30,7 @@ let setup = () => {
   canvas.height = window.innerHeight;
 
   // Initialize simulation object
-  network = new Network(ctx);
+  network = new Network(ctx, Settings);
 
   // Add the bounds, sources, and root nodes
   resetNetwork();
@@ -81,7 +82,8 @@ let resetNetwork = () => {
           [cx - sideLength/2, cy + sideLength/2]   // bottom left corner
         ],
         'Bounds',
-        ctx
+        ctx,
+        Settings
       )];
     }
 
@@ -100,7 +102,7 @@ let resetNetwork = () => {
         points.push([x, y]);
       }
 
-      return [new Path(points, 'Bounds', ctx)];
+      return [new Path(points, 'Bounds', ctx, Settings)];
     }
 
     let getLeafBounds = () => {
@@ -117,7 +119,7 @@ let resetNetwork = () => {
         point[1] = cy - shapeHeight/2 + point[1];
       }
 
-      return [new Path(polygon, 'Bounds', ctx)];
+      return [new Path(polygon, 'Bounds', ctx, Settings)];
     }
 
     let getVeinsTextBounds = () => {
@@ -136,7 +138,7 @@ let resetNetwork = () => {
           point[1] = cy - shapeHeight/2 + point[1];
         }
 
-        bounds.push(new Path(polygon, 'Bounds', ctx));
+        bounds.push(new Path(polygon, 'Bounds', ctx, Settings));
       }
 
       return bounds;
@@ -152,6 +154,14 @@ let resetNetwork = () => {
 
   // Create the network with initial conditions
   let addRootVeins = () => {
+    let veinColors = [
+      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined
+    ];
+
     switch(currentBoundsShape) {
       case SQUARE:
       case CIRCLE:
@@ -166,8 +176,8 @@ let resetNetwork = () => {
               ),
               true,
               ctx,
-              undefined,
-              'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+              Settings,
+              veinColors[i % veinColors.length]
             )
           );
         }
@@ -185,8 +195,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[0]
           )
         );
 
@@ -203,8 +213,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[0]
           )
         );
 
@@ -218,8 +228,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[1]
           )
         );
 
@@ -233,8 +243,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[2]
           )
         );
 
@@ -248,8 +258,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[3]
           )
         );
 
@@ -263,8 +273,8 @@ let resetNetwork = () => {
             ),
             true,
             ctx,
-            undefined,
-            'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')'
+            Settings,
+            veinColors[4]
           )
         );
 
