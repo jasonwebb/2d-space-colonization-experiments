@@ -1,4 +1,4 @@
-import { Light, Dark, Custom } from './ColorPresets';
+import { Light, Dark, Realistic, Custom } from './ColorPresets';
 
 export default {
   /**
@@ -26,13 +26,13 @@ export default {
   ShowKillZones: false,        // toggled with 'k'
   ShowInfluenceLines: false,   // toggled with 'i'
   ShowBounds: true,            // toggled with 'b'
-  ShowObstacles: true,         // toggled with 'o'
+  ShowObstacles: false,         // toggled with 'o'
 
   // Modes
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Dark,
+  Colors: Light,
 
   // Line thicknesses
   VeinThickness: 1.5,

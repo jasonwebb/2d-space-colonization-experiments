@@ -24,6 +24,20 @@ export const Dark = {
   ObstacleFillColor: 'rgba(255,255,255,.2)'
 }
 
+export const Realistic = {
+  BackgroundColor: 'rgba(255,255,255,1)',
+  SourceColor: 'rgba(255,255,255,1)',
+  VeinColor: 'rgba(255,255,255,.6)',
+  // VeinColor: 'rgba(0,0,0,.2)',
+  VeinTipColor: 'rgba(255,0,0,1)',
+  AttractionZoneColor: 'rgba(0,255,0,.002)',
+  KillZoneColor: 'rgba(255,0,0,.4)',
+  InfluenceLinesColor: 'rgba(0,0,255,1)',
+  BoundsFillColor: 'rgba(61,166,12,1)',
+  BoundsBorderColor: 'rgba(255,255,255,1)',
+  ObstacleFillColor: 'rgba(255,255,255,1)'
+}
+
 export const Custom = {
   BackgroundColor: 'rgb(242,242,242)',
   SourceColor: 'rgba(255,255,255,.6)',
