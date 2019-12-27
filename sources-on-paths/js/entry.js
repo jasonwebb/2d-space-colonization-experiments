@@ -50,7 +50,8 @@ let resetNetwork = () => {
     yPosition = cy;
 
     // currentPath = getHorizontalLine();
-    currentPath = getSquareBounds();
+    currentPath = getTriangleBounds();
+    // currentPath = getSquareBounds();
     // currentPath = getDiamondBounds();
     // currentPath = getCircleBounds();
     // currentPath = getLeafBounds();
@@ -72,6 +73,21 @@ let resetNetwork = () => {
         'Bounds',
         ctx
       );
+    }
+
+    let getTriangleBounds = () => {
+      const sideLength = 200;
+
+      return new Path(
+        [
+          [sideLength/2, 0],
+          [sideLength, 3*sideLength/4],
+          [0, 3*sideLength/4],
+          [sideLength/2, 0]
+        ],
+        'Bounds',
+        ctx
+      )
     }
 
     let getSquareBounds = () => {
