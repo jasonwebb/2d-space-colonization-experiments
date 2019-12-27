@@ -14,6 +14,14 @@ const grassBlade = require('../svg/grass-blade.svg');
 
 let currentPath;
 
+const LINE = 0;
+const TRIANGLE = 1;
+const SQUARE = 2;
+const DIAMOND = 3;
+const CIRCLE = 4;
+const LEAF = 5;
+let currentPathShape = TRIANGLE;
+
 let yPosition = 0;
 
 // Create initial conditions for simulation
@@ -28,6 +36,9 @@ let setup = () => {
   // Initialize simulation object
   network = new Network(ctx);
 
+  // Load the defined path
+  setupPath();
+
   // Add the bounds, sources, and root nodes
   resetNetwork();
 
@@ -40,7 +51,6 @@ let setup = () => {
 
 let resetNetwork = () => {
   network.reset();
-  setupPath();
   addRootVeins();
 }
 
@@ -49,13 +59,31 @@ let resetNetwork = () => {
     const cy = window.innerHeight/2;
     yPosition = cy;
 
-    // currentPath = getHorizontalLine();
-    currentPath = getTriangleBounds();
-    // currentPath = getSquareBounds();
-    // currentPath = getDiamondBounds();
-    // currentPath = getCircleBounds();
-    // currentPath = getLeafBounds();
-    // currentPath = getGrassBladeBounds();
+    switch(currentPathShape) {
+      case LINE:
+        currentPath = getHorizontalLine();
+        break;
+
+      case TRIANGLE:
+        currentPath = getTriangleBounds();
+        break;
+
+      case SQUARE:
+        currentPath = getSquareBounds();
+        break;
+
+      case DIAMOND:
+        currentPath = getDiamondBounds();
+        break;
+
+      case CIRCLE:
+        currentPath = getCircleBounds();
+        break;
+
+      case LEAF:
+        currentPath = getLeafBounds();
+        break;
+    }
 
     currentPath.isCentered = true;
     currentPath.setScale(.01);
@@ -318,6 +346,42 @@ document.addEventListener('keypress', (e) => {
   switch(e.key) {
     // r = reset simulation by reinitializing the network with initial conditions
     case 'r':
+      resetNetwork();
+      break;
+
+    case '1':
+      currentPathShape = LINE;
+      setupPath();
+      resetNetwork();
+      break;
+
+    case '2':
+      currentPathShape = TRIANGLE;
+      setupPath();
+      resetNetwork();
+      break;
+
+    case '3':
+      currentPathShape = SQUARE;
+      setupPath();
+      resetNetwork();
+      break;
+
+    case '4':
+      currentPathShape = DIAMOND;
+      setupPath();
+      resetNetwork();
+      break;
+
+    case '5':
+      currentPathShape = CIRCLE;
+      setupPath();
+      resetNetwork();
+      break;
+
+    case '6':
+      currentPathShape = LEAF;
+      setupPath();
       resetNetwork();
       break;
   }
