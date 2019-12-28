@@ -23,6 +23,7 @@ For both the open and closed variants of this algorithm, begin by placing a set 
 * Remove any auxin sources that have been reached by all of their associated vein segments.
 
 #### Auxin flux canalization:
+This is a process by which veins become thicker as they grow longer. The longer a vein gets, the more auxin flows through it ("flux"), causing veins to progressively thicken from their tips to their roots. "Canalization" references the process by which "canals" of water form.
 
 * Give each vein segment a uniform default thickness to start with.
 * Beginning at each terminal vein segment (that is, segments with no child segments), traverse "upwards" through each parent vein segment, adding their child vein segment thickness to their own until you reach a root vein segment (a segment with no parent segment).
@@ -84,7 +85,9 @@ A couple additional helper modules are also included there:
 - [X] Implement SVG export
 
 ## References
-_Articles and papers:_
+
+### Articles and papers:
+
 * [Modeling and visualization of leaf venation patterns](http://algorithmicbotany.org/papers/venation.sig2005.pdf) (PDF) paper by Adam Runions, Martin Fuhrer, Brendan Lane, Pavol Federl, Anne−Gaëlle Rolland−Lagan, and Przemyslaw Prusinkiewicz
 * [Modeling Trees with a Space Colonization Algorithm](http://algorithmicbotany.org/papers/colonization.egwnp2007.large.pdf) (PDF) paper by Adam Runions, Brendan Lane, and Przemyslaw Prusinkiewicz
 * [Procedurally Generated Trees with Space Colonization Algorithm in XNA C#](http://www.jgallant.com/procedurally-generating-trees-with-space-colonization-algorithm-in-xna/) by Jon Gallant
@@ -93,13 +96,15 @@ _Articles and papers:_
 * [Space Colonization Algorithm Part 1](https://bastiaanolij.blogspot.com/2014/12/space-colonization-algorithm-part-1.html) [[Part II](https://bastiaanolij.blogspot.com/2014/12/space-colonization-algorithm-part-2.html)] [[Part III](https://bastiaanolij.blogspot.com/2015/01/space-colonization-algorithm-part-3.html)] by Bastiaan Olij
 * [Space colonization](https://github.com/jasonwebb/morphogenesis-resources#space-colonization) in Jason Webb's Morphogenesis Resources repo.
 
-_Creative projects:_
+### Creative projects:
+
 * [Hyphae](https://n-e-r-v-o-u-s.com/shop/line.php?code=8), [Xylem](https://n-e-r-v-o-u-s.com/shop/line.php?code=6), [Folium](https://n-e-r-v-o-u-s.com/blog/?p=3983) series by Nervous System
   * Also see their [Xylem Experiments and Improvements](https://n-e-r-v-o-u-s.com/blog/?p=1218) write-up
 * [Bromeliad](https://n-e-r-v-o-u-s.com/shop/product.php?code=286) and [Calyx](https://n-e-r-v-o-u-s.com/shop/product.php?code=285&search=download) lamps by Nervous System
 * [Space Colonization Experiments](https://www.youtube.com/watch?v=D9Z3jJ87kzg) by David Ferreira
 
-_Code projects:_
+### Code projects:
+
 * [ofxSpaceColoinzation](https://github.com/edap/ofxSpaceColonization) add-on for openFrameworks
 * [space-colonization](https://github.com/nicknikolov/space-colonization) (JavaScript) by Nick Nikolov
 * [Dendrite](https://github.com/mattatz/Dendrite) (Unity) by mattatz
@@ -108,7 +113,8 @@ _Code projects:_
 * [hyphae](https://github.com/jblondin/hyphae) (Julia) by Jamie Blondin
 * [hyphae](https://github.com/inconvergent/hyphae) and [hyphae_ani](https://github.com/inconvergent/hyphae_ani) by Anders Hoff (inconvergent)
 
-_Videos:_
+### Videos:
+
 * [Coding Challenge #17: Fractal Trees - Space Colonization](https://www.youtube.com/watch?v=kKT0v3qhIQY) by Daniel Shiffman ([Github repo](https://github.com/CodingTrain/website/tree/master/CodingChallenges/CC_017_SpaceColonizer) with source code for p5.js and Processing)
 * [VEX in Houdini: Space Colonization](https://vimeo.com/231315378) (Houdini + VEX) by Entagma
   * [SCA-2.1](https://vimeo.com/252447953) variation by IQCoo with obstacle avoidance, increasing path widths, heat transfer visualization.
