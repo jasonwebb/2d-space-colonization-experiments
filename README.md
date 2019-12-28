@@ -28,6 +28,18 @@ This is a process by which veins become thicker as they grow longer. The longer 
 * Give each vein segment a uniform default thickness to start with.
 * Beginning at each terminal vein segment (that is, segments with no child segments), traverse "upwards" through each parent vein segment, adding their child vein segment thickness to their own until you reach a root vein segment (a segment with no parent segment).
 
+## Features
+
+1. Supports both _open_ and _closed_ venation. Configurable via `./core/Defaults.js` or a local `Setting.js` file.
+2. Growth can be constrained within _bounding shapes_. See `./core/Path.js` and `./core/Network.js`.
+3. _Obstacles_ can be defined that growth must avoid. See `./core/Path.js` and `./core/Network.js`.
+4. Simple SVG files can be loaded and parsed into either "bounds" or "obstacle" paths. See `./core/SVGLoader.js`.
+5. Auxin sources can be placed along the edges of paths, which can in turn be scaled and moved, in order to model _marginal growth_. See `./marginal-growth/js/entry.js`.
+6. Multiple vein networks can be created (just add more than one "root" vein to kick off growth).
+7. Veins can be progressively thickened as they grow using a process called _auxin flux canalization_. Press `c` in any sketch to toggle it.
+8. Vein transparency can be smoothly blended from tip to root using _opacity blending_ (a variation of auxin flux canalization). Press `p` in any sketch to toggle it.
+9. Vein networks can be exported using `e` at any time. However, these networks get so complex so quickly that this can easily cause your browser to freeze - use at your own risk!
+
 ## Implementation notes
 
 See `./core` for common modules:
