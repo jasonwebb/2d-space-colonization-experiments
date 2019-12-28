@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="900"
+   height="900"
+   version="1.1"
+   id="svg36"
+   sodipodi:docname="grass-blade.svg"
+   inkscape:version="0.92.3 (2405546, 2018-03-11)">
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="0"
+     id="g34">
+    <path
+       id="path32"
+       style="fill:none;stroke:#000000;stroke-width:0.96219009;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 441.95752,61.457361 441.71727,61.112414 441.39983,60.866028 441.03092,60.718195 440.63628,60.668914 440.24165,60.718195 439.87274,60.866028 439.5553,61.112414 439.31505,61.457361 M 467.8534,172.38615 467.4407,158.06364 466.2072,143.81219 464.15984,129.66146 461.30555,115.64115 457.65124,101.7809 453.20385,88.11042 447.9703,74.659344 441.95752,61.457361 M 439.31505,61.457361 433.30227,74.659344 428.06872,88.11042 423.62133,101.7809 419.96702,115.64115 417.11273,129.66146 415.06537,143.81219 413.83187,158.06364 413.41917,172.38615 M 467.8534,854.6005 H 461.04912 454.24484 447.44056 440.63629 433.83201 427.02773 420.22345 413.41917 M 467.8534,172.38615 V 257.66294 342.93974 428.21653 513.49333 598.77012 684.04691 769.3237 854.6005 M 413.41917,854.6005 V 769.3237 684.04691 598.77012 513.49333 428.21653 342.93974 257.66294 172.38615"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccccccccccccccccccccccccccccccccccccccccccccccc" />
+  </g>
+</svg>
