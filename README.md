@@ -93,6 +93,10 @@ _Videos:_
 
 ## Screenshots
 
-```
-TODO: screenshots of various experiments
-```
+![Basic experiment screenshot](images/basic-screenshot.png)
+
+![Bounds experiment screenshot](images/bounds-screenshot.png)
+
+![Obstacles experiment screenshot](images/obstacles-screenshot.png)
+
+![Marginal growth experiment screenshot](images/marginal-growth-screenshot.png)
