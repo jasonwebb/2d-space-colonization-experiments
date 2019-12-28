@@ -1,0 +1,101 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+  .container .content {
+    margin: 20px 0;
+  }
+
+  @media screen and (max-width: 1024px)  {
+    .container {
+      padding: 0 20px;
+    }
+  }
+
+/** Page heading */
+h1 {
+  font-size: 3rem;
+  line-height: 3rem;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+/** Button links to Medium and Github */
+.buttons {
+  margin-top: 40px;
+}
+
+.button {
+  border-radius: 0;
+  margin-right: 20px !important;
+}
+
+  .button .fab {
+    margin-right: 10px;
+  }
+
+  .button:focus {
+    box-shadow: 0 0 0 2px #fff, 0 0 0 5px black !important;
+  }
+
+/* Full-width image links for experiments */
+.experiments-list {
+  list-style: none;
+  margin: 60px 0 0 0;
+  padding: 0;
+}
+
+  .experiments-list li {
+    margin-bottom: 1px;
+  }
+
+  .experiments-list li a {
+    display: block;
+    position: relative;
+    height: 600px;
+    overflow: hidden;
+    transition: all .2s linear;
+  }
+
+    .experiments-list li a.has-border {
+      border: 1px solid rgba(0,0,0,.2);
+      border-left: 0;
+      border-right: 0;
+    }
+
+    .experiments-list li a img {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+    }
+
+    .experiments-list li a .overlay {
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+      .experiments-list li a:focus {
+        outline: 6px dashed #000;
+        outline-offset: -12px;
+      }
+
+        .experiments-list li a.is-inverted:focus {
+          outline: 6px dashed #fff;
+        }
+
+      .experiments-list li a .overlay .title {
+        background-color: rgba(0,0,0,1);
+        color: #fff;
+        padding: 15px 35px;
+        display: inline-block;
+      }
