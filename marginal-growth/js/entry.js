@@ -20,7 +20,7 @@ const SQUARE = 2;
 const DIAMOND = 3;
 const CIRCLE = 4;
 const LEAF = 5;
-let currentPathShape = TRIANGLE;
+let currentPathShape = SQUARE;
 
 let yPosition = 0;
 

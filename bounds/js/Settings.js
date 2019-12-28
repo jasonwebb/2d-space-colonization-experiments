@@ -4,7 +4,7 @@ export default {
   /**
     Sketch variables
   */
-  UsePerVeinColors: true,
+  UsePerVeinColors: false,
 
 
   /**
@@ -38,7 +38,7 @@ export default {
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Dark,
+  Colors: Custom,
 
   // Line thicknesses
   VeinThickness: 1,

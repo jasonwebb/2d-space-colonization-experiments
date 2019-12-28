@@ -25,14 +25,14 @@ export default {
   ShowAttractionZones: false,  // toggled with 'a'
   ShowKillZones: false,        // toggled with 'k'
   ShowInfluenceLines: false,   // toggled with 'i'
-  ShowBounds: true,            // toggled with 'b'
-  ShowObstacles: false,         // toggled with 'o'
+  ShowBounds: false,           // toggled with 'b'
+  ShowObstacles: false,        // toggled with 'o'
 
   // Modes
   VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Light,
+  Colors: Dark,
 
   // Line thicknesses
   VeinThickness: 1.5,
