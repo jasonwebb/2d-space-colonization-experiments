@@ -6,11 +6,11 @@
 }
 
 .container {
-  margin-top: 30px;
+  padding-top: 50px !important;
+  font-size: 18px;
 }
 
   .container .content {
-    margin: 20px 0;
   }
 
   @media screen and (max-width: 1024px)  {
@@ -24,12 +24,35 @@ h1 {
   font-size: 3rem;
   line-height: 3rem;
   font-weight: bold;
+}
+
+.by-line {
+  margin-top: 25px;
   margin-bottom: 40px;
+  color: rgba(0,0,0,.6);
+}
+
+  .by-line a {
+    color: rgba(0,0,0,.4);
+    margin-right: 5px;
+  }
+
+    .by-line a:first-of-type {
+      margin-left: 10px;
+    }
+
+    .by-line a:hover,
+    .by-line a:focus {
+      color: rgba(0,0,0,1);
+    }
+
+p a {
+  text-decoration: underline;
 }
 
 /** Button links to Medium and Github */
 .buttons {
-  margin-top: 40px;
+  margin: 40px 0 30px 0 !important;
 }
 
 .button {
@@ -48,11 +71,11 @@ h1 {
 /* Full-width image links for experiments */
 .experiments-list {
   list-style: none;
-  margin: 60px 0 0 0;
+  margin: 40px 0 0 0;
   padding: 0;
 }
 
-  .experiments-list li {
+  .experiments-list li:not(:last-of-type) {
     margin-bottom: 1px;
   }
 
