@@ -1,12 +1,33 @@
-```
-TODO: introduction
-```
-
 ## About space colonization
 
-```
-TODO: technical description of algorithm and application structure
-```
+<img src="https://i.imgur.com/WQoYWBx.gif" width="300" align="right">
+
+Space colonization is a process for iteratively growing networks of branching lines based on the distribution of growth hormone sources (called "auxin" sources) to which the lines are attracted. [Originally described](http://algorithmicbotany.org/papers/venation.sig2005.pdf) (PDF) by Adam Runions and collaborators at the Algorithmic Botany group at the University of Calgary, this system can be used to simulate the growth of leaf venation patterns and tree-like structures, as well as many other vein-like systems like Gorgonian sea fans, circulatory systems, root systems, and more.
+
+The original algorithm describes methods for generating both "open" (as seen in the example GIF) and "closed" venation networks, referring to whether or not secondary or tertiary veins connect together to form loops (or anastomoses).
+
+### Algorithm at a glance:
+
+For both the open and closed variants of this algorithm, begin by placing a set of points on the canvas representing sources of either the auxin growth hormone (as in leaves) or ambient nutrients (as in trees).
+
+#### Open venation:
+
+* Associate each auxin source with the single closest vein segment within a pre-defined attraction distance.
+* For each vein segment that is associated with at least one auxin source, calculate the average direction towards them as a normalized vector and generate a new vein segment that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
+* Remove any auxin sources that have vein segments within a pre-defined kill distance around it.
+
+#### Closed venation:
+
+* Associate each auxin source with all of the vein segments that are both within a pre-defined attraction distance and within the source's relative neighborhood.
+* For each vein segment that is associated with at least one auxin source, calculate the average direction towards them as a normalized vector and generate a new vein segment that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
+* Remove any auxin sources that have been reached by all of their associated vein segments.
+
+#### Auxin flux canalization:
+
+* Give each vein segment a uniform default thickness to start with.
+* Beginning at each terminal vein segment (that is, segments with no child segments), traverse "upwards" through each parent vein segment, adding their child vein segment thickness to their own until you reach a root vein segment (a segment with no parent segment).
+
+## Implementation notes
 
 See `./core` for common modules:
 * `AuxinSource.js` - location of a single source of auxin growth hormone
@@ -70,6 +91,7 @@ _Articles and papers:_
 * [Part 26: Trees](http://www.sea-of-memes.com/LetsCode26/LetsCode26.html) by Michael Goodfellow
 * [Hyphae](https://github.com/inconvergent/hyphae) (Python) by Anders Hoff (inconvergent) ([live examples and short writeup](https://inconvergent.net/generative/hyphae/))
 * [Space Colonization Algorithm Part 1](https://bastiaanolij.blogspot.com/2014/12/space-colonization-algorithm-part-1.html) [[Part II](https://bastiaanolij.blogspot.com/2014/12/space-colonization-algorithm-part-2.html)] [[Part III](https://bastiaanolij.blogspot.com/2015/01/space-colonization-algorithm-part-3.html)] by Bastiaan Olij
+* [Space colonization](https://github.com/jasonwebb/morphogenesis-resources#space-colonization) in Jason Webb's Morphogenesis Resources repo.
 
 _Creative projects:_
 * [Hyphae](https://n-e-r-v-o-u-s.com/shop/line.php?code=8), [Xylem](https://n-e-r-v-o-u-s.com/shop/line.php?code=6), [Folium](https://n-e-r-v-o-u-s.com/blog/?p=3983) series by Nervous System
