@@ -20,6 +20,8 @@ const LEAF = 2;
 const VEINSTEXT = 3;
 let currentBoundsShape = CIRCLE;
 
+let showHelp = true;
+
 // Create initial conditions for simulation
 let setup = () => {
   // Initialize canvas and context
@@ -282,10 +284,47 @@ let resetNetwork = () => {
     }
   }
 
+let drawText = () => {
+  let text = [
+    'Shapes can be used to constrain growth.',
+    '',
+    '1 = square',
+    '2 = circle',
+    '3 = a leaf',
+    '4 = the word "veins"',
+    '',
+    'Space = toggle pause',
+    'r = reset',
+    'c = toggle canalization',
+    'p = toggle opacity blending',
+    'v = toggle vein visibility',
+    's = toggle source visibility',
+    'a = toggle attraction zones',
+    'k = toggle kill zones',
+    't = toggle vein tips',
+    'i = toggle influence lines',
+    'h = toggle this help text'
+  ];
+
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,1)';
+  ctx.fillText('Bounds', 20, 40);
+
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  for(let i=0; i<text.length; i++) {
+    ctx.fillText(text[i], 20, 22*i + 80);
+  }
+}
+
 // Main program loop
 let update = (timestamp) => {
   network.update();
   network.draw();
+
+  if(showHelp) {
+    drawText();
+  }
 
   requestAnimationFrame(update);
 }
@@ -296,6 +335,11 @@ document.addEventListener('keypress', (e) => {
     // r = reset simulation by reinitializing the network with initial conditions
     case 'r':
       resetNetwork();
+      break;
+
+    // h = toggle help text
+    case 'h':
+      showHelp = !showHelp;
       break;
 
     case '1':

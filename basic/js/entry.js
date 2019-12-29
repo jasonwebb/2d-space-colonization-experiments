@@ -9,6 +9,8 @@ import Settings from './Settings';
 let canvas, ctx;
 let network;
 
+let showHelp = true;
+
 // Create initial conditions for simulation
 let setup = () => {
   // Initialize canvas and context
@@ -58,10 +60,44 @@ let setupNetwork = () => {
   setupKeyListeners(network);
 }
 
+let drawText = () => {
+  let text = [
+    'No colors, no fancy vein thickness, just',
+    'randomly placed sources and randomly',
+    'placed vein roots.',
+    '',
+    'Space = toggle pause',
+    'r = reset',
+    'c = toggle canalization',
+    'p = toggle opacity blending',
+    'v = toggle vein visibility',
+    's = toggle source visibility',
+    'a = toggle attraction zones',
+    'k = toggle kill zones',
+    't = toggle vein tips',
+    'i = toggle influence lines',
+    'h = toggle this help text'
+  ];
+
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,1)';
+  ctx.fillText('Basic', 20, 40);
+
+  ctx.font = '16px sans-serif';
+  ctx.fillStyle = 'rgba(0,0,0,.5)';
+  for(let i=0; i<text.length; i++) {
+    ctx.fillText(text[i], 20, 22*i + 80);
+  }
+}
+
 // Main program loop
 let update = (timestamp) => {
   network.update();
   network.draw();
+
+  if(showHelp) {
+    drawText();
+  }
 
   requestAnimationFrame(update);
 }
@@ -72,6 +108,11 @@ document.addEventListener('keypress', (e) => {
     // r = reset simulation by reinitializing the network with initial conditions
     case "r":
       setupNetwork();
+      break;
+
+    // h = toggle help text
+    case 'h':
+      showHelp = !showHelp;
       break;
   }
 });
