@@ -9,12 +9,12 @@ export default class Path {
     this.ctx = ctx;             // global canvas context
     this.type = type;           // string either 'Bounds' or 'Obstacle'
 
-    this.transformedPolygon = polygon;
-    this.origin = {x:0, y:0};   // origin point used for translation
-    this.scale = 1;
-    this.width = -1;
-    this.height = -1;
-    this.isCentered = false;
+    this.transformedPolygon = polygon;  // Paths are initialized without any transformations by default
+    this.origin = {x:0, y:0};           // origin point used for translation
+    this.scale = 1;                     // multiplication factor for polygon coordinates
+    this.width = -1;                    // width of transformed polygon - will be calculated using this.calculateDimensions()
+    this.height = -1;                   // height of transformed polygon - will be calculated using this.calculateDimensions()
+    this.isCentered = false;            // whether or not to automatically translate to screen center
 
     this.settings = Object.assign({}, Defaults, settings);
 
@@ -76,6 +76,7 @@ export default class Path {
     return totalLength;
   }
 
+  // Calculates the real width and height of the transformed polygon
   calculateDimensions() {
     let leftMostCoordinate = this.transformedPolygon[0][0],
       rightMostCoordinate = this.transformedPolygon[0][0],
@@ -100,6 +101,7 @@ export default class Path {
     this.height = Math.abs(bottomMostCoordinate - topMostCoordinate);
   }
 
+  // Create coordinates for the "transformed" version of this path, taking into consideration translation and scaling
   createTransformedPolygon() {
     this.transformedPolygon = [];
 

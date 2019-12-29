@@ -14,8 +14,8 @@ export default class Network {
 
     this.nodesIndex;    // kd-bush spatial index for all nodes
 
-    this.bounds = [];
-    this.obstacles = [];
+    this.bounds = [];     // array of Path objects that veins cannot grow outside of
+    this.obstacles = [];  // array of Path objects that veins must avoid
 
     this.buildSpatialIndices();
   }
