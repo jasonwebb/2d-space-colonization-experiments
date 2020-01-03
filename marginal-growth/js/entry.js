@@ -360,7 +360,7 @@ let drawText = () => {
   ];
 
   ctx.font = 'bold 24px sans-serif';
-  ctx.fillStyle = 'rgba(255,255,2555,1)';
+  ctx.fillStyle = 'rgba(255,255,255,1)';
   ctx.fillText('Marginal Growth', 20, 40);
 
   ctx.font = '16px sans-serif';
