@@ -10,7 +10,7 @@ import AuxinSource from '../../core/AuxinSource';
 let canvas, ctx;
 let network;
 
-let showHelp = false;
+let showHelp = true;
 let mouseX = 0;
 let mouseY = 0;
 let leftMouseIsDown = false;
@@ -51,7 +51,7 @@ let drawText = () => {
     'Paint veins by clicking and dragging!',
     '',
     'Left click and drag for sources',
-    'Right click for vein',
+    'Right click to add "seed" vein',
     'Mouse wheel to increase/decrease radius',
     '',
     'Space = toggle pause',
