@@ -10,7 +10,7 @@ export default {
   AttractionDistance: 30,       // radius of influence (d_i) around each auxin source that attracts vein segments
   KillDistance: 5,              // distance (d_k) between auxin sources and segments when segments are ended
   IsPaused: false,              // initial pause/unpause state
-  EnableCanalization: false,     // turns on/off auxin flux canalization (line segment thickening)
+  EnableCanalization: true,     // turns on/off auxin flux canalization (line segment thickening)
   EnableOpacityBlending: false,  // turns on/off opacity
 
 
