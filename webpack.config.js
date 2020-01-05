@@ -7,7 +7,8 @@ module.exports = {
     bounds: path.resolve('bounds/js/entry.js'),
     obstacles: path.resolve('obstacles/js/entry.js'),
     marginalGrowth: path.resolve('marginal-growth/js/entry.js'),
-    painting: path.resolve('painting/js/entry.js')
+    painting: path.resolve('painting/js/entry.js'),
+    images: path.resolve('from-images/js/entry.js')
   },
   module: {
     rules: [
