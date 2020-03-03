@@ -1,7 +1,7 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import { getRandomSources, getGridOfSources, applyNoise, getPhyllotaxisSources, getWaveOfSources } from '../../core/SourcePatterns';
-import VeinNode from '../../core/VeinNode';
+import { getRandomAttractors, getGridOfAttractors, applyNoise, getPhyllotaxisAttractors, getWaveOfAttractors } from '../../core/AttractorPatterns';
+import Node from '../../core/Node';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 import Settings from './Settings';
@@ -32,18 +32,18 @@ let setupNetwork = () => {
   // Initialize simulation object
   network = new Network(ctx, Settings);
 
-  // Set up the auxin sources using pre-made patterns
-  let randomSources = getRandomSources(500, ctx, 10);
-  let gridSources = getGridOfSources(150, 100, ctx, 10);
-  let phyllotaxisSources = getPhyllotaxisSources(ctx);
-  let waveSources = getWaveOfSources(ctx);
+  // Set up the attractors using pre-made patterns
+  let randomAttractors = getRandomAttractors(500, ctx, 10);
+  let gridAttractors = getGridOfAttractors(150, 100, ctx, 10);
+  let phyllotaxisAttractors = getPhyllotaxisAttractors(ctx);
+  let waveAttractors = getWaveOfAttractors(ctx);
 
-  network.sources = gridSources;
+  network.attractors = gridAttractors;
 
-  // Add a set of random root veins throughout scene
+  // Add a set of random root nodes throughout scene
   for(let i=0; i<10; i++) {
-    network.addVeinNode(
-      new VeinNode(
+    network.addNode(
+      new Node(
         null,
         new Vec2(
           random(window.innerWidth),
@@ -63,18 +63,18 @@ let setupNetwork = () => {
 let drawText = () => {
   let text = [
     'No colors, no fancy vein thickness, just',
-    'randomly placed sources and randomly',
-    'placed vein roots.',
+    'randomly placed attractors and randomly',
+    'placed root nodes.',
     '',
     'Space = toggle pause',
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
-    'a = toggle attraction zones',
+    'b = toggle branch visibility',
+    'a = toggle attractor visibility',
+    'z = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];

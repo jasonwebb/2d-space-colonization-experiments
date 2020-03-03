@@ -8,24 +8,24 @@ export function setupKeyListeners(network) {
         network.togglePause();
         break;
 
-      // v = toggle vein visibility
-      case 'v':
-        network.toggleVeins();
+      // b = toggle branch visibility
+      case 'b':
+        network.toggleBranches();
         break;
 
-      // s = toggle auxin source visibility
-      case 's':
-        network.toggleSources();
-        break;
-
-      // a = toggle attraction zone visibility
+      // a = toggle attractor visibility
       case 'a':
+        network.toggleAttractors();
+        break;
+
+      // z = toggle attraction zone visibility
+      case 'z':
         network.toggleAttractionZones();
         break;
 
-      // t = toggle vein tip visibility
+      // t = toggle tip visibility
       case 't':
-        network.toggleVeinTips();
+        network.toggleTips();
         break;
 
       // k = toggle kill zone visibility

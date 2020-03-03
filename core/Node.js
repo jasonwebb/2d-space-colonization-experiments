@@ -1,6 +1,6 @@
 import Defaults from './Defaults';
 
-export default class VeinNode {
+export default class Node {
   constructor(parent, position, isTip, ctx, settings, color = undefined) {
     this.parent = parent;       // reference to parent node, necessary for vein thickening later
     this.position = position;   // {vec2} of this node's position
@@ -9,7 +9,7 @@ export default class VeinNode {
     this.settings = Object.assign({}, Defaults, settings);
     this.color = color;         // color, usually passed down from parent
 
-    this.influencedBy = [];     // references to all AuxinSources influencing this node each frame
+    this.influencedBy = [];     // references to all Attractors influencing this node each frame
     this.thickness = 0;         // thickness - this is increased during vein thickening process
   }
 
@@ -21,29 +21,29 @@ export default class VeinNode {
       }
 
       // "Lines" render mode
-      if(this.settings.VeinRenderMode == 'Lines') {
+      if(this.settings.RenderMode == 'Lines') {
         this.ctx.beginPath();
         this.ctx.moveTo(this.position.x, this.position.y);
         this.ctx.lineTo(this.parent.position.x, this.parent.position.y);
 
-        if(this.isTip && this.settings.ShowVeinTips) {
-          this.ctx.strokeStyle = this.settings.Colors.VeinTipColor;
-          this.ctx.lineWidth = this.settings.VeinTipThickness;
+        if(this.isTip && this.settings.ShowTips) {
+          this.ctx.strokeStyle = this.settings.Colors.TipColor;
+          this.ctx.lineWidth = this.settings.TipThickness;
         } else {
           if(this.color != undefined) {
             this.ctx.strokeStyle = this.color;
           } else {
-            this.ctx.strokeStyle = this.settings.Colors.VeinColor;
+            this.ctx.strokeStyle = this.settings.Colors.BranchColor;
           }
 
-          this.ctx.lineWidth = this.settings.VeinThickness + this.thickness;
+          this.ctx.lineWidth = this.settings.BranchThickness + this.thickness;
         }
 
         this.ctx.stroke();
         this.ctx.lineWidth = 1;
 
       // "Dots" render mode
-      } else if(this.settings.VeinRenderMode == 'Dots') {
+      } else if(this.settings.RenderMode == 'Dots') {
         this.ctx.beginPath();
         this.ctx.ellipse(
           this.position.x,
@@ -56,10 +56,10 @@ export default class VeinNode {
         );
 
         // Change color or "tip" nodes
-        if(this.isTip && this.settings.ShowVeinTips) {
-          this.ctx.fillStyle = this.settings.Colors.VeinTipColor;
+        if(this.isTip && this.settings.ShowTips) {
+          this.ctx.fillStyle = this.settings.Colors.TipColor;
         } else {
-          this.ctx.fillStyle = this.settings.Colors.VeinColor;
+          this.ctx.fillStyle = this.settings.Colors.BranchColor;
         }
 
         this.ctx.fill();
@@ -73,11 +73,11 @@ export default class VeinNode {
   }
 
   // Create a new node in the provided direction and a pre-defined distance (SegmentLength)
-  getNextNode(averageSourceDirection) {
+  getNextNode(averageAttractorDirection) {
     this.isTip = false;
-    this.nextPosition = this.position.add(averageSourceDirection.multiply(this.settings.SegmentLength), true);
+    this.nextPosition = this.position.add(averageAttractorDirection.multiply(this.settings.SegmentLength), true);
 
-    return new VeinNode(
+    return new Node(
       this,
       this.nextPosition,
       true,

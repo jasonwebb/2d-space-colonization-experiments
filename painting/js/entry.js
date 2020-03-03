@@ -1,11 +1,11 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import { getRandomSources, getGridOfSources, applyNoise, getPhyllotaxisSources, getWaveOfSources } from '../../core/SourcePatterns';
-import VeinNode from '../../core/VeinNode';
+import { getRandomAttractors, getGridOfAttractors, applyNoise, getPhyllotaxisAttractors, getWaveOfAttractors } from '../../core/AttractorPatterns';
+import Node from '../../core/Node';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 import Settings from './Settings';
-import AuxinSource from '../../core/AuxinSource';
+import Attractor from '../../core/Attractor';
 
 let canvas, ctx;
 let network;
@@ -14,8 +14,8 @@ let showHelp = true;
 let mouseX = 0;
 let mouseY = 0;
 let leftMouseIsDown = false;
-let sourceRadius = 20;
-let sourceQuantity = sourceRadius/2;
+let attractorRadius = 20;
+let attractorQuantity = attractorRadius/2;
 let maxRadius = 300;
 let minRadius = 5;
 let mouseLastMoved = Date.now();
@@ -50,19 +50,19 @@ let drawText = () => {
   let text = [
     'Paint veins by clicking and dragging!',
     '',
-    'Left click and drag for sources',
-    'Right click to add "seed" vein',
+    'Left click and drag for attractors',
+    'Right click to add "seed" node',
     'Mouse wheel to increase/decrease radius',
     '',
     'Space = toggle pause',
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
-    'a = toggle attraction zones',
+    'n = toggle node visibility',
+    'a = toggle attractor visibility',
+    'z = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];
@@ -83,10 +83,10 @@ let update = (timestamp) => {
   network.update();
   network.draw();
 
-  // Draw circle on mouse cursor for source spread radius
+  // Draw circle on mouse cursor for attractor spread radius
   if(Date.now() - mouseLastMoved < mouseTimeout) {
     ctx.beginPath();
-    ctx.ellipse(mouseX, mouseY, sourceRadius, sourceRadius, 0, 0, Math.PI*2);
+    ctx.ellipse(mouseX, mouseY, attractorRadius, attractorRadius, 0, 0, Math.PI*2);
     ctx.strokeStyle = 'rgba(255,255,255,.4)';
     ctx.stroke();
   }
@@ -119,12 +119,12 @@ document.addEventListener('mousedown', (e) => {
       leftMouseIsDown = true;
       mouseLastMoved = Date.now();
 
-      for(let i=0; i<sourceQuantity; i++) {
-        let radius = random(-sourceRadius, sourceRadius);
+      for(let i=0; i<attractorQuantity; i++) {
+        let radius = random(-attractorRadius, attractorRadius);
         let angle = random(360);
 
-        network.sources.push(
-          new AuxinSource(
+        network.attractors.push(
+          new Attractor(
             new Vec2(
               e.clientX + Math.floor(radius * Math.cos(angle)),
               e.clientY + Math.floor(radius * Math.sin(angle))
@@ -138,8 +138,8 @@ document.addEventListener('mousedown', (e) => {
       break;
 
     case 2:
-      network.addVeinNode(
-        new VeinNode(
+      network.addNode(
+        new Node(
           null,
           new Vec2(
             e.clientX,
@@ -169,12 +169,12 @@ document.addEventListener('contextmenu', (e) => {
 
 document.addEventListener('mousemove', (e) => {
   if(leftMouseIsDown) {
-    for(let i=0; i<sourceQuantity; i++) {
-      let radius = random(-sourceRadius, sourceRadius);
+    for(let i=0; i<attractorQuantity; i++) {
+      let radius = random(-attractorRadius, attractorRadius);
       let angle = random(360);
 
-      network.sources.push(
-        new AuxinSource(
+      network.attractors.push(
+        new Attractor(
           new Vec2(
             e.clientX + Math.floor(radius * Math.cos(angle)),
             e.clientY + Math.floor(radius * Math.sin(angle))
@@ -193,11 +193,11 @@ document.addEventListener('mousemove', (e) => {
 
 document.addEventListener('wheel', (e) => {
   if(
-    sourceRadius + e.deltaY > minRadius &&
-    sourceRadius + e.deltaY < maxRadius
+    attractorRadius + e.deltaY > minRadius &&
+    attractorRadius + e.deltaY < maxRadius
   ) {
-    sourceRadius += e.deltaY;
-    sourceQuantity = sourceRadius/2;
+    attractorRadius += e.deltaY;
+    attractorQuantity = attractorRadius/2;
   }
 
   mouseLastMoved = Date.now();

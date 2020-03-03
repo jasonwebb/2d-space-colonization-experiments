@@ -2,20 +2,19 @@ import Defaults from './Defaults';
 import KDBush from 'kdbush';
 import * as Vec2 from 'vec2';
 import { random } from './Utilities';
-import Path from './Path';
 
 export default class Network {
   constructor(ctx, settings) {
     this.ctx = ctx;
     this.settings = Object.assign({}, Defaults, settings);
 
-    this.sources = [];  // sources (AuxinSources) attract vein nodes
-    this.nodes = [];    // nodes (VeinNodes) are connected to form veins
+    this.attractors = [];  // attractors influence node growth
+    this.nodes = [];       // nodes are connected to form branches
 
-    this.nodesIndex;    // kd-bush spatial index for all nodes
+    this.nodesIndex;       // kd-bush spatial index for all nodes
 
-    this.bounds = [];     // array of Path objects that veins cannot grow outside of
-    this.obstacles = [];  // array of Path objects that veins must avoid
+    this.bounds = [];      // array of Path objects that branches cannot grow outside of
+    this.obstacles = [];   // array of Path objects that branches must avoid
 
     this.buildSpatialIndices();
   }
@@ -26,37 +25,37 @@ export default class Network {
       return;
     }
 
-    // Associate auxin sources with nearby vein nodes to figure out where growth should occur
-    for(let [sourceID, source] of this.sources.entries()) {
+    // Associate attractors with nearby nodes to figure out where growth should occur
+    for(let [attractorID, attractor] of this.attractors.entries()) {
       switch(this.settings.VenationType) {
-        // For open venation, only associate this source with its closest vein node
+        // For open venation, only associate this attractor with its closest node
         case 'Open':
-          let closestNode = this.getClosestNode(source, this.getNodesInAttractionZone(source));
+          let closestNode = this.getClosestNode(attractor, this.getNodesInAttractionZone(attractor));
 
           if(closestNode != null) {
-            closestNode.influencedBy.push(sourceID);
-            source.influencingNodes = [closestNode];
+            closestNode.influencedBy.push(attractorID);
+            attractor.influencingNodes = [closestNode];
           }
 
           break;
 
-        // For closed venation, associate this source with all nodes in its relative neighborhood
+        // For closed venation, associate this attractor with all nodes in its relative neighborhood
         case 'Closed':
-          let neighborhoodNodes = this.getRelativeNeighborNodes(source);
-          let nodesInKillZone = this.getNodesInKillZone(source);
+          let neighborhoodNodes = this.getRelativeNeighborNodes(attractor);
+          let nodesInKillZone = this.getNodesInKillZone(attractor);
 
-          // Exclude nodes that are in the source's kill zone (these should stop growing)
+          // Exclude nodes that are in the attractor's kill zone (these should stop growing)
           let nodesToGrow = neighborhoodNodes.filter((neighborNode) => {
             return !nodesInKillZone.includes(neighborNode);
           });
 
-          source.influencingNodes = neighborhoodNodes;
+          attractor.influencingNodes = neighborhoodNodes;
 
           if(nodesToGrow.length > 0) {
-            source.fresh = false;
+            attractor.fresh = false;
 
             for(let node of nodesToGrow) {
-              node.influencedBy.push(sourceID);
+              node.influencedBy.push(attractorID);
             }
           }
 
@@ -65,15 +64,15 @@ export default class Network {
       }
     }
 
-    // Grow the network by adding new vein nodes onto any nodes being influenced by sources
+    // Grow the network by adding new nodes onto any nodes being influenced by attractors
     for(let node of this.nodes) {
       if(node.influencedBy.length > 0) {
-        let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.sources[id]));
+        let averageDirection = this.getAverageDirection(node, node.influencedBy.map(id => this.attractors[id]));
         let nextNode = node.getNextNode(averageDirection);
         let isInsideAnyBounds = false;
         let isInsideAnyObstacle = false;
 
-        // Only allow root veins inside of defined bounds
+        // Only allow root nodes inside of defined bounds
         if(this.bounds != undefined && this.bounds.length > 0) {
           for(let bound of this.bounds) {
             if(bound.contains(nextNode.position.x, nextNode.position.y)) {
@@ -82,7 +81,7 @@ export default class Network {
           }
         }
 
-        // Don't allow any root veins that are inside of an obstacle
+        // Don't allow any root nodes that are inside of an obstacle
         if(this.obstacles != undefined && this.obstacles.length > 0) {
           for(let obstacle of this.obstacles) {
             if(obstacle.contains(nextNode.position.x, nextNode.position.y)) {
@@ -91,7 +90,7 @@ export default class Network {
           }
         }
 
-        // NOTE: disabling this check lets veins grow across gaps in bounds - cool effect!
+        // NOTE: disabling this check lets nodes grow across gaps in bounds - cool effect!
         if(
           (isInsideAnyBounds || this.bounds.length === 0) &&
           (!isInsideAnyObstacle || this.obstacles.length === 0)
@@ -107,7 +106,7 @@ export default class Network {
         let currentNode = node;
 
         while(currentNode.parent != null) {
-          // When there are multiple child veins, use the thickest of them all
+          // When there are multiple child nodes, use the thickest of them all
           if(currentNode.parent.thickness < currentNode.thickness + .07) {
             currentNode.parent.thickness = currentNode.thickness + .03;
           }
@@ -117,30 +116,30 @@ export default class Network {
       }
     }
 
-    // Remove any auxin sources that have been reached by their associated vein nodes
-    for(let [sourceID, source] of this.sources.entries()) {
+    // Remove any attractors that have been reached by their associated nodes
+    for(let [attractorID, attractor] of this.attractors.entries()) {
       switch(this.settings.VenationType) {
-        // For open venation, remove the source as soon as any vein node reaches it
+        // For open venation, remove the attractor as soon as any node reaches it
         case 'Open':
-          if(source.reached) {
-            this.sources.splice(sourceID, 1);
+          if(attractor.reached) {
+            this.attractors.splice(attractorID, 1);
           }
 
           break;
 
-        // For closed venation, remove the source only when all associated vein nodes have reached it
+        // For closed venation, remove the attractor only when all associated nodes have reached it
         case 'Closed':
-          if(source.influencingNodes.length > 0 && !source.fresh) {
+          if(attractor.influencingNodes.length > 0 && !attractor.fresh) {
             let allNodesReached = true;
 
-            for(let node of source.influencingNodes) {
-              if(node.position.distance(source.position) > this.settings.KillDistance) {
+            for(let node of attractor.influencingNodes) {
+              if(node.position.distance(attractor.position) > this.settings.KillDistance) {
                 allNodesReached = false;
               }
             }
 
             if(allNodesReached) {
-              this.sources.splice(sourceID, 1);
+              this.attractors.splice(attractorID, 1);
             }
           }
 
@@ -156,8 +155,8 @@ export default class Network {
     this.drawBackground();
     this.drawBounds();
     this.drawObstacles();
-    this.drawSources();
-    this.drawVeins();
+    this.drawattractors();
+    this.drawNodes();
   }
 
   drawBackground() {
@@ -184,23 +183,23 @@ export default class Network {
     }
   }
 
-  drawVeins() {
-    if(this.settings.ShowVeins) {
+  drawNodes() {
+    if(this.settings.ShowNodes) {
       for(let node of this.nodes) {
         node.draw();
       }
     }
   }
 
-  drawSources() {
-    for(let source of this.sources) {
-      source.draw();
+  drawattractors() {
+    for(let attractor of this.attractors) {
+      attractor.draw();
 
-      // Draw lines between each source and the nodes they are influencing
-      if(this.settings.ShowInfluenceLines && source.influencingNodes.length > 0) {
-        for(let node of source.influencingNodes) {
+      // Draw lines between each attractor and the nodes they are influencing
+      if(this.settings.ShowInfluenceLines && attractor.influencingNodes.length > 0) {
+        for(let node of attractor.influencingNodes) {
           this.ctx.beginPath();
-          this.ctx.moveTo(source.position.x, source.position.y);
+          this.ctx.moveTo(attractor.position.x, attractor.position.y);
           this.ctx.lineTo(node.position.x, node.position.y);
           this.ctx.strokeStyle = this.settings.Colors.InfluenceLinesColor;
           this.ctx.stroke();
@@ -209,34 +208,34 @@ export default class Network {
     }
   }
 
-  getRelativeNeighborNodes(source) {
+  getRelativeNeighborNodes(attractor) {
     let fail;
 
-    let nearbyNodes = this.getNodesInAttractionZone(source);
+    let nearbyNodes = this.getNodesInAttractionZone(attractor);
     let relativeNeighbors = [];
-    let sourceToP0, sourceToP1, p0ToP1;
+    let attractorToP0, attractorToP1, p0ToP1;
 
     // p0 is a relative neighbor of auxinPos iff
     // for any point p1 that is closer to auxinPos than is p0,
     // p0 is closer to auxinPos than to p1
     for(let p0 of nearbyNodes) {
       fail = false;
-      sourceToP0 = p0.position.subtract(source.position, true);
+      attractorToP0 = p0.position.subtract(attractor.position, true);
 
       for(let p1 of nearbyNodes) {
         if(p0 === p1) {
           continue;
         }
 
-        sourceToP1 = p1.position.subtract(source.position, true);
+        attractorToP1 = p1.position.subtract(attractor.position, true);
 
-        if(sourceToP1.length() > sourceToP0.length()) {
+        if(attractorToP1.length() > attractorToP0.length()) {
           continue;
         }
 
         p0ToP1 = p1.position.subtract(p0.position, true);
 
-        if(sourceToP0.length() > p0ToP1.length()) {
+        if(attractorToP0.length() > p0ToP1.length()) {
           fail = true;
           break;
         }
@@ -250,35 +249,35 @@ export default class Network {
     return relativeNeighbors;
   }
 
-  getNodesInAttractionZone(source) {
+  getNodesInAttractionZone(attractor) {
     return this.nodesIndex.within(
-      source.position.x,
-      source.position.y,
+      attractor.position.x,
+      attractor.position.y,
       this.settings.AttractionDistance
     ).map(
       id => this.nodes[id]
     );
   }
 
-  getNodesInKillZone(source) {
+  getNodesInKillZone(attractor) {
     return this.nodesIndex.within(
-      source.position.x,
-      source.position.y,
+      attractor.position.x,
+      attractor.position.y,
       this.settings.KillDistance
     ).map(
       id => this.nodes[id]
     );
   }
 
-  getClosestNode(source, nearbyNodes) {
+  getClosestNode(attractor, nearbyNodes) {
     let closestNode = null,
       record = this.settings.AttractionDistance;
 
     for(let node of nearbyNodes) {
-      let distance = node.position.distance(source.position);
+      let distance = node.position.distance(attractor.position);
 
       if(distance < this.settings.KillDistance) {
-        source.reached = true;
+        attractor.reached = true;
         closestNode = null;
       } else if(distance < record) {
         closestNode = node;
@@ -289,17 +288,17 @@ export default class Network {
     return closestNode;
   }
 
-  getAverageDirection(node, nearbySources) {
-    // Add up normalized vectors pointing to each auxin source
+  getAverageDirection(node, nearbyattractors) {
+    // Add up normalized vectors pointing to each attractor
     let averageDirection = new Vec2(0,0);
 
-    for(let source of nearbySources) {
+    for(let attractor of nearbyattractors) {
       averageDirection.add(
-        source.position.subtract(node.position, true).normalize()
+        attractor.position.subtract(node.position, true).normalize()
       );
     }
 
-    // Add small amount of random "jitter" to avoid getting stuck between two auxin sources and endlessly generating nodes in the same place
+    // Add small amount of random "jitter" to avoid getting stuck between two attractors and endlessly generating nodes in the same place
     // (Credit to Davide Prati (edap) for the idea, seen in ofxSpaceColonization)
     averageDirection.add(new Vec2(random(-.1, .1), random(-.1, .1))).normalize();
 
@@ -308,11 +307,11 @@ export default class Network {
     return averageDirection;
   }
 
-  addVeinNode(node) {
+  addNode(node) {
     let isInsideAnyBounds = false;
     let isInsideAnyObstacle = false;
 
-    // Only allow root veins inside of defined bounds
+    // Only allow root nodes inside of defined bounds
     if(this.bounds != undefined && this.bounds.length > 0) {
       for(let bound of this.bounds) {
         if(bound.contains(node.position.x, node.position.y)) {
@@ -321,7 +320,7 @@ export default class Network {
       }
     }
 
-    // Don't allow any root veins that are inside of an obstacle
+    // Don't allow any root nodes that are inside of an obstacle
     if(this.obstacles != undefined && this.obstacles.length > 0) {
       for(let obstacle of this.obstacles) {
         if(obstacle.contains(node.position.x, node.position.y)) {
@@ -341,7 +340,7 @@ export default class Network {
 
   reset() {
     this.nodes = [];
-    this.sources = [];
+    this.attractors = [];
 
     this.buildSpatialIndices();
   }
@@ -350,39 +349,39 @@ export default class Network {
     this.nodesIndex = new KDBush(this.nodes, p => p.position.x, p => p.position.y);
   }
 
-  toggleVeins() {
-    this.settings.ShowVeins = !this.settings.ShowVeins;
+  toggleNodes() {
+    this.settings.ShowNodes = !this.settings.ShowNodes;
   }
 
-  toggleVeinTips() {
-    this.settings.ShowVeinTips = !this.settings.ShowVeinTips;
+  toggleTips() {
+    this.settings.ShowTips = !this.settings.ShowTips;
 
     for(let node of this.nodes) {
-      node.settings.ShowVeinTips = !node.settings.ShowVeinTips;
+      node.settings.ShowTips = !node.settings.ShowTips;
     }
   }
 
-  toggleSources() {
-    this.settings.ShowSources = !this.settings.ShowSources;
+  toggleattractors() {
+    this.settings.Showattractors = !this.settings.Showattractors;
 
-    for(let source of this.sources) {
-      source.settings.ShowSources = !source.settings.ShowSources;
+    for(let attractor of this.attractors) {
+      attractor.settings.Showattractors = !attractor.settings.Showattractors;
     }
   }
 
   toggleAttractionZones() {
     this.settings.ShowAttractionZones = !this.settings.ShowAttractionZones;
 
-    for(let source of this.sources) {
-      source.settings.ShowAttractionZones = !source.settings.ShowAttractionZones;
+    for(let attractor of this.attractors) {
+      attractor.settings.ShowAttractionZones = !attractor.settings.ShowAttractionZones;
     }
   }
 
   toggleKillZones() {
     this.settings.ShowKillZones = !this.settings.ShowKillZones;
 
-    for(let source of this.sources) {
-      source.settings.ShowKillZones = !source.settings.ShowKillZones;
+    for(let attractor of this.attractors) {
+      attractor.settings.ShowKillZones = !attractor.settings.ShowKillZones;
     }
   }
 

@@ -4,19 +4,19 @@ export default {
   /**
     Sketch variables
   */
-  UsePerVeinColors: false,
+  UsePerBranchColors: false,
 
 
   /**
     Simulation configurations
   */
 
-  VenationType: 'Closed',         // venation can be "Open" or "Closed"
-  SegmentLength: 5,             // length of each vein segment. Smaller numbers mean smoother lines, but more computation cost
-  AttractionDistance: 50,       // radius of influence (d_i) around each auxin source that attracts vein segments
-  KillDistance: 5,              // distance (d_k) between auxin sources and segments when segments are ended
-  IsPaused: false,              // initial pause/unpause state
-  EnableCanalization: true,     // turns on/off auxin flux canalization (line segment thickening)
+  VenationType: 'Closed',        // venation can be "Open" or "Closed"
+  SegmentLength: 5,              // length of each branch segment. Smaller numbers mean smoother lines, but more computation cost
+  AttractionDistance: 50,        // radius of influence (d_i) around each attractor that attracts nodes
+  KillDistance: 5,               // distance (d_k) between attractor and nodes when branches are ended
+  IsPaused: false,               // initial pause/unpause state
+  EnableCanalization: true,      // turns on/off auxin flux canalization (line segment thickening)
   EnableOpacityBlending: false,  // turns on/off opacity
 
 
@@ -25,23 +25,23 @@ export default {
   */
 
   // Visibility toggles
-  ShowSources: true,          // toggled with 's'
-  ShowVeins: true,             // toggled with 'v'
-  ShowVeinTips: false,         // toggled with 't'
-  ShowAttractionZones: false,  // toggled with 'a'
+  ShowAttractors: true,        // toggled with 'a'
+  ShowNodes: true,             // toggled with 'n'
+  ShowTips: false,             // toggled with 't'
+  ShowAttractionZones: false,  // toggled with 'z'
   ShowKillZones: false,        // toggled with 'k'
-  ShowInfluenceLines: true,   // toggled with 'i'
-  ShowBounds: false,            // toggled with 'b'
+  ShowInfluenceLines: true,    // toggled with 'i'
+  ShowBounds: false,           // toggled with 'b'
   ShowObstacles: false,        // toggled with 'o'
 
   // Modes
-  VeinRenderMode: 'Lines',  // draw vein segments as "Lines" or "Dots"
+  RenderMode: 'Lines',  // draw branch segments as "Lines" or "Dots"
 
   // Colors
   Colors: Dark,
 
   // Line thicknesses
-  VeinThickness: 1,
-  VeinTipThickness: 2,
+  BranchThickness: 1,
+  TipThickness: 2,
   BoundsBorderThickness: 1
 }

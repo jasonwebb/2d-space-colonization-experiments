@@ -4,7 +4,7 @@
 
 Space colonization is a process for iteratively growing networks of branching lines based on the distribution of growth hormone sources (called "auxin" sources) to which the lines are attracted. [Originally described](http://algorithmicbotany.org/papers/venation.sig2005.pdf) (PDF) by Adam Runions and collaborators at the Algorithmic Botany group at the University of Calgary, this system can be used to simulate the growth of leaf venation patterns and tree-like structures, as well as many other vein-like systems like Gorgonian sea fans, circulatory systems, root systems, and more.
 
-The original algorithm describes methods for generating both "open" (as seen in the example GIF) and "closed" venation networks, referring to whether or not secondary or tertiary veins connect together to form loops (or anastomoses).
+The original algorithm describes methods for generating both "open" (as seen in the example GIF) and "closed" venation networks, referring to whether or not secondary or tertiary branches connect together to form loops (or anastomoses).
 
 ### Algorithm at a glance:
 
@@ -12,21 +12,21 @@ For both the open and closed variants of this algorithm, begin by placing a set 
 
 #### Open venation:
 
-* Associate each auxin source with the single closest vein segment within a pre-defined attraction distance.
-* For each vein segment that is associated with at least one auxin source, calculate the average direction towards them as a normalized vector and generate a new vein segment that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
-* Remove any auxin sources that have vein segments within a pre-defined kill distance around it.
+* Associate each attractor with the single closest node within a pre-defined attraction distance.
+* For each node that is associated with at least one attractor, calculate the average direction towards them as a normalized vector and generate a new node that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
+* Remove any attractors that have nodes within a pre-defined kill distance around it.
 
 #### Closed venation:
 
-* Associate each auxin source with all of the vein segments that are both within a pre-defined attraction distance and within the source's relative neighborhood.
-* For each vein segment that is associated with at least one auxin source, calculate the average direction towards them as a normalized vector and generate a new vein segment that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
-* Remove any auxin sources that have been reached by all of their associated vein segments.
+* Associate each attractor with all of the nodes that are both within a pre-defined attraction distance and within the attractor's relative neighborhood.
+* For each node that is associated with at least one attractor, calculate the average direction towards them as a normalized vector and generate a new node that extends in that direction at a pre-defined segment length (by scaling the normalized direction vector by that length).
+* Remove any attractors that have been reached by all of their associated nodes.
 
 #### Auxin flux canalization:
 This is a process by which veins become thicker as they grow longer. The longer a vein gets, the more auxin flows through it ("flux"), causing veins to progressively thicken from their tips to their roots. "Canalization" references the process by which "canals" of water form.
 
-* Give each vein segment a uniform default thickness to start with.
-* Beginning at each terminal vein segment (that is, segments with no child segments), traverse "upwards" through each parent vein segment, adding their child vein segment thickness to their own until you reach a root vein segment (a segment with no parent segment).
+* Give each branch segment a uniform default thickness to start with.
+* Beginning at each terminal node (that is, segments with no child segments), traverse "upwards" through each parent node, adding their child node thickness to their own until you reach a root node (a segment with no parent segment).
 
 ## Features
 
@@ -34,7 +34,7 @@ This is a process by which veins become thicker as they grow longer. The longer 
 2. Growth can be constrained within _bounding shapes_. See `./core/Path.js` and `./core/Network.js`.
 3. _Obstacles_ can be defined that growth must avoid. See `./core/Path.js` and `./core/Network.js`.
 4. Simple SVG files can be loaded and parsed into either "bounds" or "obstacle" paths. See `./core/SVGLoader.js`.
-5. Auxin sources can be placed along the edges of paths, which can in turn be scaled and moved, in order to model _marginal growth_. See `./marginal-growth/js/entry.js`.
+5. Attractors can be placed along the edges of paths, which can in turn be scaled and moved, in order to model _marginal growth_. See `./marginal-growth/js/entry.js`.
 6. Multiple vein networks can be created (just add more than one "root" vein to kick off growth).
 7. Veins can be progressively thickened as they grow using a process called _auxin flux canalization_. Press `c` in any sketch to toggle it.
 8. Vein transparency can be smoothly blended from tip to root using _opacity blending_ (a variation of auxin flux canalization). Press `p` in any sketch to toggle it.
@@ -43,11 +43,11 @@ This is a process by which veins become thicker as they grow longer. The longer 
 ## Implementation notes
 
 See `./core` for common modules:
-* `AuxinSource.js` - location of a single source of auxin growth hormone
-* `Network.js` - manages the growth of vein segments based on auxin sources and provided bounds and obstacles
+* `Attractor.js` - location of a single source of auxin growth hormone or other growth-promoting influence
+* `Network.js` - manages the growth of nodes based on attractors and provided bounds and obstacles
 * `Path.js` - arbitrary path consisting of points, used for either constraining growth ("bounds") or defining areas for growth to avoid ("obstacle").
-* `SourcePatterns.js` - functions for generating auxin sources arranged in various patterns (grids, noise, etc)
-* `VeinNode.js` - a single point in a vein
+* `AttractorPatterns.js` - functions for generating attractors arranged in various patterns (grids, noise, etc)
+* `Node.js` - a single point in a branch
 
 A couple additional helper modules are also included there:
 * `KeyboardInteractions.js` - a structure for handling common keyboard commands that every sketch should have
@@ -74,25 +74,25 @@ A couple additional helper modules are also included there:
 ## TODO
 - [X] Create most basic implementation
 - [X] Add configurable support for open vs. closed venation patterns
-  * Closed patterns emerge when more than one vein is allowed to grow towards the same auxin source, as though they are "sharing" the auxin.
-  * Must also modify the criteria for auxin source removal to wait for all veins to reach, or exit the proximity threshold.
+  * Closed patterns emerge when more than one vein is allowed to grow towards the same attractor, as though they are "sharing" the auxin.
+  * Must also modify the criteria for attractor removal to wait for all veins to reach, or exit the proximity threshold.
 - [X] Implement static boundary shape (leaf shape) from SVG design
 - [ ] Implement dynamic boundary shape to simulate leaf growth
   - [X] Uniform growth via scaling
   - [ ] Non-uniform growth via shape interpolation (?)
 - [X] Ensure that multiple vein networks can grow independently
 - [X] Add support for obstacles that growth must avoid
-- [ ] Implement different auxin placement schemes
+- [ ] Implement different attractor placement schemes
   - [X] Random at start of simulation
   - [ ] Place using patterned noise, like Perlin
   - [X] Place using perfect grid pattern
-  - [ ] Inserted in random locations during simulation (perhaps tied to auxin removal?)
+  - [ ] Inserted in random locations during simulation (perhaps tied to attractor removal?)
   - [X] Added along margin of shape only
     - [X] Using adaptive subdivision
     - [X] Using constant spacing
-- [X] Implement spatial index to enable fast knn searching of nearby auxin sources and vein segments
+- [X] Implement spatial index to enable fast knn searching of nearby attractors and nodes
 - [X] Implement varying vein widths (auxin flux canalization)
-  * Start by setting the terminal vein segments to a minimum thickness, then increasing it gradually as it propagates back through parents
+  * Start by setting the terminal nodes to a minimum thickness, then increasing it gradually as it propagates back through parents
   * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
 - [X] Implement SVG export
 

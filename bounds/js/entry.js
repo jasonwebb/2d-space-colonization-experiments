@@ -1,7 +1,7 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import { getRandomSources, getGridOfSources } from '../../core/SourcePatterns';
-import VeinNode from '../../core/VeinNode';
+import { getRandomAttractors, getGridOfAttractors } from '../../core/AttractorPatterns';
+import Node from '../../core/Node';
 import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
 import { random } from '../../core/Utilities';
@@ -34,7 +34,7 @@ let setup = () => {
   // Initialize simulation object
   network = new Network(ctx, Settings);
 
-  // Add the bounds, sources, and root nodes
+  // Add the bounds, attractors, and root nodes
   resetNetwork();
 
   // Set up common keyboard interaction listeners
@@ -47,8 +47,8 @@ let setup = () => {
 let resetNetwork = () => {
   network.reset();
   addBounds();
-  addSources();
-  addRootVeins();
+  addAttractors();
+  addRootNodes();
 }
 
   let addBounds = () => {
@@ -146,31 +146,31 @@ let resetNetwork = () => {
       return bounds;
     }
 
-  let addSources = () => {
-    // Set up the auxin sources using pre-made patterns
-    let randomSources = getRandomSources(500, ctx, 10, network.bounds);
-    let gridSources = getGridOfSources(150, 150, ctx, 10, network.bounds);
+  let addAttractors = () => {
+    // Set up the attractors using pre-made patterns
+    let randomAttractors = getRandomAttractors(500, ctx, 10, network.bounds);
+    let gridAttractors = getGridOfAttractors(150, 150, ctx, 10, network.bounds);
 
-    network.sources = gridSources;
+    network.attractors = gridAttractors;
   }
 
   // Create the network with initial conditions
-  let addRootVeins = () => {
-    let veinColors = [
-      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
-      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
-      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
-      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
-      Settings.UsePerVeinColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined
+  let addRootNodes = () => {
+    let branchColors = [
+      Settings.UsePerBranchColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerBranchColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerBranchColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerBranchColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined,
+      Settings.UsePerBranchColors ? 'rgb(' + random(100,255) + ',' + random(100,255) + ',' + random(100,255) + ')' : undefined
     ];
 
     switch(currentBoundsShape) {
       case SQUARE:
       case CIRCLE:
-        // Add a set of random root veins throughout scene
+        // Add a set of random root nodes throughout scene
         for(let i=0; i<13; i++) {
-          network.addVeinNode(
-            new VeinNode(
+          network.addNode(
+            new Node(
               null,
               new Vec2(
                 random(window.innerWidth),
@@ -179,7 +179,7 @@ let resetNetwork = () => {
               true,
               ctx,
               Settings,
-              veinColors[i % veinColors.length]
+              branchColors[i % branchColors.length]
             )
           );
         }
@@ -188,8 +188,8 @@ let resetNetwork = () => {
 
       case LEAF:
         // Put a single root note at the base of the leaf
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 - 5,
@@ -198,7 +198,7 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[0]
+            branchColors[0]
           )
         );
 
@@ -206,8 +206,8 @@ let resetNetwork = () => {
 
       case VEINSTEXT:
         // V
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 - 330,
@@ -216,13 +216,13 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[0]
+            branchColors[0]
           )
         );
 
         // E
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 - 200,
@@ -231,13 +231,13 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[1]
+            branchColors[1]
           )
         );
 
         // I
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2,
@@ -246,13 +246,13 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[2]
+            branchColors[2]
           )
         );
 
         // N
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 + 100,
@@ -261,13 +261,13 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[3]
+            branchColors[3]
           )
         );
 
         // S
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 + 410,
@@ -276,7 +276,7 @@ let resetNetwork = () => {
             true,
             ctx,
             Settings,
-            veinColors[4]
+            branchColors[4]
           )
         );
 
@@ -297,11 +297,11 @@ let drawText = () => {
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
+    'n = toggle node visibility',
+    'a = toggle attractor visibility',
     'a = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];

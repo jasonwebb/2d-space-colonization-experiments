@@ -1,9 +1,9 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import VeinNode from '../../core/VeinNode';
+import Node from '../../core/Node';
 import Path from '../../core/Path';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
-import AuxinSource from '../../core/AuxinSource';
+import Attractor from '../../core/Attractor';
 import SVGLoader from '../../core/SVGLoader';
 
 let canvas, ctx;
@@ -41,7 +41,7 @@ let setup = () => {
   // Load the defined path
   setupPath();
 
-  // Add the bounds, sources, and root nodes
+  // Add the bounds, attractors, and root nodes
   resetNetwork();
 
   // Set up common keyboard interaction listeners
@@ -53,7 +53,7 @@ let setup = () => {
 
 let resetNetwork = () => {
   network.reset();
-  addRootVeins();
+  addRootNodes();
 }
 
   let setupPath = () => {
@@ -181,7 +181,7 @@ let resetNetwork = () => {
     }
 
   // Create the network with initial conditions
-  let addRootVeins = () => {
+  let addRootNodes = () => {
     const cx = window.innerWidth/2;
     let cy = window.innerHeight/2;
 
@@ -189,8 +189,8 @@ let resetNetwork = () => {
       cy = window.innerHeight - 100;
     }
 
-    network.addVeinNode(
-      new VeinNode(
+    network.addNode(
+      new Node(
         null,
         new Vec2(
           cx,
@@ -221,14 +221,14 @@ let resetNetwork = () => {
     }
   }
 
-  let generateSourcesOnPath = () => {
-    // network.sources = createEvenlySpacedSources();
-    network.sources = createSubdividedSources();
+  let generateAttractorsOnPath = () => {
+    // network.attractors = createEvenlySpacedAttractors();
+    network.attractors = createSubdividedAttractors();
   }
 
-    let createEvenlySpacedSources = () => {
-      let sources = [];
-      const sourceSpacing = 10;
+    let createEvenlySpacedAttractors = () => {
+      let attractors = [];
+      const attractorSpacing = 10;
       let previousSegmentRemainder = 0;
 
       // For each path segment ...
@@ -236,45 +236,45 @@ let resetNetwork = () => {
         const point0 = Vec2(currentPath.transformedPolygon[i-1][0], currentPath.transformedPolygon[i-1][1]);
         const point1 = Vec2(currentPath.transformedPolygon[i][0], currentPath.transformedPolygon[i][1]);
         const currentSegmentLength = point1.distance(point0);
-        const startingOffset = sourceSpacing - previousSegmentRemainder;
+        const startingOffset = attractorSpacing - previousSegmentRemainder;
         const availableLength = currentSegmentLength - startingOffset;
 
-        // We can fit at least one source onto this segment
-        if(availableLength >= sourceSpacing) {
+        // We can fit at least one attractor onto this segment
+        if(availableLength >= attractorSpacing) {
           let segmentDirection = point1.subtract(point0, true).normalize();
 
-          // How many sources can we fit onto this segment?
-          const numSources = Math.floor(availableLength / sourceSpacing);
+          // How many attractors can we fit onto this segment?
+          const numAttractors = Math.floor(availableLength / attractorSpacing);
 
-          // Create as many auxin sources as we can
-          for(let sourceIndex=0; sourceIndex<=numSources; sourceIndex++) {
-            sources.push(
-              new AuxinSource(
-                point0.add(segmentDirection.multiply(sourceSpacing * sourceIndex + startingOffset, true), true),
+          // Create as many attractors as we can
+          for(let attractorIndex=0; attractorIndex<=numAttractors; attractorIndex++) {
+            attractors.push(
+              new Attractor(
+                point0.add(segmentDirection.multiply(attractorSpacing * attractorIndex + startingOffset, true), true),
                 ctx
               )
             );
           }
 
-          // Store remainder of segment length to offset next segment's source placement
-          previousSegmentRemainder = availableLength - (numSources * sourceSpacing);
+          // Store remainder of segment length to offset next segment's attractor placement
+          previousSegmentRemainder = availableLength - (numAttractors * attractorSpacing);
 
-        // Can't fit any sources onto this segment, so accumulate the length (previous segments might've also been too short)
+        // Can't fit any attractors onto this segment, so accumulate the length (previous segments might've also been too short)
         } else {
           previousSegmentRemainder += currentSegmentLength;
         }
       }
 
-      return sources;
+      return attractors;
     }
 
-    let createSubdividedSources = () => {
-      let sources = [];
+    let createSubdividedAttractors = () => {
+      let attractors = [];
 
-      // Create sources at each vertex
+      // Create attractors at each vertex
       for(let i=0; i<currentPath.transformedPolygon.length; i++) {
-        sources.push(
-          new AuxinSource(
+        attractors.push(
+          new Attractor(
             new Vec2(
               currentPath.transformedPolygon[i][0],
               currentPath.transformedPolygon[i][1]
@@ -284,51 +284,51 @@ let resetNetwork = () => {
         );
       }
 
-      let newSources = [];
+      let newAttractors = [];
 
       // Recursively subdivide segments
-      for(let i=1; i<sources.length; i++) {
-        const point0 = sources[i-1].position;
-        const point1 = sources[i].position;
-        subdivideSegment(point0, point1, i, newSources);
+      for(let i=1; i<attractors.length; i++) {
+        const point0 = attractors[i-1].position;
+        const point1 = attractors[i].position;
+        subdivideSegment(point0, point1, i, newAttractors);
       }
 
-      // Reverse the new sources list so that indices don't shift as they are inserted
-      newSources.sort((a,b) => {
+      // Reverse the new attractors list so that indices don't shift as they are inserted
+      newAttractors.sort((a,b) => {
         return b.index - a.index;
       });
 
-      // Inject all the new sources
-      for(let newSource of newSources) {
-        sources.splice(newSource.index, 0, newSource.source);
+      // Inject all the new attractors
+      for(let newAttractor of newAttractors) {
+        attractors.splice(newAttractor.index, 0, newAttractor.attractor);
       }
 
-      return sources;
+      return attractors;
     }
 
-      // Split a segment (defined by two input points) by placing a source at it's midpoint
-      let subdivideSegment = (point0, point1, originalIndex, newSources) => {
+      // Split a segment (defined by two input points) by placing a attractor at it's midpoint
+      let subdivideSegment = (point0, point1, originalIndex, newAttractors) => {
         const segmentLength = point1.distance(point0);
 
         // Only subdivide the segment if its long enough (terminates recursion in short segments)
         if(segmentLength > 20) {
-          let midpointSource = getMidpointSource(point0, point1, segmentLength);
-          newSources.push({
+          let midpointAttractor = getMidpointAttractor(point0, point1, segmentLength);
+          newAttractors.push({
             index: originalIndex,
-            source: midpointSource
+            attractor: midpointAttractor
           });
 
           // Recursively subdivide the new segments
-          subdivideSegment(point0, midpointSource.position, originalIndex, newSources); // subdivide the left segment
-          subdivideSegment(midpointSource.position, point1, originalIndex, newSources); // subdivide the right segment
+          subdivideSegment(point0, midpointAttractor.position, originalIndex, newAttractors); // subdivide the left segment
+          subdivideSegment(midpointAttractor.position, point1, originalIndex, newAttractors); // subdivide the right segment
         }
       }
 
-      // Generate a new source exactly halfway between two others
-      let getMidpointSource = (point0, point1, segmentLength) => {
+      // Generate a new attractor exactly halfway between two others
+      let getMidpointAttractor = (point0, point1, segmentLength) => {
         const segmentDirection = point1.subtract(point0, true).normalize();
 
-        return new AuxinSource(
+        return new Attractor(
           point0.add(segmentDirection.multiply(segmentLength/2, true), true),
           ctx
         );
@@ -336,7 +336,7 @@ let resetNetwork = () => {
 
 let drawText = () => {
   let text = [
-    'Auxin sources can be placed on the edges of paths,',
+    'Attractors can be placed on the edges of paths,',
     'creating growth as they are scaled.',
     '',
     '1 = horizontal line moving upwards',
@@ -350,11 +350,11 @@ let drawText = () => {
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
-    'a = toggle attraction zones',
+    'n = toggle node visibility',
+    'a = toggle attractor visibility',
+    'z = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];
@@ -381,7 +381,7 @@ let update = (timestamp) => {
       scalePath();
     }
 
-    generateSourcesOnPath();
+    generateAttractorsOnPath();
 
     network.update();
   }

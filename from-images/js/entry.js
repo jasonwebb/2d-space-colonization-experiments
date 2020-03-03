@@ -1,12 +1,12 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import VeinNode from '../../core/VeinNode';
-import AuxinSource from '../../core/AuxinSource';
+import Node from '../../core/Node';
+import Attractor from '../../core/Attractor';
 import Path from '../../core/Path';
 import { random } from '../../core/Utilities';
 import { setupKeyListeners } from '../../core/KeyboardInteractions';
 import Settings from './Settings';
-import { GreekStatue } from './SourcePatterns';
+import { GreekStatue } from './AttractorPatterns';
 
 let canvas, ctx;
 let network;
@@ -25,7 +25,7 @@ let setup = () => {
   // Initialize simulation object
   network = new Network(ctx, Settings);
 
-  // Add the bounds, sources, and root nodes
+  // Add the bounds, attractors, and root nodes
   resetNetwork();
 
   // Set up common keyboard interaction listeners
@@ -37,16 +37,16 @@ let setup = () => {
 
 let resetNetwork = () => {
   network.reset();
-  addSources();
-  addRootVeins();
+  addAttractors();
+  addRootNodes();
 }
 
-  let addSources = () => {
-    let sources = [];
+  let addAttractors = () => {
+    let attractors = [];
 
     for(let coords of GreekStatue) {
-      sources.push(
-        new AuxinSource(
+      attractors.push(
+        new Attractor(
           new Vec2(
             coords[0]*1.5 - 1300,
             coords[1]*1.5 - 200
@@ -57,13 +57,13 @@ let resetNetwork = () => {
       );
     }
 
-    network.sources = sources;
+    network.attractors = attractors;
   }
 
   // Create the network with initial conditions
-  let addRootVeins = () => {
-    network.addVeinNode(
-      new VeinNode(
+  let addRootNodes = () => {
+    network.addNode(
+      new Node(
         null,
         new Vec2(
           window.innerWidth/2 - 440,
@@ -75,8 +75,8 @@ let resetNetwork = () => {
       )
     );
 
-    // network.addVeinNode(
-    //   new VeinNode(
+    // network.addNode(
+    //   new Node(
     //     null,
     //     new Vec2(
     //       window.innerWidth/2 + 200,
@@ -91,7 +91,7 @@ let resetNetwork = () => {
 
 let drawText = () => {
   let text = [
-    'Sources placed based on image data.',
+    'Attractors placed based on image data.',
     '',
     '1 = square',
     '',
@@ -99,11 +99,11 @@ let drawText = () => {
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
+    'v = toggle branch visibility',
+    's = toggle attractor visibility',
     'a = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];

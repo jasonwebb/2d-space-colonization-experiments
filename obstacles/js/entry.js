@@ -1,7 +1,7 @@
 import * as Vec2 from 'vec2';
 import Network from '../../core/Network';
-import { getRandomSources, getGridOfSources } from '../../core/SourcePatterns';
-import VeinNode from '../../core/VeinNode';
+import { getRandomAttractors, getGridOfAttractors } from '../../core/AttractorPatterns';
+import Node from '../../core/Node';
 import Path from '../../core/Path';
 import SVGLoader from '../../core/SVGLoader';
 import { random, getCircleOfPoints } from '../../core/Utilities';
@@ -32,7 +32,7 @@ let setup = () => {
   // Initialize simulation object
   network = new Network(ctx);
 
-  // Add the bounds, sources, and root nodes
+  // Add the bounds, attractors, and root nodes
   resetNetwork();
 
   // Set up common keyboard interaction listeners
@@ -46,8 +46,8 @@ let resetNetwork = () => {
   network.reset();
   addBounds();
   addObstacles();
-  addSources();
-  addRootVeins();
+  addAttractors();
+  addRootNodes();
 }
 
   let addBounds = () => {
@@ -174,23 +174,23 @@ let resetNetwork = () => {
     }
   }
 
-  let addSources = () => {
-    // Set up the auxin sources using pre-made patterns
-    let randomSources = getRandomSources(500, ctx, 10, network.bounds, network.obstacles);
-    let gridSources = getGridOfSources(200, 200, ctx, 10, network.bounds, network.obstacles);
+  let addAttractors = () => {
+    // Set up the attractors using pre-made patterns
+    let randomAttractors = getRandomAttractors(500, ctx, 10, network.bounds, network.obstacles);
+    let gridAttractors = getGridOfAttractors(200, 200, ctx, 10, network.bounds, network.obstacles);
 
-    network.sources = gridSources;
+    network.attractors = gridAttractors;
   }
 
   // Create the network with initial conditions
-  let addRootVeins = () => {
+  let addRootNodes = () => {
     const cx = window.innerWidth/2;
     const cy = window.innerHeight/2;
 
     switch(currentBoundsShape) {
       case TRIANGLE:
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(cx - 340, cy + 290),
             true,
@@ -198,8 +198,8 @@ let resetNetwork = () => {
           )
         );
 
-        // network.addVeinNode(
-        //   new VeinNode(
+        // network.addNode(
+        //   new Node(
         //     null,
         //     new Vec2(cx, cy - 300),
         //     true,
@@ -207,8 +207,8 @@ let resetNetwork = () => {
         //   )
         // );
 
-        // network.addVeinNode(
-        //   new VeinNode(
+        // network.addNode(
+        //   new Node(
         //     null,
         //     new Vec2(cx + 340, cy + 290),
         //     true,
@@ -219,8 +219,8 @@ let resetNetwork = () => {
         break;
 
       case CIRCLE:
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(cx, cy + 300),
             true,
@@ -231,10 +231,10 @@ let resetNetwork = () => {
         break;
 
       case SQUARE:
-        // Add a set of random root veins throughout scene
+        // Add a set of random root nodes throughout scene
         for(let i=0; i<10; i++) {
-          network.addVeinNode(
-            new VeinNode(
+          network.addNode(
+            new Node(
               null,
               new Vec2(
                 random(window.innerWidth),
@@ -250,8 +250,8 @@ let resetNetwork = () => {
 
       case LEAF:
         // Put a single root note at the base of the leaf
-        network.addVeinNode(
-          new VeinNode(
+        network.addNode(
+          new Node(
             null,
             new Vec2(
               window.innerWidth / 2 - 5,
@@ -279,11 +279,11 @@ let drawText = () => {
     'r = reset',
     'c = toggle canalization',
     'p = toggle opacity blending',
-    'v = toggle vein visibility',
-    's = toggle source visibility',
-    'a = toggle attraction zones',
+    'n = toggle node visibility',
+    'a = toggle attractor visibility',
+    'z = toggle attraction zones',
     'k = toggle kill zones',
-    't = toggle vein tips',
+    't = toggle tips',
     'i = toggle influence lines',
     'h = toggle this help text'
   ];

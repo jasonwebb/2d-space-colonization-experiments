@@ -1,13 +1,13 @@
 import Defaults from './Defaults';
 
-export default class AuxinSource {
+export default class Attractor {
   constructor(position, ctx, settings = {}) {
-    this.position = position;     // vec2 of this source's position
+    this.position = position;     // vec2 of this attractor's position
     this.ctx = ctx;               // global canvas context
     this.settings = Object.assign({}, Defaults, settings);
 
-    this.influencingNodes = [];   // references to nodes this source is influencing each frame
-    this.fresh = true;            // flag used to prevent sources from being removed during first frame of Closed venation mode
+    this.influencingNodes = [];   // references to nodes this attractor is influencing each frame
+    this.fresh = true;            // flag used to prevent attractors from being removed during first frame of Closed venation mode
   }
 
   draw() {
@@ -27,11 +27,11 @@ export default class AuxinSource {
       this.ctx.fill();
     }
 
-    // Draw the auxin source
-    if(this.settings.ShowSources) {
+    // Draw the attractor
+    if(this.settings.ShoAttractors) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, 1, 1, 0, 0, Math.PI * 2);
-      this.ctx.fillStyle = this.settings.Colors.SourceColor;
+      this.ctx.fillStyle = this.settings.Colors.AttractorColor;
       this.ctx.fill();
     }
   }

@@ -49,8 +49,8 @@ export function exportSVG(network) {
   svg.setAttribute('height', window.innerHeight);
   svg.setAttribute('viewBox', '0 0 ' + window.innerWidth + ' ' + window.innerHeight);
 
-  // Create <line>s for each vein segment
-  if(network.settings.ShowVeins) {
+  // Create <line>s for each branch segment
+  if(network.settings.ShowBranches) {
     let nodeLinesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 
     for(let node of network.nodes) {
