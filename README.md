@@ -1,5 +1,7 @@
 ---
+
 [Read my walkthrough article to learn all about this project and the space colonization algorithm!](https://medium.com/@jason.webb/space-colonization-algorithm-in-javascript-6f683b743dc5)
+
 ---
 
 ## About space colonization
