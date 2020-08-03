@@ -71,31 +71,6 @@ A couple additional helper modules are also included there:
 1. Run `npm install` to get all packages
 2. Run `npm run serve` to start up Webpack and launch the application in a browser window
 
-## TODO
-- [X] Create most basic implementation
-- [X] Add configurable support for open vs. closed venation patterns
-  * Closed patterns emerge when more than one vein is allowed to grow towards the same attractor, as though they are "sharing" the auxin.
-  * Must also modify the criteria for attractor removal to wait for all veins to reach, or exit the proximity threshold.
-- [X] Implement static boundary shape (leaf shape) from SVG design
-- [ ] Implement dynamic boundary shape to simulate leaf growth
-  - [X] Uniform growth via scaling
-  - [ ] Non-uniform growth via shape interpolation (?)
-- [X] Ensure that multiple vein networks can grow independently
-- [X] Add support for obstacles that growth must avoid
-- [ ] Implement different attractor placement schemes
-  - [X] Random at start of simulation
-  - [ ] Place using patterned noise, like Perlin
-  - [X] Place using perfect grid pattern
-  - [ ] Inserted in random locations during simulation (perhaps tied to attractor removal?)
-  - [X] Added along margin of shape only
-    - [X] Using adaptive subdivision
-    - [X] Using constant spacing
-- [X] Implement spatial index to enable fast knn searching of nearby attractors and nodes
-- [X] Implement varying vein widths (auxin flux canalization)
-  * Start by setting the terminal nodes to a minimum thickness, then increasing it gradually as it propagates back through parents
-  * Also add jump in thickness between "levels" of veins, i.e. when branches merge (parent has multiple children)
-- [X] Implement SVG export
-
 ## References
 
 ### Articles and papers:
