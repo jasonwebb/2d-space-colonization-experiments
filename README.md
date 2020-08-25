@@ -1,8 +1,6 @@
----
-
-[Read my walkthrough article to learn all about this project and the space colonization algorithm!](https://medium.com/@jason.webb/space-colonization-algorithm-in-javascript-6f683b743dc5)
-
----
+> [Read my Medium article](https://medium.com/@jason.webb/space-colonization-algorithm-in-javascript-6f683b743dc5) to learn more about the space colonization algorithm and this project.
+>
+> [Additional media is available on my portfolio](https://jasonwebb.io/2020/03/space-colonization-branching-experiments-in-javascript/)
 
 ## About space colonization
 
