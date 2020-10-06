@@ -1,6 +1,12 @@
-import { Light, Dark, Custom } from '../../core/ColorPresets';
+import { Light, Dark, Custom } from '../../../core/ColorPresets';
 
 export default {
+  /**
+    Sketch variables
+  */
+  UsePerBranchColors: false,
+
+
   /**
     Simulation configurations
   */
@@ -19,7 +25,7 @@ export default {
   */
 
   // Visibility toggles
-  ShowAttractors: true,        // toggled with 'a'
+  ShowAttractors: false,       // toggled with 'a'
   ShowNodes: true,             // toggled with 'n'
   ShowTips: false,             // toggled with 't'
   ShowAttractionZones: false,  // toggled with 'z'
@@ -32,8 +38,7 @@ export default {
   RenderMode: 'Lines',  // draw branch segments as "Lines" or "Dots"
 
   // Colors
-  UseBranchColors: false,
-  Colors: Dark,
+  Colors: Custom,
 
   // Line thicknesses
   BranchThickness: 1,

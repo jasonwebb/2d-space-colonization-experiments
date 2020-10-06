@@ -1,11 +1,11 @@
 import * as Vec2 from 'vec2';
-import Network from '../../core/Network';
-import { getRandomAttractors, getGridOfAttractors, applyNoise, getPhyllotaxisAttractors, getWaveOfAttractors } from '../../core/AttractorPatterns';
-import Node from '../../core/Node';
-import { random } from '../../core/Utilities';
-import { setupKeyListeners } from '../../core/KeyboardInteractions';
+import Network from '../../../core/Network';
+import { getRandomAttractors, getGridOfAttractors, applyNoise, getPhyllotaxisAttractors, getWaveOfAttractors } from '../../../core/AttractorPatterns';
+import Node from '../../../core/Node';
+import { random } from '../../../core/Utilities';
+import { setupKeyListeners } from '../../../core/KeyboardInteractions';
 import Settings from './Settings';
-import Attractor from '../../core/Attractor';
+import Attractor from '../../../core/Attractor';
 
 let canvas, ctx;
 let network;

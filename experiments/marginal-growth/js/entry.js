@@ -1,10 +1,10 @@
 import * as Vec2 from 'vec2';
-import Network from '../../core/Network';
-import Node from '../../core/Node';
-import Path from '../../core/Path';
-import { setupKeyListeners } from '../../core/KeyboardInteractions';
-import Attractor from '../../core/Attractor';
-import SVGLoader from '../../core/SVGLoader';
+import Network from '../../../core/Network';
+import Node from '../../../core/Node';
+import Path from '../../../core/Path';
+import { setupKeyListeners } from '../../../core/KeyboardInteractions';
+import Attractor from '../../../core/Attractor';
+import SVGLoader from '../../../core/SVGLoader';
 
 let canvas, ctx;
 let network;

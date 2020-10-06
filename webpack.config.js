@@ -3,12 +3,12 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    basic: path.resolve('basic/js/entry.js'),
-    bounds: path.resolve('bounds/js/entry.js'),
-    obstacles: path.resolve('obstacles/js/entry.js'),
-    marginalGrowth: path.resolve('marginal-growth/js/entry.js'),
-    painting: path.resolve('painting/js/entry.js'),
-    images: path.resolve('from-images/js/entry.js')
+    basic: path.resolve('experiments/basic/js/entry.js'),
+    bounds: path.resolve('experiments/bounds/js/entry.js'),
+    obstacles: path.resolve('experiments/obstacles/js/entry.js'),
+    marginalGrowth: path.resolve('experiments/marginal-growth/js/entry.js'),
+    painting: path.resolve('experiments/painting/js/entry.js'),
+    images: path.resolve('experiments/from-images/js/entry.js')
   },
   module: {
     rules: [

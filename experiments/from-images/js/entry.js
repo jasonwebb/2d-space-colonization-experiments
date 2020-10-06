@@ -1,10 +1,10 @@
 import * as Vec2 from 'vec2';
-import Network from '../../core/Network';
-import Node from '../../core/Node';
-import Attractor from '../../core/Attractor';
-import Path from '../../core/Path';
-import { random } from '../../core/Utilities';
-import { setupKeyListeners } from '../../core/KeyboardInteractions';
+import Network from '../../../core/Network';
+import Node from '../../../core/Node';
+import Attractor from '../../../core/Attractor';
+import Path from '../../../core/Path';
+import { random } from '../../../core/Utilities';
+import { setupKeyListeners } from '../../../core/KeyboardInteractions';
 import Settings from './Settings';
 import { GreekStatue } from './AttractorPatterns';
 
@@ -48,8 +48,8 @@ let resetNetwork = () => {
       attractors.push(
         new Attractor(
           new Vec2(
-            coords[0]*1.5 - 1300,
-            coords[1]*1.5 - 200
+            coords[0]*1.1 - 750,
+            coords[1]*1.1 - 90
           ),
           ctx,
           Settings

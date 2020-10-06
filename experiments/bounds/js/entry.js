@@ -1,11 +1,11 @@
 import * as Vec2 from 'vec2';
-import Network from '../../core/Network';
-import { getRandomAttractors, getGridOfAttractors } from '../../core/AttractorPatterns';
-import Node from '../../core/Node';
-import Path from '../../core/Path';
-import SVGLoader from '../../core/SVGLoader';
-import { random } from '../../core/Utilities';
-import { setupKeyListeners } from '../../core/KeyboardInteractions';
+import Network from '../../../core/Network';
+import { getRandomAttractors, getGridOfAttractors } from '../../../core/AttractorPatterns';
+import Node from '../../../core/Node';
+import Path from '../../../core/Path';
+import SVGLoader from '../../../core/SVGLoader';
+import { random } from '../../../core/Utilities';
+import { setupKeyListeners } from '../../../core/KeyboardInteractions';
 import Settings from './Settings';
 
 const leaf = require('../svg/leaf.svg');

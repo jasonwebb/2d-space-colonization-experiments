@@ -1,12 +1,6 @@
-import { Light, Dark, Custom } from '../../core/ColorPresets';
+import { Light, Dark, Custom } from '../../../core/ColorPresets';
 
 export default {
-  /**
-    Sketch variables
-  */
-  UsePerBranchColors: false,
-
-
   /**
     Simulation configurations
   */
@@ -16,7 +10,7 @@ export default {
   AttractionDistance: 30,        // radius of influence (d_i) around each attractor that attracts nodes
   KillDistance: 5,               // distance (d_k) between attractors and nodes when branches are ended
   IsPaused: false,               // initial pause/unpause state
-  EnableCanalization: true,      // turns on/off auxin flux canalization (line segment thickening)
+  EnableCanalization: false,     // turns on/off auxin flux canalization (line segment thickening)
   EnableOpacityBlending: false,  // turns on/off opacity
 
 
@@ -38,7 +32,8 @@ export default {
   RenderMode: 'Lines',  // draw branch segments as "Lines" or "Dots"
 
   // Colors
-  Colors: Custom,
+  UseBranchColors: false,
+  Colors: Light,
 
   // Line thicknesses
   BranchThickness: 1,
