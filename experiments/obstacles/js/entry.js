@@ -180,6 +180,10 @@ let resetNetwork = () => {
     let gridAttractors = getGridOfAttractors(200, 200, ctx, 10, network.bounds, network.obstacles);
 
     network.attractors = gridAttractors;
+  
+    for(let attractor of network.attractors) {
+      attractor.settings = network.settings;
+    }
   }
 
   // Create the network with initial conditions

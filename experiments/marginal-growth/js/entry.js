@@ -224,6 +224,10 @@ let resetNetwork = () => {
   let generateAttractorsOnPath = () => {
     // network.attractors = createEvenlySpacedAttractors();
     network.attractors = createSubdividedAttractors();
+  
+    for(let attractor of network.attractors) {
+      attractor.settings = network.settings;
+    }
   }
 
     let createEvenlySpacedAttractors = () => {

@@ -7842,3 +7842,26 @@ export let GreekStatue = [
   [1650.6536, 555.5017],
   [1647.8226, 559.41113]
 ];
+
+export function calculateExtents(coordArray) {
+  let minX = Infinity, maxX = -Infinity;
+  let minY = Infinity, maxY = -Infinity;
+  
+  for(let coords of coordArray) {
+    minX = Math.min(minX, coords[0]);
+    maxX = Math.max(maxX, coords[0]);
+    minY = Math.min(minY, coords[1]);
+    maxY = Math.max(maxY, coords[1]);
+  }
+  
+  return {
+    minX,
+    maxX,
+    minY,
+    maxY,
+    width: maxX - minX,
+    height: maxY - minY
+  };
+}
+
+export let GreekStatueExtents = calculateExtents(GreekStatue);

@@ -6,7 +6,7 @@ import Path from '../../../core/Path';
 import { random } from '../../../core/Utilities';
 import { setupKeyListeners } from '../../../core/KeyboardInteractions';
 import Settings from './Settings';
-import { GreekStatue } from './AttractorPatterns';
+import { GreekStatue, GreekStatueExtents } from './AttractorPatterns';
 
 let canvas, ctx;
 let network;
@@ -44,13 +44,23 @@ let resetNetwork = () => {
   let addAttractors = () => {
     let attractors = [];
 
+    // Scale the coordinates to fit within the window
+    const scale = Math.min(
+      window.innerWidth / GreekStatueExtents.width,
+      window.innerHeight / GreekStatueExtents.height
+    ) * 0.8; // 0.8 to leave some margin
+
+    // Center the pattern in the middle of the window
+    const offsetX = (window.innerWidth - (GreekStatueExtents.width * scale)) / 2;
+    const offsetY = (window.innerHeight - (GreekStatueExtents.height * scale)) / 2;
+
     for(let coords of GreekStatue) {
+      const x = (coords[0] - GreekStatueExtents.minX) * scale + offsetX;
+      const y = (coords[1] - GreekStatueExtents.minY) * scale + offsetY;
+      
       attractors.push(
         new Attractor(
-          new Vec2(
-            coords[0]*1.1 - 750,
-            coords[1]*1.1 - 90
-          ),
+          new Vec2(x, y),
           ctx,
           Settings
         )
@@ -58,6 +68,10 @@ let resetNetwork = () => {
     }
 
     network.attractors = attractors;
+  
+    for(let attractor of network.attractors) {
+      attractor.settings = network.settings;
+    }
   }
 
   // Create the network with initial conditions
@@ -66,7 +80,7 @@ let resetNetwork = () => {
       new Node(
         null,
         new Vec2(
-          window.innerWidth/2 - 440,
+          window.innerWidth/2 - 190,
           window.innerHeight/2 + 100
         ),
         false,

@@ -123,16 +123,18 @@ document.addEventListener('mousedown', (e) => {
         let radius = random(-attractorRadius, attractorRadius);
         let angle = random(360);
 
-        network.attractors.push(
-          new Attractor(
-            new Vec2(
-              e.clientX + Math.floor(radius * Math.cos(angle)),
-              e.clientY + Math.floor(radius * Math.sin(angle))
-            ),
-            ctx,
-            Settings
-          )
-        );
+        const newAttractor = new Attractor(
+          new Vec2(
+            e.clientX + Math.floor(radius * Math.cos(angle)),
+            e.clientY + Math.floor(radius * Math.sin(angle))
+          ),
+          ctx,
+          Settings
+        )
+
+        newAttractor.settings = network.settings;
+
+        network.attractors.push(newAttractor);
       }
 
       break;
@@ -173,16 +175,18 @@ document.addEventListener('mousemove', (e) => {
       let radius = random(-attractorRadius, attractorRadius);
       let angle = random(360);
 
-      network.attractors.push(
-        new Attractor(
-          new Vec2(
-            e.clientX + Math.floor(radius * Math.cos(angle)),
-            e.clientY + Math.floor(radius * Math.sin(angle))
-          ),
-          ctx,
-          Settings
-        )
-      );
+      const newAttractor = new Attractor(
+        new Vec2(
+          e.clientX + Math.floor(radius * Math.cos(angle)),
+          e.clientY + Math.floor(radius * Math.sin(angle))
+        ),
+        ctx,
+        Settings
+      )
+
+      newAttractor.settings = network.settings;
+
+      network.attractors.push(newAttractor);
     }
   }
 

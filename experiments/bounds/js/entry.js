@@ -152,6 +152,10 @@ let resetNetwork = () => {
     let gridAttractors = getGridOfAttractors(150, 150, ctx, 10, network.bounds);
 
     network.attractors = gridAttractors;
+  
+    for(let attractor of network.attractors) {
+      attractor.settings = network.settings;
+    }
   }
 
   // Create the network with initial conditions

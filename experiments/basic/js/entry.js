@@ -39,6 +39,10 @@ let setupNetwork = () => {
   let waveAttractors = getWaveOfAttractors(ctx);
 
   network.attractors = gridAttractors;
+  
+  for(let attractor of network.attractors) {
+    attractor.settings = network.settings;
+  }
 
   // Add a set of random root nodes throughout scene
   for(let i=0; i<10; i++) {
