@@ -13,7 +13,7 @@ export const Light = {
 
 export const Dark = {
   BackgroundColor: 'rgba(0,0,0,.9)',
-  AttractorColor: 'rgba(255,255,255,.5)',
+  AttractorColor: 'rgba(0,0,0,.5)',
   BranchColor: 'rgba(255,255,255,1)',
   TipColor: 'rgba(0,255,255,1)',
   AttractionZoneColor: 'rgba(255,255,255,.002)',

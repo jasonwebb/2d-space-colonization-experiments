@@ -28,7 +28,7 @@ export default class Attractor {
     }
 
     // Draw the attractor
-    if(this.settings.ShoAttractors) {
+    if(this.settings.ShowAttractors) {
       this.ctx.beginPath();
       this.ctx.ellipse(this.position.x, this.position.y, 1, 1, 0, 0, Math.PI * 2);
       this.ctx.fillStyle = this.settings.Colors.AttractorColor;

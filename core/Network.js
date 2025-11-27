@@ -361,11 +361,11 @@ export default class Network {
     }
   }
 
-  toggleattractors() {
-    this.settings.Showattractors = !this.settings.Showattractors;
+  toggleAttractors() {
+    this.settings.ShowAttractors = !this.settings.ShowAttractors;
 
     for(let attractor of this.attractors) {
-      attractor.settings.Showattractors = !attractor.settings.Showattractors;
+      attractor.settings.ShowAttractors = !attractor.settings.ShowAttractors;
     }
   }
 

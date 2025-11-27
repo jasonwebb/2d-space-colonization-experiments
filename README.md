@@ -72,6 +72,9 @@ A couple additional helper modules are also included there:
 * [Webpack](https://webpack.js.org/) for modern JS (ES6) syntax, code modularization, bundling, and serving locally.
 
 ## Install and run notes
+> [!IMPORTANT]
+> This project requires Node v16.20.8.
+
 1. Run `npm install` to get all packages
 2. Run `npm run serve` to start up Webpack and launch the application in a browser window
 
